@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee                http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
   <!-- Servlets -->
+  
+  <servlet>
+    <servlet-name>loginService</servlet-name>
+    <servlet-class>com.google.gwt.sample.stockwatcher.server.LoginServiceImpl</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>loginService</servlet-name>
+    <url-pattern>/SchoolViewer/login</url-pattern>
+  </servlet-mapping>
+  
   <servlet>
     <servlet-name>greetServlet</servlet-name>
     <servlet-class>com.google.gwt.schoolviewer.server.GreetingServiceImpl</servlet-class>
@@ -8,7 +19,7 @@
   
   <servlet-mapping>
     <servlet-name>greetServlet</servlet-name>
-    <url-pattern>/schoolviewer/greet</url-pattern>
+    <url-pattern>/SchoolViewer/greet</url-pattern>
   </servlet-mapping>
   
   <!-- Default page to serve -->
