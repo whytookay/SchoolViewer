@@ -1,0 +1,2 @@
+serviceClass: com.gwt.schoolviewer.client.GreetingService
+path: 83DC01280A9B0BE403A261AD5C5455C2.gwt.rpc
