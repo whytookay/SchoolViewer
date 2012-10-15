@@ -10,4 +10,19 @@ public class School {
 		// TODO Auto-generated constructor stub
 	}
 
+	public String getName()
+	{
+		return name;
+	}
+	
+	public String getLocation()
+	{
+		return location;
+	}
+	
+	public String getDistrict()
+	{
+		return district;
+	}
+	
 }
