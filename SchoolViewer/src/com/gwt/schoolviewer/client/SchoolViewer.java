@@ -86,18 +86,18 @@ public class SchoolViewer implements EntryPoint {
 		
 		
 		
-	    final FlexTable stocksFlexTable = new FlexTable();
+	    final FlexTable schoolFlexTable = new FlexTable();
 		final Button sendButton = new Button("Search");
 		final TextBox nameField = new TextBox();
 		nameField.setText("GWT User");
 		final Label errorLabel = new Label();
 		
 	    // Create table for stock data.
-	    stocksFlexTable.setText(0, 0, "Name");
-	    stocksFlexTable.setText(0, 1, "Value");
-	    stocksFlexTable.setText(0, 2, "Location");
-	    stocksFlexTable.setText(0, 3, "District");
-	    stocksFlexTable.setText(0, 4, "Postal Code");
+	    schoolFlexTable.setText(0, 0, "Name");
+	    schoolFlexTable.setText(0, 1, "Value");
+	    schoolFlexTable.setText(0, 2, "Location");
+	    schoolFlexTable.setText(0, 3, "District");
+	    schoolFlexTable.setText(0, 4, "Postal Code");
 		
 
 		// We can add style names to widgets
@@ -108,7 +108,7 @@ public class SchoolViewer implements EntryPoint {
 		RootPanel.get("nameFieldContainer").add(nameField);
 		RootPanel.get("sendButtonContainer").add(sendButton);
 		RootPanel.get("errorLabelContainer").add(errorLabel);
-		RootPanel.get(null).add(stocksFlexTable);
+		RootPanel.get(null).add(schoolFlexTable);
 		// Focus the cursor on the name field when the app loads
 		nameField.setFocus(true);
 		nameField.selectAll();
