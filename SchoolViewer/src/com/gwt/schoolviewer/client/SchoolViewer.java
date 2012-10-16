@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Anchor;
 
+
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
@@ -40,6 +41,7 @@ public class SchoolViewer implements EntryPoint {
 	  private VerticalPanel loginPanel = new VerticalPanel();
 	  private Label loginLabel = new Label("Please sign in to your Google Account to access the StockWatcher application.");
 	  private Anchor signInLink = new Anchor("Sign In");
+	  private Anchor signOutLink = new Anchor("Sign Out");
 	
 	/**
 	 * This is the entry point method.
@@ -71,6 +73,12 @@ public class SchoolViewer implements EntryPoint {
 		  }
 	
 	private void loadschoolviewer(){
+	    // Set up sign out hyperlink.
+	    signOutLink.setHref(loginInfo.getLogoutUrl());
+		
+		
+		
+		
 		final Button sendButton = new Button("Send");
 		final TextBox nameField = new TextBox();
 		nameField.setText("GWT User");
