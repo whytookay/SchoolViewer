@@ -11,6 +11,7 @@ import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -43,6 +44,7 @@ public class SchoolViewer implements EntryPoint {
 	  private Anchor signInLink = new Anchor("Sign In");
 	  private Anchor signOutLink = new Anchor("Sign Out");
 	
+	
 	/**
 	 * This is the entry point method.
 	 */
@@ -62,8 +64,13 @@ public class SchoolViewer implements EntryPoint {
 	        }
 	      }
 	    });
+	    
+
+
 		
 	}
+	
+	
 	private void loadLogin() {
 		    // Assemble login panel.
 		    signInLink.setHref(loginInfo.getLoginUrl());
@@ -79,11 +86,19 @@ public class SchoolViewer implements EntryPoint {
 		
 		
 		
-		
-		final Button sendButton = new Button("Send");
+	    final FlexTable stocksFlexTable = new FlexTable();
+		final Button sendButton = new Button("Search");
 		final TextBox nameField = new TextBox();
 		nameField.setText("GWT User");
 		final Label errorLabel = new Label();
+		
+	    // Create table for stock data.
+	    stocksFlexTable.setText(0, 0, "Name");
+	    stocksFlexTable.setText(0, 1, "Value");
+	    stocksFlexTable.setText(0, 2, "Location");
+	    stocksFlexTable.setText(0, 3, "District");
+	    stocksFlexTable.setText(0, 4, "Postal Code");
+		
 
 		// We can add style names to widgets
 		sendButton.addStyleName("sendButton");
@@ -93,7 +108,7 @@ public class SchoolViewer implements EntryPoint {
 		RootPanel.get("nameFieldContainer").add(nameField);
 		RootPanel.get("sendButtonContainer").add(sendButton);
 		RootPanel.get("errorLabelContainer").add(errorLabel);
-
+		RootPanel.get(null).add(stocksFlexTable);
 		// Focus the cursor on the name field when the app loads
 		nameField.setFocus(true);
 		nameField.selectAll();
