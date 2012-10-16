@@ -1,10 +1,12 @@
 package com.gwt.schoolviewer.server;
 
+import java.util.ArrayList;
+
 public class School {
 
 	String name;
 	String location;
-	String district;
+	District district;
 	
 	public School() {
 		// TODO Auto-generated constructor stub
@@ -20,9 +22,14 @@ public class School {
 		return location;
 	}
 	
-	public String getDistrict()
+	public District getDistrict()
 	{
 		return district;
+	}
+	
+	public ArrayList<String[]> getValues()
+	{
+		return district.getValues();
 	}
 	
 }
