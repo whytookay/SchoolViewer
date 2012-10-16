@@ -69,7 +69,7 @@ public class SchoolViewer implements EntryPoint {
 		    signInLink.setHref(loginInfo.getLoginUrl());
 		    loginPanel.add(loginLabel);
 		    loginPanel.add(signInLink);
-		   // RootPanel.get("stockList").add(loginPanel);
+		    RootPanel.get(null).add(loginPanel);
 		  }
 	
 	private void loadschoolviewer(){
