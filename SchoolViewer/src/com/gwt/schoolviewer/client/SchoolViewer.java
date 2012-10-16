@@ -98,6 +98,7 @@ public class SchoolViewer implements EntryPoint {
 	    schoolFlexTable.setText(0, 2, "Location");
 	    schoolFlexTable.setText(0, 3, "District");
 	    schoolFlexTable.setText(0, 4, "Postal Code");
+	    schoolFlexTable.setText(4, 4, "V6K 2J0");
 		
 
 		// We can add style names to widgets
@@ -107,8 +108,8 @@ public class SchoolViewer implements EntryPoint {
 		// Use RootPanel.get() to get the entire body element
 		RootPanel.get("nameFieldContainer").add(nameField);
 		RootPanel.get("sendButtonContainer").add(sendButton);
+		RootPanel.get("flexTableContainer").add(schoolFlexTable);
 		RootPanel.get("errorLabelContainer").add(errorLabel);
-		RootPanel.get(null).add(schoolFlexTable);
 		// Focus the cursor on the name field when the app loads
 		nameField.setFocus(true);
 		nameField.selectAll();
