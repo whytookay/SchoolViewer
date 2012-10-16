@@ -8,8 +8,10 @@ public class School {
 	String location;
 	District district;
 	
-	public School() {
-		// TODO Auto-generated constructor stub
+	public School(String name, String location, District district) {
+		this.name = name;
+		this.location = location;
+		this.district = district;
 	}
 
 	public String getName()

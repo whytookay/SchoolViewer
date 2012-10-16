@@ -10,8 +10,15 @@ public class District {
 	
 	ArrayList <School>schools = new ArrayList<School> ();
 	
-	public District(String name) {
+	public District(String name, ArrayList<String[]> values) {
 		this.name = name;
+		this.values = values;
+		buildSchools();
+	}
+	
+	private void buildSchools()
+	{
+		return;
 	}
 	
 	public ArrayList<String[]> getValues()
