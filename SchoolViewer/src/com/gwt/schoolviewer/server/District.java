@@ -57,5 +57,15 @@ public class District {
 	{
 		return values;
 	}
+	
+//	public void printSchools()
+//	{
+//		System.out.print(this.getName() + " district contains: ");
+//		for(int i = 0; i < schools.size(); i++)
+//		{
+//			System.out.print(schools.get(i).getName() + ", ");
+//		}
+//		System.out.println();
+//	}
 
 }

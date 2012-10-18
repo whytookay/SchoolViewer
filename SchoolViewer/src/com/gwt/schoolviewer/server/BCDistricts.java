@@ -1,13 +1,14 @@
 package com.gwt.schoolviewer.server;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 public class BCDistricts {
 	
-	public static void main(String args[]) throws IOException{
-	}
+//	public static void main(String args[]) throws IOException{
+//		BCDistricts temp = new BCDistricts();
+//		temp.printSchools();
+//	}
 
 	ArrayList<District> districts = new ArrayList<District>();
 	
@@ -71,12 +72,11 @@ public class BCDistricts {
 	{
 		ArrayList<ArrayList<String>> tempList = new ArrayList<ArrayList<String>>();
 		TxtSplitter splitter = new TxtSplitter("http://www.bced.gov.bc.ca/reporting/odefiles/SchoolLocations_Current.txt");
-		tempList = splitter.split();
+		tempList = transpose(splitter.split());
 		
 		for(int i = 1; i < tempList.size(); i++)
 		{
 			ArrayList<String> tempLine = tempList.get(i);
-			District tempDis;
 			for (int j = 0; j < districts.size(); j++)
 			{
 				if (tempLine.get(3).equals(districts.get(j).getName()))
@@ -88,5 +88,13 @@ public class BCDistricts {
 			}
 		}
 	}
+	
+//	public void printSchools()
+//	{
+//		for(int i = 0; i < districts.size(); i++)
+//		{
+//			districts.get(i).printSchools();
+//		}
+//	}
 
 }
