@@ -29,7 +29,7 @@ public class School {
 		return district;
 	}
 	
-	public ArrayList<String[]> getValues()
+	public ArrayList<String> getValues()
 	{
 		return district.getValues();
 	}
