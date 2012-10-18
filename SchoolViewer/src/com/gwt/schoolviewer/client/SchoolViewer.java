@@ -106,6 +106,8 @@ public class SchoolViewer implements EntryPoint {
 		
 	    // Add styles to elements in the stock list table.
 	    schoolFlexTable.setCellPadding(6);
+	    schoolFlexTable.getRowFormatter().addStyleName(0, "schoolListHeader");
+	    schoolFlexTable.addStyleName("schoolList");
 
 
 		// Add the nameField and sendButton to the RootPanel
