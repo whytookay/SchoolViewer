@@ -103,6 +103,10 @@ public class SchoolViewer implements EntryPoint {
 
 		// We can add style names to widgets
 		sendButton.addStyleName("sendButton");
+		
+	    // Add styles to elements in the stock list table.
+	    schoolFlexTable.setCellPadding(6);
+
 
 		// Add the nameField and sendButton to the RootPanel
 		// Use RootPanel.get() to get the entire body element
@@ -148,7 +152,7 @@ public class SchoolViewer implements EntryPoint {
 			 * Fired when the user clicks on the sendButton.
 			 */
 			public void onClick(ClickEvent event) {
-				sendNameToServer();
+				sendDatatoServer();
 			}
 
 			/**
@@ -156,19 +160,19 @@ public class SchoolViewer implements EntryPoint {
 			 */
 			public void onKeyUp(KeyUpEvent event) {
 				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-					sendNameToServer();
+					sendDatatoServer();
 				}
 			}
 
 			/**
 			 * Send the name from the nameField to the server and wait for a response.
 			 */
-			private void sendNameToServer() {
+			private void sendDatatoServer() {
 				// First, we validate the input.
 				errorLabel.setText("");
 				String textToServer = nameField.getText();
 				if (!FieldVerifier.isValidName(textToServer)) {
-					errorLabel.setText("Please enter at least four characters");
+					errorLabel.setText("Please enter valid search terms");
 					return;
 				}
 
