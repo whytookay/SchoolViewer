@@ -1,25 +1,23 @@
 package com.gwt.schoolviewer.server;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 public class BCDistricts {
 	
 	public static void main(String args[]) throws IOException{
-		BCDistricts bcDistricts = new BCDistricts();
-		bcDistricts.printDistricts();
 	}
 
 	ArrayList<District> districts = new ArrayList<District>();
 	
 	public BCDistricts() throws IOException {
 		populateDistricts(pageToList());
+		populateSchools();
 	}
 	
 	private void populateDistricts(ArrayList<ArrayList<String>> temp) {
-		System.out.println(temp.get(0).size());
 		ArrayList<ArrayList<String>> disList = transpose(temp);
-		System.out.println(disList.size());
 		for(int i = 1; i < disList.size(); i++)
 		{
 			ArrayList<String> tempList = disList.get(i);
@@ -31,8 +29,13 @@ public class BCDistricts {
 	private ArrayList<ArrayList<String>> pageToList() throws IOException {
 		TxtSplitter splitter = new TxtSplitter("http://www.bced.gov.bc.ca/reporting/odefiles/BoardLocations_Current.txt");
 		ArrayList<ArrayList<String>> temp = splitter.split();
+		String[] accepted = new String[4];
+		accepted[0] = "DISTRICT_NAME";
+		accepted[1] = "DISTRICT_CITY";
+		accepted[2] = "DISTRICT_PHONE_NUMBER";
+		accepted[3] = "DISTRICT_WEBSITE";
 		for(int i = 0; i < temp.size();) {
-			if (requiredLine(temp.get(i))){
+			if (requiredLine(temp.get(i), accepted)){
 				i++;
 			}else{
 				temp.remove(i);
@@ -41,26 +44,13 @@ public class BCDistricts {
 		return temp;
 	}
 	
-	private Boolean requiredLine(ArrayList<String> temp) {
+	private Boolean requiredLine(ArrayList<String> temp, String[] accepted) {
 		String title = temp.get(0);
-		String[] accepted = new String[4];
-		accepted[0] = "DISTRICT_NAME";
-		accepted[1] = "DISTRICT_CITY";
-		accepted[2] = "DISTRICT_PHONE_NUMBER";
-		accepted[3] = "DISTRICT_WEBSITE";
-
 		for(int i = 0; i < accepted.length; i++){
 			if(title.equals(accepted[i]))
 				return true;
 		}
 		return false;
-	}
-	
-	public void printDistricts(){
-		for(int i = 0; i < districts.size(); i++){
-			District temp = districts.get(i);
-			System.out.println(temp.getName() + " " + temp.getCity() + " " + temp.getPhone() + " " + temp.getWeb());
-		}
 	}
 	
 	private ArrayList<ArrayList<String>> transpose(ArrayList<ArrayList<String>> orig){
@@ -75,6 +65,28 @@ public class BCDistricts {
 			temp.add(tempLine);
 		}
 		return temp;
+	}
+	
+	private void populateSchools() throws IOException
+	{
+		ArrayList<ArrayList<String>> tempList = new ArrayList<ArrayList<String>>();
+		TxtSplitter splitter = new TxtSplitter("http://www.bced.gov.bc.ca/reporting/odefiles/SchoolLocations_Current.txt");
+		tempList = splitter.split();
+		
+		for(int i = 1; i < tempList.size(); i++)
+		{
+			ArrayList<String> tempLine = tempList.get(i);
+			District tempDis;
+			for (int j = 0; j < districts.size(); j++)
+			{
+				if (tempLine.get(3).equals(districts.get(j).getName()))
+				{
+					School temp = new School(tempLine.get(5),tempLine.get(7),tempLine.get(10),tempLine.get(1),tempLine.get(8)
+							,tempLine.get(15),tempLine.get(16),districts.get(j));
+					districts.get(j).addSchool(temp);
+				}
+			}
+		}
 	}
 
 }

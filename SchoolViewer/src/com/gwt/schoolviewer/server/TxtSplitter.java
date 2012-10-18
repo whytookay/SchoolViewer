@@ -8,17 +8,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class TxtSplitter {
-	
-//	public static void main (String args[]) throws IOException
-//	{
-//		TxtSplitter parser = new TxtSplitter("http://www.bced.gov.bc.ca/reporting/odefiles/BoardLocations_Current.txt");
-//		ArrayList<ArrayList<String>> temp = (parser.split());
-//		for(int i = 0; i < temp.size(); i++)
-//		{
-//			//System.out.println(temp.get(i).get(2));
-//			System.out.println(temp.get(i));
-//		}
-//	}
 
 	public TxtSplitter(String target) throws MalformedURLException {
 		url = new URL(target);

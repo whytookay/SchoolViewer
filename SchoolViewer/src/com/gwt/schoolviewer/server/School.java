@@ -4,13 +4,23 @@ import java.util.ArrayList;
 
 public class School {
 
-	String name;
-	String location;
-	District district;
+	private String name;
+	private String location;
+	private String phone;
+	private String pubOrInd;
+	private String city;
+	private String eduLevel;
+	private String grades;
+	private District district;
 	
-	public School(String name, String location, District district) {
+	public School(String name, String location, String phone, String pubOrInd, String city, String eduLevel, String grades, District district) {
 		this.name = name;
 		this.location = location;
+		this.phone = phone;
+		this.pubOrInd = pubOrInd;
+		this.city = city;
+		this.eduLevel = eduLevel;
+		this.grades = grades;
 		this.district = district;
 	}
 

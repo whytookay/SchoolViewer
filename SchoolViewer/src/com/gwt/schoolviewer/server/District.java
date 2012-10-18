@@ -21,6 +21,11 @@ public class District {
 		buildSchools();
 	}
 	
+	public void addSchool(School school)
+	{
+		schools.add(school);
+	}
+	
 	public String getName(){
 		return name;
 	}
