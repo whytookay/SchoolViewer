@@ -21,6 +21,22 @@ public class District {
 		buildSchools();
 	}
 	
+	public String getName(){
+		return name;
+	}
+	
+	public String getCity(){
+		return city;
+	}
+	
+	public String getPhone(){
+		return phone;
+	}
+	
+	public String getWeb(){
+		return website;
+	}
+	
 //	public District(String name, ArrayList<String> values) {
 //		this.name = name;
 //		this.values = values;
