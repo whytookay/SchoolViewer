@@ -96,6 +96,11 @@ public class BCDistricts {
 		}
 	}
 	
+	public ArrayList<District> getDistricts()
+	{
+		return districts;
+	}
+	
 //	public void printSchools()
 //	{
 //		for(int i = 0; i < districts.size(); i++)
