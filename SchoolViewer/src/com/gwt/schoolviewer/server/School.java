@@ -34,6 +34,31 @@ public class School {
 		return location;
 	}
 	
+	public String getPhone()
+	{
+		return phone;
+	}
+	
+	public String getType()
+	{
+		return pubOrInd;
+	}
+	
+	public String getCity()
+	{
+		return city;
+	}
+	
+	public String getLevel()
+	{
+		return eduLevel;
+	}
+	
+	public String getGrades()
+	{
+		return grades;
+	}
+	
 	public District getDistrict()
 	{
 		return district;

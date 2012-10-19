@@ -70,9 +70,8 @@ public class BCDistricts {
 	
 	private void populateSchools() throws IOException
 	{
-		ArrayList<ArrayList<String>> tempList = new ArrayList<ArrayList<String>>();
 		TxtSplitter splitter = new TxtSplitter("http://www.bced.gov.bc.ca/reporting/odefiles/SchoolLocations_Current.txt");
-		tempList = transpose(splitter.split());
+		ArrayList<ArrayList<String>> tempList = transpose(splitter.split());
 		
 		for(int i = 1; i < tempList.size(); i++)
 		{

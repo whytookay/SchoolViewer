@@ -1,0 +1,2 @@
+serviceClass: com.gwt.schoolviewer.client.LoginService
+path: 8A1ECBD8F27A1F3825408C8C1DF42816.gwt.rpc

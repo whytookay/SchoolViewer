@@ -42,12 +42,6 @@ public class District {
 		return website;
 	}
 	
-//	public District(String name, ArrayList<String> values) {
-//		this.name = name;
-//		this.values = values;
-//		buildSchools();
-//	}
-	
 	private void buildSchools()
 	{
 		return;
