@@ -5,6 +5,12 @@ import java.util.ArrayList;
 
 public class BCDistricts {
 	
+    private static final BCDistricts instance = new BCDistricts();
+    
+    public static BCDistricts getInstance() {
+    	return instance;
+    }
+	
 //	public static void main(String args[]) throws IOException{
 //		BCDistricts temp = new BCDistricts();
 //		temp.printSchools();
@@ -12,9 +18,11 @@ public class BCDistricts {
 
 	ArrayList<District> districts = new ArrayList<District>();
 	
-	public BCDistricts() throws IOException {
+	public BCDistricts() {
+		try{
 		populateDistricts(pageToList());
 		populateSchools();
+		} catch (IOException e){}
 	}
 	
 	private void populateDistricts(ArrayList<ArrayList<String>> temp) {
