@@ -37,6 +37,18 @@ public class SchoolViewer implements EntryPoint {
 	 */
 	private final GreetingServiceAsync greetingService = GWT
 			.create(GreetingService.class);
+	
+	/**
+	 * Create a remote service proxy to talk to the server-side postal code service.
+	 */
+	private final PostalCodeServiceAsync postalCodeService = GWT
+			.create(PostalCodeService.class);
+	
+	/**
+	 * Create a remote service proxy to talk to the server-side school value service.
+	 */
+	private final SchoolValueServiceAsync schoolValueService = GWT
+			.create(SchoolValueService.class);
 
 	  private LoginInfo loginInfo = null;
 	  private VerticalPanel loginPanel = new VerticalPanel();
@@ -70,7 +82,6 @@ public class SchoolViewer implements EntryPoint {
 		
 	}
 	
-	
 	private void loadLogin() {
 		    // Assemble login panel.
 		    signInLink.setHref(loginInfo.getLoginUrl());
@@ -83,8 +94,6 @@ public class SchoolViewer implements EntryPoint {
 	private void loadschoolviewer(){
 	    // Set up sign out hyperlink.
 	    signOutLink.setHref(loginInfo.getLogoutUrl());
-		
-		
 		
 	    final FlexTable schoolFlexTable = new FlexTable();
 		final Button sendButton = new Button("Search");

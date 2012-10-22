@@ -1,33 +1,39 @@
 package com.gwt.schoolviewer.server;
 
+import java.util.ArrayList;
+
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.gwt.schoolviewer.client.PostalCodeService;
-import com.gwt.schoolviewer.client.SchoolValue;
+import com.gwt.schoolviewer.shared.School;
 
 public class PostalCodeServiceImpl extends RemoteServiceServlet implements PostalCodeService {
 //TODO: add persistence with javax.jdo
+	
+	private ArrayList<String> codes = new ArrayList<String>(); //TODO: remove dummy values
+	
 	@Override
 	public String[] getCode() {
-		// TODO stub
-		return new String[] {"V5J 2C4"};
+		return (String[]) codes.toArray(); //codes;
 	}
 
 	@Override
 	public Boolean clearCode() {
-		// TODO Auto-generated method stub
+		codes.clear();
 		return true;
 	}
 
 	@Override
 	public Boolean addCode(String pCode) {
-		// TODO Auto-generated method stub
+		codes.add(pCode);
 		return true;
 	}
-
+	
 	@Override
-	public SchoolValue[] getRange(int radius) {
-		// TODO Auto-generated method stub
-		return null; //new SchoolValue[] 
+	public School[] getRange(int radius) {
+		ArrayList<School> schools = BCDistricts.getInstance().getSchools();
+		//TODO: need to do the distance calculation
+		//schools.get(1).getLocation() is the kind of syntax you'll need
+		return (School[]) schools.toArray();
 	}
 
 }
