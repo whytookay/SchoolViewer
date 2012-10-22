@@ -225,15 +225,18 @@ public class SchoolViewer implements EntryPoint {
 	    }
 	    
 	    // Set up the callback object.
-	    AsyncCallback<SchoolValue[]> callback = new AsyncCallback<SchoolValue[]>() {
+	    AsyncCallback <ArrayList<SchoolValue>> callback = new AsyncCallback <ArrayList<SchoolValue>>() {
 	      public void onFailure(Throwable caught) {
 	        // TODO: Do something with errors.
 	      }
 
-	      public void onSuccess(SchoolValue[] result) {
+	      public void onSuccess(ArrayList<SchoolValue> result) {
 	        updateTable(result);
 	      }
 	    };
+	    
+	    // Make the call to the stock price service.
+	    schoolValueSvc.getValues(schools.toArray(new String[0]), callback);
 	}
 	
 	  /**
@@ -241,9 +244,9 @@ public class SchoolViewer implements EntryPoint {
 	   *
 	   * @param values School data for all rows.
 	   */
-	  private void updateTable(SchoolValue[] values) {
-	    for (int i = 0; i < values.length; i++) {
-	      updateTable(values[i]);
+	  private void updateTable(ArrayList<SchoolValue> values) {
+	    for (int i = 0; i < values.size(); i++) {
+	      updateTable(values.get(i));
 	    }
 	  }
 	  
