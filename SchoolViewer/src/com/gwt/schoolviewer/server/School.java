@@ -1,8 +1,6 @@
-package com.gwt.schoolviewer.shared;
+package com.gwt.schoolviewer.server;
 
 import java.util.ArrayList;
-
-import com.gwt.schoolviewer.server.District;
 
 public class School {
 

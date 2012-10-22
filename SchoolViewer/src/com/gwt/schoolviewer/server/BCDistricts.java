@@ -3,8 +3,6 @@ package com.gwt.schoolviewer.server;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.gwt.schoolviewer.shared.School;
-
 public class BCDistricts {
 	
     private static final BCDistricts instance = new BCDistricts();
@@ -101,15 +99,6 @@ public class BCDistricts {
 	public ArrayList<District> getDistricts()
 	{
 		return districts;
-	}
-	
-	public ArrayList<School> getSchools()
-	{
-		ArrayList<School> schools = new ArrayList<School>();
-		for (int i = 0; i<districts.size(); i++) {
-			schools.addAll(districts.get(i).getSchools());
-		}
-		return schools;
 	}
 	
 //	public void printSchools()

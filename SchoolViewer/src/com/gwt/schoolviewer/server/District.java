@@ -2,8 +2,6 @@ package com.gwt.schoolviewer.server;
 
 import java.util.ArrayList;
 
-import com.gwt.schoolviewer.shared.School;
-
 public class District {
 
 	String name;
@@ -14,7 +12,7 @@ public class District {
 	ArrayList <String>values = new ArrayList<String> ();
 	
 	ArrayList <School>schools = new ArrayList<School> ();
-
+	
 	public District(String name, String city, String phone, String website) {
 		this.name = name;
 		this.city = city;
@@ -26,10 +24,6 @@ public class District {
 	public void addSchool(School school)
 	{
 		schools.add(school);
-	}
-	
-	public ArrayList<School> getSchools() {
-		return schools;
 	}
 	
 	public String getName(){

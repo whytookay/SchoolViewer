@@ -1,17 +1,15 @@
 package com.gwt.schoolviewer.server;
 
-import java.util.ArrayList;
-
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.gwt.schoolviewer.client.SchoolValue;
 import com.gwt.schoolviewer.client.SchoolValueService;
-import com.gwt.schoolviewer.shared.School;
 
 public class SchoolValueServiceImpl extends RemoteServiceServlet implements SchoolValueService {
 
 	@Override
-	public School[] getValues(String[] schools) {
-		ArrayList<School> schoolList = BCDistricts.getInstance().getSchools();
-		return (School[]) schoolList.toArray();
+	public SchoolValue[] getValues(String[] schools) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
