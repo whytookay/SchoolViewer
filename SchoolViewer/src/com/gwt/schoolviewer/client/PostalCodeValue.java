@@ -3,7 +3,7 @@ package com.gwt.schoolviewer.client;
 import java.io.Serializable;
 
 public class PostalCodeValue implements Serializable {
-	private String code;
+	String code;
 	
 	PostalCodeValue(){}
 

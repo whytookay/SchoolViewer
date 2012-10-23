@@ -46,7 +46,6 @@ public class SchoolViewer implements EntryPoint {
 	private Anchor signInLink = new Anchor("Sign In");
 	private Anchor signOutLink = new Anchor("Sign Out");
 	private ArrayList<String> schools = new ArrayList<String>();
-	private ArrayList<String> codes = new ArrayList<String>();
 	private SchoolValueServiceAsync schoolValueSvc = GWT
 			.create(SchoolValueService.class);
 	private PostalCodeServiceAsync postalCodeSvc = GWT
@@ -126,7 +125,7 @@ public class SchoolViewer implements EntryPoint {
 			 * Fired when the user clicks on the sendButton.
 			 */
 			public void onClick(ClickEvent event) {
-				sendDatatoServer();
+				refreshSchoolList();
 			}
 
 			/**
@@ -134,22 +133,10 @@ public class SchoolViewer implements EntryPoint {
 			 */
 			public void onKeyUp(KeyUpEvent event) {
 				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-					sendDatatoServer();
+					refreshSchoolList();
 				}
 			}
 
-			/**
-			 * Send the name from the nameField to the server and wait for a
-			 * response.
-			 */
-			private void sendDatatoServer() {
-				// add schools to the table
-				refreshSchoolList();
-
-				// First, we validate the input.
-				// Then, we send the input to the server.
-
-			}
 		}
 
 		// Add a handler to send the name to the server
@@ -171,14 +158,16 @@ public class SchoolViewer implements EntryPoint {
 			}
 		};
 
-		// Set up the callback object for Schools
+		// Set up the callback object for Postal Codes
 		AsyncCallback<ArrayList<PostalCodeValue>> callbackPostal = new AsyncCallback<ArrayList<PostalCodeValue>>() {
 			public void onFailure(Throwable caught) {
 				// TODO: Do something with errors.
 			}
 
-			public void onSuccess(ArrayList<PostalCodeValue> result) {
-				updateTablePostal(result);
+			public void onSuccess(ArrayList<PostalCodeValue> resultcodes) {
+				schoolFlexTable.setText(1,3, "onSuccess is called");
+				schoolFlexTable.setText(2, 3, resultcodes.get(0).getCode()); //This means the resultcodes array is empty
+				updateTablePostal(resultcodes);
 			}
 		};
 		// Make the call to the school price service.
@@ -238,6 +227,6 @@ public class SchoolViewer implements EntryPoint {
 	private void updateTablePostalRow(PostalCodeValue value, int index){
 		int row = index + 1;
 		// Populate Postal code
-		schoolFlexTable.setText(row,3, value.getCode());
+		schoolFlexTable.setText(row, 3, value.getCode());
 	}
 }
