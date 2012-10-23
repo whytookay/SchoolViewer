@@ -8,14 +8,16 @@ public class SchoolValue implements Serializable {
 	ArrayList<String> values;
 	String location;
 	String district;
+	String pCode;
 	
 	public SchoolValue(){}
 	
-	public SchoolValue(String name, ArrayList<String> values, String location, String district) {
+	public SchoolValue(String name, ArrayList<String> values, String location, String district, String pCode) {
 		this.name = name;
 		this.values = values;
 		this.location = location;
 		this.district = district;
+		this.pCode = pCode;
 	}
 	public String getName() {
 		return name;
@@ -40,5 +42,13 @@ public class SchoolValue implements Serializable {
 	}
 	public void setDistrict(String district) {
 		this.district = district;
+	}
+	
+	public String getpCode() {
+		return pCode;
+	}
+	
+	public void setpCode(String pCode) {
+		this.pCode = pCode;
 	}
 }

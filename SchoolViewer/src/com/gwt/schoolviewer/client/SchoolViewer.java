@@ -215,6 +215,7 @@ public class SchoolViewer implements EntryPoint {
 		schoolFlexTable.setText(row, 0, value.getName());
 		schoolFlexTable.setText(row, 1, value.getLocation());
 		schoolFlexTable.setText(row, 2, value.getDistrict());
+		//schoolFlexTable.setText(row, 3, value.getpCode());// TODO: CHECK IF THIS IS FINE
 	}
 	
 	/**
@@ -227,6 +228,6 @@ public class SchoolViewer implements EntryPoint {
 	private void updateTablePostalRow(PostalCodeValue value, int index){
 		int row = index + 1;
 		// Populate Postal code
-		schoolFlexTable.setText(row, 3, value.getCode());
+		schoolFlexTable.setText(row, 3, value.getCode()); // TODO: CHECK IF THIS IS FINE
 	}
 }

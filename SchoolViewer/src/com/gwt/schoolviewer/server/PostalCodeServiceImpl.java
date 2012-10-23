@@ -72,7 +72,8 @@ public class PostalCodeServiceImpl extends RemoteServiceServlet implements Posta
 			schoolValues.add(new SchoolValue(school.getName(),
 					school.getValues(),
 					school.getLocation(),
-					school.getDistrict().getName()));
+					school.getDistrict().getName(),
+					school.getPCode()));
 		}
 		//TODO: construct schoolvalues from schools
 		return schoolValues;
