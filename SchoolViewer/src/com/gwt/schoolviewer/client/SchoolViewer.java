@@ -20,7 +20,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Anchor;
 import java.util.ArrayList;
 
-
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
@@ -34,81 +33,80 @@ public class SchoolViewer implements EntryPoint {
 			+ "connection and try again.";
 
 	/**
-	 * Create a remote service proxy to talk to the server-side Greeting service.
+	 * Create a remote service proxy to talk to the server-side Greeting
+	 * service.
 	 */
 	private final GreetingServiceAsync greetingService = GWT
 			.create(GreetingService.class);
 
-	  private LoginInfo loginInfo = null;
-	  private VerticalPanel loginPanel = new VerticalPanel();
-	  private Label loginLabel = new Label("Please sign in to your Google Account to access the StockWatcher application.");
-	  private Anchor signInLink = new Anchor("Sign In");
-	  private Anchor signOutLink = new Anchor("Sign Out");
-	  private ArrayList<String> schools = new ArrayList<String>();	
-	  private SchoolValueServiceAsync schoolValueSvc = GWT.create(SchoolValueService.class);
-	  final FlexTable schoolFlexTable = new FlexTable();
+	private LoginInfo loginInfo = null;
+	private VerticalPanel loginPanel = new VerticalPanel();
+	private Label loginLabel = new Label(
+			"Please sign in to your Google Account to access the StockWatcher application.");
+	private Anchor signInLink = new Anchor("Sign In");
+	private Anchor signOutLink = new Anchor("Sign Out");
+	private ArrayList<String> schools = new ArrayList<String>();
+	private ArrayList<String> codes = new ArrayList<String>();
+	private SchoolValueServiceAsync schoolValueSvc = GWT
+			.create(SchoolValueService.class);
+	private PostalCodeServiceAsync postalCodeSvc = GWT
+			.create(PostalCodeService.class);
+	final FlexTable schoolFlexTable = new FlexTable();
+
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-	    // Check login status using login service.
-	    LoginServiceAsync loginService = GWT.create(LoginService.class);
-	    loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
-	      public void onFailure(Throwable error) {
-	      }
+		// Check login status using login service.
+		LoginServiceAsync loginService = GWT.create(LoginService.class);
+		loginService.login(GWT.getHostPageBaseURL(),
+				new AsyncCallback<LoginInfo>() {
+					public void onFailure(Throwable error) {
+					}
 
-	      public void onSuccess(LoginInfo result) {
-	        loginInfo = result;
-	        if(loginInfo.isLoggedIn()) {
-	          loadschoolviewer();
-	        } else {
-	          loadLogin();
-	        }
-	      }
-	    });
-	    
+					public void onSuccess(LoginInfo result) {
+						loginInfo = result;
+						if (loginInfo.isLoggedIn()) {
+							loadschoolviewer();
+						} else {
+							loadLogin();
+						}
+					}
+				});
 
-
-		
 	}
-	
-	
+
 	private void loadLogin() {
-		    // Assemble login panel.
-		    signInLink.setHref(loginInfo.getLoginUrl());
-		    loginPanel.add(loginLabel);
-		    loginPanel.add(signInLink);
-		    RootPanel.get(null).add(loginPanel); 
-		    
-		  }
-	
-	private void loadschoolviewer(){
-	    // Set up sign out hyperlink.
-	    signOutLink.setHref(loginInfo.getLogoutUrl());
-		
-		
+		// Assemble login panel.
+		signInLink.setHref(loginInfo.getLoginUrl());
+		loginPanel.add(loginLabel);
+		loginPanel.add(signInLink);
+		RootPanel.get(null).add(loginPanel);
+
+	}
+
+	private void loadschoolviewer() {
+		// Set up sign out hyperlink.
+		signOutLink.setHref(loginInfo.getLogoutUrl());
+
 		final Button sendButton = new Button("Search");
 		final TextBox nameField = new TextBox();
 		nameField.setText("GWT User");
 		final Label errorLabel = new Label();
-		
-	    // Create table for stock data.
-	    schoolFlexTable.setText(0, 0, "Name");
-	    //schoolFlexTable.setText(0, 1, "Value");
-	   //.setText(0, 2, "Location");
-	    schoolFlexTable.setText(0, 1, "District");
-	    schoolFlexTable.setText(0, 2, "Postal Code");
-	    schoolFlexTable.setText(4, 2, "V6K 2J0");
-		
+
+		// Create table for stock data.
+		schoolFlexTable.setText(0, 0, "Name");
+		schoolFlexTable.setText(0, 1, "Location");
+		schoolFlexTable.setText(0, 2, "District");
+		schoolFlexTable.setText(0, 3, "Postal Code");
 
 		// We can add style names to widgets
 		sendButton.addStyleName("sendButton");
-		
-	    // Add styles to elements in the stock list table.
-	    schoolFlexTable.setCellPadding(6);
-	    schoolFlexTable.getRowFormatter().addStyleName(0, "schoolListHeader");
-	    schoolFlexTable.addStyleName("schoolList");
 
+		// Add styles to elements in the stock list table.
+		schoolFlexTable.setCellPadding(6);
+		schoolFlexTable.getRowFormatter().addStyleName(0, "schoolListHeader");
+		schoolFlexTable.addStyleName("schoolList");
 
 		// Add the nameField and sendButton to the RootPanel
 		// Use RootPanel.get() to get the entire body element
@@ -120,33 +118,7 @@ public class SchoolViewer implements EntryPoint {
 		nameField.setFocus(true);
 		nameField.selectAll();
 
-/*		// Create the popup dialog box
-		final DialogBox dialogBox = new DialogBox();
-		dialogBox.setText("Remote Procedure Call");
-		dialogBox.setAnimationEnabled(true);
-		final Button closeButton = new Button("Close");
-		// We can set the id of a widget by accessing its Element
-		closeButton.getElement().setId("closeButton");
-		final Label textToServerLabel = new Label();
-		final HTML serverResponseLabel = new HTML();
-		VerticalPanel dialogVPanel = new VerticalPanel();
-		dialogVPanel.addStyleName("dialogVPanel");
-		dialogVPanel.add(new HTML("<b>Sending name to the server:</b>"));
-		dialogVPanel.add(textToServerLabel);
-		dialogVPanel.add(new HTML("<br><b>Server replies:</b>"));
-		dialogVPanel.add(serverResponseLabel);
-		dialogVPanel.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
-		dialogVPanel.add(closeButton);
-		dialogBox.setWidget(dialogVPanel);
-
-		// Add a handler to close the DialogBox
-		closeButton.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				dialogBox.hide();
-				sendButton.setEnabled(true);
-				sendButton.setFocus(true);
-			}
-		});*/
+		// create popup dialog box here old implementation
 
 		// Create a handler for the sendButton and nameField
 		class MyHandler implements ClickHandler, KeyUpHandler {
@@ -167,48 +139,16 @@ public class SchoolViewer implements EntryPoint {
 			}
 
 			/**
-			 * Send the name from the nameField to the server and wait for a response.
+			 * Send the name from the nameField to the server and wait for a
+			 * response.
 			 */
 			private void sendDatatoServer() {
 				// add schools to the table
 				refreshSchoolList();
-				
-				
-				
-/*				// First, we validate the input.
-				errorLabel.setText("");
-				String textToServer = nameField.getText();
-				if (!FieldVerifier.isValidName(textToServer)) {
-					errorLabel.setText("Please enter valid search terms");
-					return;
-				}
 
+				// First, we validate the input.
 				// Then, we send the input to the server.
-				sendButton.setEnabled(false);
-				textToServerLabel.setText(textToServer);
-				serverResponseLabel.setText("");
-				greetingService.greetServer(textToServer,
-						new AsyncCallback<String>() {
-							public void onFailure(Throwable caught) {
-								// Show the RPC error message to the user
-								dialogBox
-										.setText("Remote Procedure Call - Failure");
-								serverResponseLabel
-										.addStyleName("serverResponseLabelError");
-								serverResponseLabel.setHTML(SERVER_ERROR);
-								dialogBox.center();
-								closeButton.setFocus(true);
-							}
 
-							public void onSuccess(String result) {
-								dialogBox.setText("Remote Procedure Call");
-								serverResponseLabel
-										.removeStyleName("serverResponseLabelError");
-								serverResponseLabel.setHTML(result);
-								dialogBox.center();
-								closeButton.setFocus(true);
-							}
-						});*/
 			}
 		}
 
@@ -217,49 +157,87 @@ public class SchoolViewer implements EntryPoint {
 		sendButton.addClickHandler(handler);
 		nameField.addKeyUpHandler(handler);
 	}
-	private void refreshSchoolList(){
-	    // Initialize the service proxy.
-	    if (schoolValueSvc == null) {
-	      schoolValueSvc = GWT.create(SchoolValueService.class);
-	    }
-	    
-	    // Set up the callback object.
-	    AsyncCallback <ArrayList<SchoolValue>> callback = new AsyncCallback <ArrayList<SchoolValue>>() {
-	      public void onFailure(Throwable caught) {
-	        // TODO: Do something with errors.
-	      }
 
-	      public void onSuccess(ArrayList<SchoolValue> result) {
-	        updateTable(result);
-	      }
-	    };
-	    
-	    // Make the call to the school price service.
-	    schoolValueSvc.getValues(schools.toArray(new String[0]), callback);
+	private void refreshSchoolList() {
+
+		// Set up the callback object for Schools
+		AsyncCallback<ArrayList<SchoolValue>> callback = new AsyncCallback<ArrayList<SchoolValue>>() {
+			public void onFailure(Throwable caught) {
+				// TODO: Do something with errors.
+			}
+
+			public void onSuccess(ArrayList<SchoolValue> result) {
+				updateTableSchool(result);
+			}
+		};
+
+		// Set up the callback object for Schools
+		AsyncCallback<ArrayList<PostalCodeValue>> callbackPostal = new AsyncCallback<ArrayList<PostalCodeValue>>() {
+			public void onFailure(Throwable caught) {
+				// TODO: Do something with errors.
+			}
+
+			public void onSuccess(ArrayList<PostalCodeValue> result) {
+				updateTablePostal(result);
+			}
+		};
+		// Make the call to the school price service.
+		schoolValueSvc.getValues(schools.toArray(new String[0]), callback);
+		postalCodeSvc.getCode(callbackPostal);
+	}
+
+	/**
+	 * Update the Name, Location, and District fields all the rows in the school table.
+	 * 
+	 * @param values
+	 *            School data for all rows.
+	 */
+	private void updateTableSchool(ArrayList<SchoolValue> values) {
+		for (int i = 0; i < values.size(); i++) {
+			updateTableSchoolRow(values.get(i), i);
+		}
 	}
 	
-	  /**
-	   * Update the Price and Change fields all the rows in the school table.
-	   *
-	   * @param values School data for all rows.
-	   */
-	  private void updateTable(ArrayList<SchoolValue> values) {
-	    for (int i = 0; i < values.size(); i++) {
-	      updateTable(values.get(i), i);
-	    }
-	  }
-	  
-	  /**
-	   * Update a single row in the stock table.
-	   *
-	   * @param price Stock data for a single row.
-	   */
-	  private void updateTable(SchoolValue value, int index) {
-	  
-		  int row = index + 1;
-		  
-		  // Populate name and district
-		  schoolFlexTable.setText(row, 0, value.getName() );
-		  schoolFlexTable.setText(row, 1, value.getDistrict());
-	  }
+	/**
+	 * Update the Postal Code -> all the rows in the school table.
+	 * 
+	 * @param values
+	 *            Postal Code data for all rows.
+	 */
+	private void updateTablePostal(ArrayList<PostalCodeValue> values) {
+		for (int i = 0; i < values.size(); i++) {
+			updateTablePostalRow(values.get(i), i);
+		}
+	}
+
+	/**
+	 * Update a single row in the school table.
+	 * 
+	 * @param value
+	 *            School data for a single row.
+	 * @param index
+	 * 			  the row to be updated
+	 */
+	private void updateTableSchoolRow(SchoolValue value, int index) {
+
+		int row = index + 1;
+
+		// Populate name, location and district
+		schoolFlexTable.setText(row, 0, value.getName());
+		schoolFlexTable.setText(row, 1, value.getLocation());
+		schoolFlexTable.setText(row, 2, value.getDistrict());
+	}
+	
+	/**
+	 *  Update a single row in the school table for postal code
+	 *  @param value 
+	 *  		Postal Code for a single row
+	 *  @param index
+	 *  		the row to be updated
+	 */
+	private void updateTablePostalRow(PostalCodeValue value, int index){
+		int row = index + 1;
+		// Populate Postal code
+		schoolFlexTable.setText(row,3, value.getCode());
+	}
 }
