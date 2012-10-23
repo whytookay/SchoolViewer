@@ -77,6 +77,9 @@ public class BCDistricts {
 		return temp;
 	}
 	
+	/*
+	 * 
+	 */
 	private void populateSchools() throws IOException
 	{
 		TxtSplitter splitter = new TxtSplitter("http://www.bced.gov.bc.ca/reporting/odefiles/SchoolLocations_Current.txt");
@@ -97,6 +100,9 @@ public class BCDistricts {
 		}
 	}
 	
+	/*
+	 * returns the list of Districts in BC
+	 */
 	public ArrayList<District> getDistricts()
 	{
 		return districts;

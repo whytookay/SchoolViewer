@@ -9,6 +9,8 @@ public class SchoolValue implements Serializable {
 	String location;
 	String district;
 	
+	public SchoolValue(){}
+	
 	public SchoolValue(String name, ArrayList<String> values, String location, String district) {
 		this.name = name;
 		this.values = values;
