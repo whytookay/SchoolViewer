@@ -18,7 +18,6 @@ public class District {
 		this.city = city;
 		this.phone = phone;
 		this.website = website;
-		buildSchools();
 	}
 	
 	public void addSchool(School school)
@@ -42,9 +41,9 @@ public class District {
 		return website;
 	}
 	
-	private void buildSchools()
+	public ArrayList<School> getSchools()
 	{
-		return;
+		return schools;
 	}
 	
 	public ArrayList<String> getValues()

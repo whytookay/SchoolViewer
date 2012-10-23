@@ -11,9 +11,10 @@ public class School {
 	private String city;
 	private String eduLevel;
 	private String grades;
+	private String pCode;
 	private District district;
 	
-	public School(String name, String location, String phone, String pubOrInd, String city, String eduLevel, String grades, District district) {
+	public School(String name, String location, String phone, String pubOrInd, String city, String eduLevel, String grades, String pCode, District district) {
 		this.name = name;
 		this.location = location;
 		this.phone = phone;
@@ -22,6 +23,7 @@ public class School {
 		this.eduLevel = eduLevel;
 		this.grades = grades;
 		this.district = district;
+		this.pCode = pCode;
 	}
 
 	public String getName()
@@ -59,6 +61,11 @@ public class School {
 		return grades;
 	}
 	
+	public String getPCode()
+	{
+		return pCode;
+	}
+	
 	public District getDistrict()
 	{
 		return district;
@@ -68,5 +75,11 @@ public class School {
 	{
 		return district.getValues();
 	}
+	
+//	public void printSchool()
+//	{
+//		System.out.println(name + " " + location + " " + phone + " " + pubOrInd + " "
+//				+ city + " " + eduLevel + " " + grades + " " + pCode);
+//	}
 	
 }

@@ -13,7 +13,8 @@ public class BCDistricts {
 	
 //	public static void main(String args[]) throws IOException{
 //		BCDistricts temp = new BCDistricts();
-//		temp.printSchools();
+//		School sTemp = temp.getDistricts().get(0).getSchools().get(0);
+//		sTemp.printSchool();
 //	}
 
 	ArrayList<District> districts = new ArrayList<District>();
@@ -88,8 +89,8 @@ public class BCDistricts {
 			{
 				if (tempLine.get(3).equals(districts.get(j).getName()))
 				{
-					School temp = new School(tempLine.get(5),tempLine.get(7),tempLine.get(10),tempLine.get(1),tempLine.get(8)
-							,tempLine.get(15),tempLine.get(16),districts.get(j));
+					School temp = new School(tempLine.get(5),tempLine.get(7),tempLine.get(11),tempLine.get(1),tempLine.get(8)
+							,tempLine.get(15),tempLine.get(16),tempLine.get(10),districts.get(j));
 					districts.get(j).addSchool(temp);
 				}
 			}
