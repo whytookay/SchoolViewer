@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Anchor;
+import java.util.ArrayList;
 
 
 /**
@@ -43,8 +44,8 @@ public class SchoolViewer implements EntryPoint {
 	  private Label loginLabel = new Label("Please sign in to your Google Account to access the StockWatcher application.");
 	  private Anchor signInLink = new Anchor("Sign In");
 	  private Anchor signOutLink = new Anchor("Sign Out");
-	
-	
+	  private ArrayList<String> schools = new ArrayList<String>();	
+	  private SchoolValueServiceAsync schoolValueSvc = GWT.create(SchoolValueService.class);
 	/**
 	 * This is the entry point method.
 	 */
@@ -120,7 +121,7 @@ public class SchoolViewer implements EntryPoint {
 		nameField.setFocus(true);
 		nameField.selectAll();
 
-		// Create the popup dialog box
+/*		// Create the popup dialog box
 		final DialogBox dialogBox = new DialogBox();
 		dialogBox.setText("Remote Procedure Call");
 		dialogBox.setAnimationEnabled(true);
@@ -146,7 +147,7 @@ public class SchoolViewer implements EntryPoint {
 				sendButton.setEnabled(true);
 				sendButton.setFocus(true);
 			}
-		});
+		});*/
 
 		// Create a handler for the sendButton and nameField
 		class MyHandler implements ClickHandler, KeyUpHandler {
@@ -170,7 +171,12 @@ public class SchoolViewer implements EntryPoint {
 			 * Send the name from the nameField to the server and wait for a response.
 			 */
 			private void sendDatatoServer() {
-				// First, we validate the input.
+				// add schools to the table
+				refreshSchoolList();
+				
+				
+				
+/*				// First, we validate the input.
 				errorLabel.setText("");
 				String textToServer = nameField.getText();
 				if (!FieldVerifier.isValidName(textToServer)) {
@@ -203,7 +209,7 @@ public class SchoolViewer implements EntryPoint {
 								dialogBox.center();
 								closeButton.setFocus(true);
 							}
-						});
+						});*/
 			}
 		}
 
@@ -212,4 +218,44 @@ public class SchoolViewer implements EntryPoint {
 		sendButton.addClickHandler(handler);
 		nameField.addKeyUpHandler(handler);
 	}
+	private void refreshSchoolList(){
+	    // Initialize the service proxy.
+	    if (schoolValueSvc == null) {
+	      schoolValueSvc = GWT.create(SchoolValueService.class);
+	    }
+	    
+	    // Set up the callback object.
+	    AsyncCallback <ArrayList<SchoolValue>> callback = new AsyncCallback <ArrayList<SchoolValue>>() {
+	      public void onFailure(Throwable caught) {
+	        // TODO: Do something with errors.
+	      }
+
+	      public void onSuccess(ArrayList<SchoolValue> result) {
+	        updateTable(result);
+	      }
+	    };
+	    
+	    // Make the call to the stock price service.
+	    schoolValueSvc.getValues(schools.toArray(new String[0]), callback);
+	}
+	
+	  /**
+	   * Update the Price and Change fields all the rows in the school table.
+	   *
+	   * @param values School data for all rows.
+	   */
+	  private void updateTable(ArrayList<SchoolValue> values) {
+	    for (int i = 0; i < values.size(); i++) {
+	      updateTable(values.get(i));
+	    }
+	  }
+	  
+	  /**
+	   * Update a single row in the stock table.
+	   *
+	   * @param price Stock data for a single row.
+	   */
+	  private void updateTable(SchoolValue value) {
+	  
+	  }
 }
