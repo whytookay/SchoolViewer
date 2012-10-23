@@ -46,6 +46,7 @@ public class SchoolViewer implements EntryPoint {
 	  private Anchor signOutLink = new Anchor("Sign Out");
 	  private ArrayList<String> schools = new ArrayList<String>();	
 	  private SchoolValueServiceAsync schoolValueSvc = GWT.create(SchoolValueService.class);
+	  final FlexTable schoolFlexTable = new FlexTable();
 	/**
 	 * This is the entry point method.
 	 */
@@ -86,8 +87,6 @@ public class SchoolViewer implements EntryPoint {
 	    signOutLink.setHref(loginInfo.getLogoutUrl());
 		
 		
-		
-	    final FlexTable schoolFlexTable = new FlexTable();
 		final Button sendButton = new Button("Search");
 		final TextBox nameField = new TextBox();
 		nameField.setText("GWT User");
@@ -95,11 +94,11 @@ public class SchoolViewer implements EntryPoint {
 		
 	    // Create table for stock data.
 	    schoolFlexTable.setText(0, 0, "Name");
-	    schoolFlexTable.setText(0, 1, "Value");
-	    schoolFlexTable.setText(0, 2, "Location");
-	    schoolFlexTable.setText(0, 3, "District");
-	    schoolFlexTable.setText(0, 4, "Postal Code");
-	    schoolFlexTable.setText(4, 4, "V6K 2J0");
+	    //schoolFlexTable.setText(0, 1, "Value");
+	   //.setText(0, 2, "Location");
+	    schoolFlexTable.setText(0, 1, "District");
+	    schoolFlexTable.setText(0, 2, "Postal Code");
+	    schoolFlexTable.setText(4, 2, "V6K 2J0");
 		
 
 		// We can add style names to widgets
@@ -257,5 +256,10 @@ public class SchoolViewer implements EntryPoint {
 	   */
 	  private void updateTable(SchoolValue value) {
 	  
+		  int row = schools.indexOf(value.getName()) + 1;
+		  
+		  // Populate name and district
+		  schoolFlexTable.setText(row, 0, value.getName() );
+		  schoolFlexTable.setText(row, 1, value.getDistrict());
 	  }
 }

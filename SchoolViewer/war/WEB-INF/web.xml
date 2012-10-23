@@ -39,5 +39,15 @@
     <servlet-name>SystemServiceServlet</servlet-name>
     <url-pattern>/_ah/spi/*</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>schoolValueServiceImpl</servlet-name>
+    <servlet-class>com.google.gwt.sample.schoolviewer.server.SchoolValueServiceImpl</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>schoolValueServiceImpl</servlet-name>
+    <url-pattern>/schoolviewer/schoolValues</url-pattern>
+  </servlet-mapping>
 
 </web-app>
