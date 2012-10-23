@@ -16,8 +16,8 @@ import com.gwt.schoolviewer.client.SchoolValue;
 import com.gwt.schoolviewer.client.NotLoggedInException;
 
 public class PostalCodeServiceImpl extends RemoteServiceServlet implements PostalCodeService {
-	private static final PersistenceManagerFactory PMF =
-			JDOHelper.getPersistenceManagerFactory("transactions-optional");// TODO: verify what "transactions-optional" means
+	//private static final PersistenceManagerFactory PMF =
+	//		JDOHelper.getPersistenceManagerFactory("transactions-optional");// TODO: verify what "transactions-optional" means
 
 	private ArrayList<PostalCode> codes = new ArrayList<PostalCode>();//TODO: remove this, we don't seem to need it
 
@@ -40,13 +40,14 @@ public class PostalCodeServiceImpl extends RemoteServiceServlet implements Posta
 
 	@Override
 	public Boolean addCode(PostalCodeValue pCode) throws NotLoggedInException {
-		checkLoggedIn();
-		PersistenceManager pm = getPersistenceManager();
-		try {
-			pm.makePersistent(new PostalCode(getUser(), pCode.getCode()));
-		} finally {
-			pm.close();
-		}
+		//checkLoggedIn();
+		//PersistenceManager pm = getPersistenceManager();
+		//try {
+		//	pm.makePersistent(new PostalCode(getUser(), pCode.getCode()));
+		//} finally {
+		//	pm.close();
+		//}
+		codes.add(new PostalCode(getUser(), pCode.getCode()));
 		return true;
 	}
 
@@ -77,19 +78,19 @@ public class PostalCodeServiceImpl extends RemoteServiceServlet implements Posta
 		return schoolValues;
 	}
 
-	private void checkLoggedIn() throws NotLoggedInException {
-		if (getUser() == null) {
-			throw new NotLoggedInException("Not logged in.");
-		}
-	}
+	//private void checkLoggedIn() throws NotLoggedInException {
+	//	if (getUser() == null) {
+	//		throw new NotLoggedInException("Not logged in.");
+	//	}
+	//}
 
 	private User getUser() {
 		UserService userService = UserServiceFactory.getUserService();
 		return userService.getCurrentUser();
 	}
 
-	private PersistenceManager getPersistenceManager() {
-		return PMF.getPersistenceManager();
-	}
+	//private PersistenceManager getPersistenceManager() {
+	//	return PMF.getPersistenceManager();
+	//}
 
 }
