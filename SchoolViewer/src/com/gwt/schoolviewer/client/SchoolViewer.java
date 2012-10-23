@@ -158,21 +158,8 @@ public class SchoolViewer implements EntryPoint {
 			}
 		};
 
-		// Set up the callback object for Postal Codes
-		AsyncCallback<ArrayList<PostalCodeValue>> callbackPostal = new AsyncCallback<ArrayList<PostalCodeValue>>() {
-			public void onFailure(Throwable caught) {
-				// TODO: Do something with errors.
-			}
-
-			public void onSuccess(ArrayList<PostalCodeValue> resultcodes) {
-				schoolFlexTable.setText(1,3, "onSuccess is called");
-				schoolFlexTable.setText(2, 3, resultcodes.get(0).getCode()); //This means the resultcodes array is empty
-				updateTablePostal(resultcodes);
-			}
-		};
 		// Make the call to the school price service.
-		schoolValueSvc.getValues(schools.toArray(new String[0]), callback);
-		postalCodeSvc.getCode(callbackPostal);
+		schoolValueSvc.getValues(callback);
 	}
 
 	/**
@@ -184,18 +171,6 @@ public class SchoolViewer implements EntryPoint {
 	private void updateTableSchool(ArrayList<SchoolValue> values) {
 		for (int i = 0; i < values.size(); i++) {
 			updateTableSchoolRow(values.get(i), i);
-		}
-	}
-	
-	/**
-	 * Update the Postal Code -> all the rows in the school table.
-	 * 
-	 * @param values
-	 *            Postal Code data for all rows.
-	 */
-	private void updateTablePostal(ArrayList<PostalCodeValue> values) {
-		for (int i = 0; i < values.size(); i++) {
-			updateTablePostalRow(values.get(i), i);
 		}
 	}
 
@@ -215,19 +190,6 @@ public class SchoolViewer implements EntryPoint {
 		schoolFlexTable.setText(row, 0, value.getName());
 		schoolFlexTable.setText(row, 1, value.getLocation());
 		schoolFlexTable.setText(row, 2, value.getDistrict());
-		//schoolFlexTable.setText(row, 3, value.getpCode());// TODO: CHECK IF THIS IS FINE
-	}
-	
-	/**
-	 *  Update a single row in the school table for postal code
-	 *  @param value 
-	 *  		Postal Code for a single row
-	 *  @param index
-	 *  		the row to be updated
-	 */
-	private void updateTablePostalRow(PostalCodeValue value, int index){
-		int row = index + 1;
-		// Populate Postal code
-		schoolFlexTable.setText(row, 3, value.getCode()); // TODO: CHECK IF THIS IS FINE
+		schoolFlexTable.setText(row, 3, value.getpCode());// TODO: CHECK IF THIS IS FINE
 	}
 }

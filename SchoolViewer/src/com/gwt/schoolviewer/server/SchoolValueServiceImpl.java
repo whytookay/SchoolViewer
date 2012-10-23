@@ -9,7 +9,7 @@ import com.gwt.schoolviewer.client.SchoolValueService;
 public class SchoolValueServiceImpl extends RemoteServiceServlet implements SchoolValueService {
 
 	@Override
-	public ArrayList<SchoolValue> getValues(String[] schools) {
+	public ArrayList<SchoolValue> getValues() {
 		// populate a list of districts 
 		ArrayList<District> districts = BCDistricts.getInstance().getDistricts();
 		
