@@ -234,7 +234,7 @@ public class SchoolViewer implements EntryPoint {
 	      }
 	    };
 	    
-	    // Make the call to the stock price service.
+	    // Make the call to the school price service.
 	    schoolValueSvc.getValues(schools.toArray(new String[0]), callback);
 	}
 	
@@ -245,7 +245,7 @@ public class SchoolViewer implements EntryPoint {
 	   */
 	  private void updateTable(ArrayList<SchoolValue> values) {
 	    for (int i = 0; i < values.size(); i++) {
-	      updateTable(values.get(i));
+	      updateTable(values.get(i), i);
 	    }
 	  }
 	  
@@ -254,9 +254,9 @@ public class SchoolViewer implements EntryPoint {
 	   *
 	   * @param price Stock data for a single row.
 	   */
-	  private void updateTable(SchoolValue value) {
+	  private void updateTable(SchoolValue value, int index) {
 	  
-		  int row = schools.indexOf(value.getName()) + 1;
+		  int row = index + 1;
 		  
 		  // Populate name and district
 		  schoolFlexTable.setText(row, 0, value.getName() );
