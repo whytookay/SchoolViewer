@@ -40,14 +40,15 @@
     <url-pattern>/_ah/spi/*</url-pattern>
   </servlet-mapping>
   
-  <servlet>
+    <servlet>
     <servlet-name>schoolValueServiceImpl</servlet-name>
-    <servlet-class>com.google.gwt.sample.schoolviewer.server.SchoolValueServiceImpl</servlet-class>
+    <servlet-class>com.gwt.schoolviewer.server.SchoolValueServiceImpl</servlet-class>
   </servlet>
 
   <servlet-mapping>
     <servlet-name>schoolValueServiceImpl</servlet-name>
-    <url-pattern>/schoolviewer/schoolValues</url-pattern>
+    <url-pattern>/schoolviewer/schoolvalue</url-pattern>
   </servlet-mapping>
-
+  
+  
 </web-app>
