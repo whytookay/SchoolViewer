@@ -71,6 +71,11 @@ public class School {
 		return district;
 	}
 	
+//	public ArrayList<Value> getValues()
+//	{
+//		return district.getValues();
+//	}
+	
 	public ArrayList<String> getValues()
 	{
 		return district.getValues();

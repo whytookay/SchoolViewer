@@ -9,7 +9,8 @@ public class District {
 	String phone;
 	String website;
 	
-	ArrayList <String>values = new ArrayList<String> ();
+//	ArrayList <Value>values = new ArrayList<Value> ();
+	ArrayList<String> values = new ArrayList<String> ();
 	
 	ArrayList <School>schools = new ArrayList<School> ();
 	
@@ -19,6 +20,12 @@ public class District {
 		this.phone = phone;
 		this.website = website;
 	}
+	
+//	public void addValue(String nName, Double nVal)
+//	{
+//		Value val = new Value(nName, nVal);
+//		values.add(val);
+//	}
 	
 	public void addSchool(School school)
 	{
@@ -45,6 +52,11 @@ public class District {
 	{
 		return schools;
 	}
+	
+//	public ArrayList<Value> getValues()
+//	{
+//		return values;
+//	}
 	
 	public ArrayList<String> getValues()
 	{
