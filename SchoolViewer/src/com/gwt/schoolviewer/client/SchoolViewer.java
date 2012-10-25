@@ -10,6 +10,7 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
@@ -32,6 +33,8 @@ public class SchoolViewer implements EntryPoint {
 			+ "attempting to contact the server. Please check your network "
 			+ "connection and try again.";
 
+	private LoginInfo loginInfo = null;
+
 	/**
 	 * Create a remote service proxy to talk to the server-side Greeting
 	 * service.
@@ -39,7 +42,6 @@ public class SchoolViewer implements EntryPoint {
 	private final GreetingServiceAsync greetingService = GWT
 			.create(GreetingService.class);
 
-	private LoginInfo loginInfo = null;
 	private VerticalPanel loginPanel = new VerticalPanel();
 	private Label loginLabel = new Label(
 			"Please sign in to your Google Account to access the StockWatcher application.");
@@ -90,17 +92,20 @@ public class SchoolViewer implements EntryPoint {
 
 		final Button sendButton = new Button("Search");
 		final TextBox nameField = new TextBox();
-		nameField.setText("GWT User");
-		final Label errorLabel = new Label();
+		nameField.setText("Enter school information:");
+		final Button compButton = new Button("Compare");
+		
 
 		// Create table for stock data.
 		schoolFlexTable.setText(0, 0, "Name");
 		schoolFlexTable.setText(0, 1, "Location");
 		schoolFlexTable.setText(0, 2, "District");
 		schoolFlexTable.setText(0, 3, "Postal Code");
+		schoolFlexTable.setText(0,4, "Select");
 
 		// We can add style names to widgets
 		sendButton.addStyleName("sendButton");
+		compButton.addStyleName("compButton");
 
 		// Add styles to elements in the stock list table.
 		schoolFlexTable.setCellPadding(6);
@@ -111,13 +116,12 @@ public class SchoolViewer implements EntryPoint {
 		// Use RootPanel.get() to get the entire body element
 		RootPanel.get("nameFieldContainer").add(nameField);
 		RootPanel.get("sendButtonContainer").add(sendButton);
+		RootPanel.get("compButtonContainer").add(compButton);
 		RootPanel.get("flexTableContainer").add(schoolFlexTable);
-		RootPanel.get("errorLabelContainer").add(errorLabel);
 		// Focus the cursor on the name field when the app loads
 		nameField.setFocus(true);
 		nameField.selectAll();
 
-		// create popup dialog box here old implementation
 
 		// Create a handler for the sendButton and nameField
 		class MyHandler implements ClickHandler, KeyUpHandler {
@@ -169,8 +173,9 @@ public class SchoolViewer implements EntryPoint {
 	 *            School data for all rows.
 	 */
 	private void updateTableSchool(ArrayList<SchoolValue> values) {
-		for (int i = 0; i < values.size(); i++) {
-			updateTableSchoolRow(values.get(i), i);
+		for (int i = 0; i < 100; i++) {
+			final CheckBox checkBox = new CheckBox(); // create new checkbox for each row
+			updateTableSchoolRow(values.get(i), i, checkBox);
 		}
 	}
 
@@ -182,7 +187,7 @@ public class SchoolViewer implements EntryPoint {
 	 * @param index
 	 * 			  the row to be updated
 	 */
-	private void updateTableSchoolRow(SchoolValue value, int index) {
+	private void updateTableSchoolRow(SchoolValue value, int index, CheckBox checkBox) {
 
 		int row = index + 1;
 
@@ -191,5 +196,9 @@ public class SchoolViewer implements EntryPoint {
 		schoolFlexTable.setText(row, 1, value.getLocation());
 		schoolFlexTable.setText(row, 2, value.getDistrict());
 		schoolFlexTable.setText(row, 3, value.getpCode());// TODO: CHECK IF THIS IS FINE
+		schoolFlexTable.setWidget(row, 4, checkBox);
+
+
+		
 	}
 }
