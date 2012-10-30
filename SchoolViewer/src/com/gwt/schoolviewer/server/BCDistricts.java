@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 
+import com.google.maps.gwt.client.LatLng;
+
 public class BCDistricts {
 	
     private static final BCDistricts instance = new BCDistricts();
@@ -95,9 +97,12 @@ public class BCDistricts {
 			{
 				if (tempLine.get(3).equals(districts.get(j).getName()))
 				{
+					double lat = Double.parseDouble(tempLine.get(13));
+					double lon = Double.parseDouble(tempLine.get(14));
+					LatLng gpsLoc = LatLng.create(lat, lon);
 					schoolnames.add(tempLine.get(5));
 					School temp = new School(tempLine.get(5),tempLine.get(7),tempLine.get(11),tempLine.get(1),tempLine.get(8)
-							,tempLine.get(15),tempLine.get(16),tempLine.get(10),districts.get(j));
+							,tempLine.get(15),tempLine.get(16),tempLine.get(10),districts.get(j), gpsLoc);
 					districts.get(j).addSchool(temp);
 				}
 			}
