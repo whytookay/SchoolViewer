@@ -1,6 +1,7 @@
 package com.gwt.schoolviewer.server;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 public class BCDistricts {
@@ -14,7 +15,7 @@ public class BCDistricts {
 //	public static void main(String args[]) throws IOException{
 //		BCDistricts temp = new BCDistricts();
 //		School sTemp = temp.getDistricts().get(0).getSchools().get(0);
-//		sTemp.printSchool();
+//		//sTemp.printSchool();
 //	}
 
 	ArrayList<District> districts = new ArrayList<District>();
@@ -24,6 +25,7 @@ public class BCDistricts {
 		try{
 		populateDistricts(pageToList());
 		populateSchools();
+		//populateValues();
 		} catch (IOException e){}
 	}
 	
@@ -102,6 +104,42 @@ public class BCDistricts {
 		}
 	}
 	
+	private void populateValues() throws IOException
+	{
+		populateClassSize();
+	}
+	
+	private void populateClassSize() throws IOException
+	{
+		valSplitter splitter = new valSplitter("http://www.bced.gov.bc.ca/reporting/odefiles/ClassSizeCurr.txt");
+		ArrayList<ArrayList<String>> tempList = transpose(splitter.split());
+		//System.out.println("is it here?");
+		int startIndex = -1;
+		for(int i = 0; i < tempList.size(); i++)
+		{
+			if(schoolnames.contains(tempList.get(i).get(6)))
+			{
+				startIndex = i;
+				break;
+			}
+		}
+		
+		if(startIndex >= 0)
+		{
+			for(int i = 1; i < startIndex; i++)
+			{
+				tempList.remove(0);
+			}
+			
+			for(int i = 0; i < tempList.size(); i++)
+			{
+				System.out.println(tempList.get(i).get(6));
+			}
+		}
+		
+
+	}
+	
 	/*
 	 * returns the list of Districts in BC
 	 */
@@ -109,13 +147,5 @@ public class BCDistricts {
 	{
 		return districts;
 	}
-	
-//	public void printSchools()
-//	{
-//		for(int i = 0; i < districts.size(); i++)
-//		{
-//			districts.get(i).printSchools();
-//		}
-//	}
 
 }
