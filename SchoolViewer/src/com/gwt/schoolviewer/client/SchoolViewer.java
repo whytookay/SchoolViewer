@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
@@ -61,6 +62,7 @@ public class SchoolViewer implements EntryPoint {
 			.create(PostalCodeService.class);
 	final FlexTable schoolFlexTable = new FlexTable();
 	MapOptions options  = MapOptions.create() ;
+	final FlowPanel mapFlowPanel = new FlowPanel();
 
 	/**
 	 * This is the entry point method.
@@ -104,14 +106,12 @@ public class SchoolViewer implements EntryPoint {
 	    options.setScaleControl(true) ;
 	    options.setScrollwheel(true) ;
 
-	    SimplePanel widg = new SimplePanel() ;
+	    mapFlowPanel.setSize("40%","40%");
 
-	    widg.setSize("40%","40%");
+	    GoogleMap theMap = GoogleMap.create( mapFlowPanel.getElement(), options ) ;
 
-	    GoogleMap theMap = GoogleMap.create( widg.getElement(), options ) ;
-
-	    RootLayoutPanel.get().add( widg ) ;
-		
+	    RootLayoutPanel.get().add( mapFlowPanel ) ;
+		// RootPanel.get("flowPanelContainer").add(mapFlowPanel);
 		
 		
 		

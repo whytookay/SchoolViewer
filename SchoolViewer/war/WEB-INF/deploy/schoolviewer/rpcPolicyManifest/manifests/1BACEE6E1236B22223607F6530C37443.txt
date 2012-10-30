@@ -1,0 +1,2 @@
+serviceClass: com.gwt.schoolviewer.client.SchoolValueService
+path: 2D0F23560B121F44928C1A82E620319F.gwt.rpc

@@ -1,0 +1,2 @@
+serviceClass: com.gwt.schoolviewer.client.PostalCodeService
+path: 0A61169B0FDCC1F881D28DF596FF4170.gwt.rpc
