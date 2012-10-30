@@ -18,6 +18,7 @@ public class BCDistricts {
 //	}
 
 	ArrayList<District> districts = new ArrayList<District>();
+	private ArrayList<String> schoolnames = new ArrayList<String>();
 	
 	public BCDistricts() {
 		try{
@@ -92,6 +93,7 @@ public class BCDistricts {
 			{
 				if (tempLine.get(3).equals(districts.get(j).getName()))
 				{
+					schoolnames.add(tempLine.get(5));
 					School temp = new School(tempLine.get(5),tempLine.get(7),tempLine.get(11),tempLine.get(1),tempLine.get(8)
 							,tempLine.get(15),tempLine.get(16),tempLine.get(10),districts.get(j));
 					districts.get(j).addSchool(temp);

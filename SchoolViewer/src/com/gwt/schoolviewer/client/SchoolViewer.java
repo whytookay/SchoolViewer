@@ -26,6 +26,8 @@ import com.google.maps.gwt.client.GoogleMap;
 import com.google.maps.gwt.client.LatLng;
 import com.google.maps.gwt.client.MapOptions;
 import com.google.maps.gwt.client.MapTypeId;
+import com.google.maps.gwt.client.Marker;
+import com.google.maps.gwt.client.MarkerOptions;
 
 import java.util.ArrayList;
 
@@ -62,7 +64,7 @@ public class SchoolViewer implements EntryPoint {
 			.create(PostalCodeService.class);
 	final FlexTable schoolFlexTable = new FlexTable();
 	MapOptions options  = MapOptions.create() ;
-	final SimplePanel mapSimplePanel = new SimplePanel();
+	
 
 	/**
 	 * This is the entry point method.
@@ -99,25 +101,37 @@ public class SchoolViewer implements EntryPoint {
 	private void loadschoolviewer() {
 		// load map 
 	    options.setCenter(LatLng.create( 49.242931,-123.184547));   
-	    options.setZoom( 6 ) ;
+	    options.setZoom( 12 ) ;
 	    options.setMapTypeId( MapTypeId.ROADMAP );
 	    options.setDraggable(true);
 	    options.setMapTypeControl(true);
 	    options.setScaleControl(true) ;
 	    options.setScrollwheel(true) ;
-
-	    mapSimplePanel.setSize("40%","40%");
-
 	    
+	    SimplePanel mapPanel = new SimplePanel() ;
+	    mapPanel.setSize("500px","500px");
+	    mapPanel.setVisible(true);
 
-	    //RootLayoutPanel.get().add( mapSimplePanel ) ;
-		RootPanel.get("simplePanelContainer").add(mapSimplePanel);
+	    GoogleMap theMap = GoogleMap.create( mapPanel.getElement(), options ) ;
+	   
+	    //sample of how to add marker-------------
+	    MarkerOptions markerOptions = MarkerOptions.create(); 
+	    markerOptions.setMap(theMap); 
+	    markerOptions.setTitle("Hello World!"); 
+	    markerOptions.setDraggable(false); 
+	    markerOptions.setPosition(LatLng.create( 49.242931,-123.184547));
+	    Marker start = Marker.create(markerOptions);
 	    
-	    GoogleMap theMap = GoogleMap.create( mapSimplePanel.getElement(), options ) ;
+	    //-----------------
+	    
+	    
+	    
+	   // RootLayoutPanel.get().add( mapFlowPanel ) ;
+	    
 		
-		//final TextBox testBox = new TextBox();
-		//testBox.setText("this is a test");
-		//RootPanel.get("simplePanelContainer").add(testBox);
+		
+		
+		
 		
 		
 		// Set up sign out hyperlink.
@@ -147,10 +161,12 @@ public class SchoolViewer implements EntryPoint {
 
 		// Add the nameField and sendButton to the RootPanel
 		// Use RootPanel.get() to get the entire body element
+		RootPanel.get("mapPanelContainer").add(mapPanel);
 		RootPanel.get("nameFieldContainer").add(nameField);
 		RootPanel.get("sendButtonContainer").add(sendButton);
 		RootPanel.get("compButtonContainer").add(compButton);
 		RootPanel.get("flexTableContainer").add(schoolFlexTable);
+		
 		// Focus the cursor on the name field when the app loads
 		nameField.setFocus(true);
 		nameField.selectAll();

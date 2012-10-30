@@ -1,6 +1,7 @@
 package com.gwt.schoolviewer.server;
 
 import java.util.ArrayList;
+import com.google.maps.gwt.client.LatLng;
 
 public class School {
 
@@ -13,8 +14,11 @@ public class School {
 	private String grades;
 	private String pCode;
 	private District district;
+	private LatLng gpsloc;
 	
-	public School(String name, String location, String phone, String pubOrInd, String city, String eduLevel, String grades, String pCode, District district) {
+	public School(String name, String location, String phone, String pubOrInd,
+						String city, String eduLevel, String grades, String pCode,
+							District district, LatLng gpsloc) {
 		this.name = name;
 		this.location = location;
 		this.phone = phone;
@@ -24,6 +28,12 @@ public class School {
 		this.grades = grades;
 		this.district = district;
 		this.pCode = pCode;
+		this.gpsloc = gpsloc;
+	}
+	
+	public LatLng getGPSloc()
+	{
+		return gpsloc;
 	}
 
 	public String getName()
