@@ -15,10 +15,17 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.maps.gwt.client.GoogleMap;
+import com.google.maps.gwt.client.LatLng;
+import com.google.maps.gwt.client.MapOptions;
+import com.google.maps.gwt.client.MapTypeId;
+
 import java.util.ArrayList;
 
 /**
@@ -53,6 +60,7 @@ public class SchoolViewer implements EntryPoint {
 	private PostalCodeServiceAsync postalCodeSvc = GWT
 			.create(PostalCodeService.class);
 	final FlexTable schoolFlexTable = new FlexTable();
+	MapOptions options  = MapOptions.create() ;
 
 	/**
 	 * This is the entry point method.
@@ -87,6 +95,29 @@ public class SchoolViewer implements EntryPoint {
 	}
 
 	private void loadschoolviewer() {
+		// load map 
+	    options.setCenter(LatLng.create( 49.242931,-123.184547));   
+	    options.setZoom( 6 ) ;
+	    options.setMapTypeId( MapTypeId.ROADMAP );
+	    options.setDraggable(true);
+	    options.setMapTypeControl(true);
+	    options.setScaleControl(true) ;
+	    options.setScrollwheel(true) ;
+
+	    SimplePanel widg = new SimplePanel() ;
+
+	    widg.setSize("40%","40%");
+
+	    GoogleMap theMap = GoogleMap.create( widg.getElement(), options ) ;
+
+	    RootLayoutPanel.get().add( widg ) ;
+		
+		
+		
+		
+		
+		
+		
 		// Set up sign out hyperlink.
 		signOutLink.setHref(loginInfo.getLogoutUrl());
 
