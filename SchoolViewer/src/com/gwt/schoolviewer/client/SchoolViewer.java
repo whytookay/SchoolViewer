@@ -62,7 +62,7 @@ public class SchoolViewer implements EntryPoint {
 			.create(PostalCodeService.class);
 	final FlexTable schoolFlexTable = new FlexTable();
 	MapOptions options  = MapOptions.create() ;
-	final FlowPanel mapFlowPanel = new FlowPanel();
+	final SimplePanel mapSimplePanel = new SimplePanel();
 
 	/**
 	 * This is the entry point method.
@@ -106,16 +106,18 @@ public class SchoolViewer implements EntryPoint {
 	    options.setScaleControl(true) ;
 	    options.setScrollwheel(true) ;
 
-	    mapFlowPanel.setSize("40%","40%");
+	    mapSimplePanel.setSize("40%","40%");
 
-	    GoogleMap theMap = GoogleMap.create( mapFlowPanel.getElement(), options ) ;
+	    
 
-	    RootLayoutPanel.get().add( mapFlowPanel ) ;
-		// RootPanel.get("flowPanelContainer").add(mapFlowPanel);
+	    //RootLayoutPanel.get().add( mapSimplePanel ) ;
+		RootPanel.get("simplePanelContainer").add(mapSimplePanel);
+	    
+	    GoogleMap theMap = GoogleMap.create( mapSimplePanel.getElement(), options ) ;
 		
-		
-		
-		
+		//final TextBox testBox = new TextBox();
+		//testBox.setText("this is a test");
+		//RootPanel.get("simplePanelContainer").add(testBox);
 		
 		
 		// Set up sign out hyperlink.
