@@ -14,11 +14,13 @@ public class School {
 	private String grades;
 	private String pCode;
 	private District district;
-	private LatLng gpsloc;
+	private Double latitude;
+	private Double longitude;
+//	private LatLng gpsloc;
 	
 	public School(String name, String location, String phone, String pubOrInd,
 						String city, String eduLevel, String grades, String pCode,
-							District district, LatLng gpsloc) {
+							District district, Double latitude, Double longitude) {
 		this.name = name;
 		this.location = location;
 		this.phone = phone;
@@ -28,12 +30,25 @@ public class School {
 		this.grades = grades;
 		this.district = district;
 		this.pCode = pCode;
-		this.gpsloc = gpsloc;
+		this.latitude = latitude;
+		this.longitude = longitude;
+//		this.gpsloc = gpsloc;
+		
 	}
 	
-	public LatLng getGPSloc()
+//	public LatLng getGPSloc()
+//	{
+//		return gpsloc;
+//	}
+	
+	public Double getLat()
 	{
-		return gpsloc;
+		return latitude;
+	}
+	
+	public Double getLon()
+	{
+		return longitude;
 	}
 
 	public String getName()

@@ -97,12 +97,12 @@ public class BCDistricts {
 			{
 				if (tempLine.get(3).equals(districts.get(j).getName()))
 				{
-					double lat = Double.parseDouble(tempLine.get(13));
-					double lon = Double.parseDouble(tempLine.get(14));
-					LatLng gpsLoc = LatLng.create(lat, lon);
+					Double lat = Double.parseDouble(tempLine.get(13));
+					Double lon = Double.parseDouble(tempLine.get(14));
+//					LatLng gpsLoc = LatLng.create(lat, lon);
 					schoolnames.add(tempLine.get(5));
 					School temp = new School(tempLine.get(5),tempLine.get(7),tempLine.get(11),tempLine.get(1),tempLine.get(8)
-							,tempLine.get(15),tempLine.get(16),tempLine.get(10),districts.get(j), gpsLoc);
+							,tempLine.get(15),tempLine.get(16),tempLine.get(10),districts.get(j), lat, lon);
 					districts.get(j).addSchool(temp);
 				}
 			}
