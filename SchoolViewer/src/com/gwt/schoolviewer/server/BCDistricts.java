@@ -1,7 +1,10 @@
 package com.gwt.schoolviewer.server;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
+
+import com.google.maps.gwt.client.LatLng;
 
 public class BCDistricts {
 	
@@ -14,7 +17,7 @@ public class BCDistricts {
 //	public static void main(String args[]) throws IOException{
 //		BCDistricts temp = new BCDistricts();
 //		School sTemp = temp.getDistricts().get(0).getSchools().get(0);
-//		sTemp.printSchool();
+//		//sTemp.printSchool();
 //	}
 
 	ArrayList<District> districts = new ArrayList<District>();
@@ -24,6 +27,7 @@ public class BCDistricts {
 		try{
 		populateDistricts(pageToList());
 		populateSchools();
+		//populateValues();
 		} catch (IOException e){}
 	}
 	
@@ -93,13 +97,52 @@ public class BCDistricts {
 			{
 				if (tempLine.get(3).equals(districts.get(j).getName()))
 				{
+					double lat = Double.parseDouble(tempLine.get(13));
+					double lon = Double.parseDouble(tempLine.get(14));
+					LatLng gpsLoc = LatLng.create(lat, lon);
 					schoolnames.add(tempLine.get(5));
 					School temp = new School(tempLine.get(5),tempLine.get(7),tempLine.get(11),tempLine.get(1),tempLine.get(8)
-							,tempLine.get(15),tempLine.get(16),tempLine.get(10),districts.get(j));
+							,tempLine.get(15),tempLine.get(16),tempLine.get(10),districts.get(j), gpsLoc);
 					districts.get(j).addSchool(temp);
 				}
 			}
 		}
+	}
+	
+	private void populateValues() throws IOException
+	{
+		populateClassSize();
+	}
+	
+	private void populateClassSize() throws IOException
+	{
+		valSplitter splitter = new valSplitter("http://www.bced.gov.bc.ca/reporting/odefiles/ClassSizeCurr.txt");
+		ArrayList<ArrayList<String>> tempList = transpose(splitter.split());
+		//System.out.println("is it here?");
+		int startIndex = -1;
+		for(int i = 0; i < tempList.size(); i++)
+		{
+			if(schoolnames.contains(tempList.get(i).get(6)))
+			{
+				startIndex = i;
+				break;
+			}
+		}
+		
+		if(startIndex >= 0)
+		{
+			for(int i = 1; i < startIndex; i++)
+			{
+				tempList.remove(0);
+			}
+			
+			for(int i = 0; i < tempList.size(); i++)
+			{
+				System.out.println(tempList.get(i).get(6));
+			}
+		}
+		
+
 	}
 	
 	/*
@@ -109,13 +152,5 @@ public class BCDistricts {
 	{
 		return districts;
 	}
-	
-//	public void printSchools()
-//	{
-//		for(int i = 0; i < districts.size(); i++)
-//		{
-//			districts.get(i).printSchools();
-//		}
-//	}
 
 }
