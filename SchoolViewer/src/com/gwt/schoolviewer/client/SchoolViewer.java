@@ -65,6 +65,7 @@ public class SchoolViewer implements EntryPoint {
 	private MapOptions options  = MapOptions.create() ;
 	private ArrayList<SchoolValue> ListOfSchools;
 	private GoogleMap theMap;
+	private ArrayList<Marker> Markers = new ArrayList<Marker>();
 	
 
 	/**
@@ -123,18 +124,15 @@ public class SchoolViewer implements EntryPoint {
 	    markerOptions.setPosition(LatLng.create( 49.242931,-123.184547));
 	    Marker start = Marker.create(markerOptions);
 	    
-	    //-----------------
-	    
-	    
-	    
-	   // RootLayoutPanel.get().add( mapFlowPanel ) ;
+	    Markers.add(start);
+	    //----------------------------------------
 	    
 		
 		
 		
 		
 		
-	 // Set up sign out hyperlink.
+	        // Set up sign out hyperlink.
 	 		signOutLink.setHref(loginInfo.getLogoutUrl());
 
 	 		final Button searchButton = new Button("Search");
@@ -357,26 +355,13 @@ public class SchoolViewer implements EntryPoint {
 	 		// go backward to avoid messed up row indices
 	 		for (int i = rowCount - 1; i > 0; i--) {
 	 			if (((CheckBox) compFlexTable.getWidget(i, 4)).getValue()) {
+                    RemoveMarker(compFlexTable.getText(i, 0));
 	 				compFlexTable.removeRow(i);
 	 			}
 	 		}
 	 		CheckBox checkedBox = (CheckBox) compFlexTable.getWidget(0, 4);
 	 		checkedBox.setValue(false);
-			// Re - load map 
-		    options.setCenter(LatLng.create( 49.242931,-123.184547));   
-		    options.setZoom( 12 ) ;
-		    options.setMapTypeId( MapTypeId.ROADMAP );
-		    options.setDraggable(true);
-		    options.setMapTypeControl(true);
-		    options.setScaleControl(true) ;
-		    options.setScrollwheel(true) ;
-		    
-		    SimplePanel mapPanel = new SimplePanel() ;
-		    mapPanel.setSize("500px","500px");
-		    mapPanel.setVisible(true);
-
-		    theMap = GoogleMap.create( mapPanel.getElement(), options ) ;
-		    RootPanel.get("mapPanelContainer").add(mapPanel);
+			
 	 		
 	 	}
 
@@ -402,15 +387,20 @@ public class SchoolViewer implements EntryPoint {
 	 			    markerOptions.setTitle(s.getName()); 
 	 			    markerOptions.setDraggable(false); 
 	 			    markerOptions.setPosition(LatLng.create( s.getLatitude(),s.getLongitude()));
-	 			    Marker start = Marker.create(markerOptions);
+	 			    Marker marker = Marker.create(markerOptions);
+	 			    Markers.add(marker);
 	 			    
-	 			    SimplePanel mapPanel = new SimplePanel() ;
-	 			    mapPanel.setSize("500px","500px");
-	 			    mapPanel.setVisible(true);
-	 			    RootPanel.get("mapPanelContainer").add(mapPanel);
 	 			}
 	 				
 	 		}
 	 		
+	 	}
+	 	private void RemoveMarker(String name){
+	 		for(int k = 0; k < Markers.size(); k++){
+	 			if(name.equals(Markers.get(k).getTitle())){
+	 				Markers.get(k).setVisible(false);
+	 				Markers.remove(k);
+	 			}
+	 		}
 	 	}
 	 }
