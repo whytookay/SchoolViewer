@@ -62,7 +62,9 @@ public class SchoolViewer implements EntryPoint {
 			.create(SchoolValueService.class);
 	final FlexTable compFlexTable = new FlexTable();
 	final FlexTable schoolFlexTable = new FlexTable();
-	MapOptions options  = MapOptions.create() ;
+	private MapOptions options  = MapOptions.create() ;
+	private ArrayList<SchoolValue> ListOfSchools;
+	private GoogleMap theMap;
 	
 
 	/**
@@ -111,12 +113,12 @@ public class SchoolViewer implements EntryPoint {
 	    mapPanel.setSize("500px","500px");
 	    mapPanel.setVisible(true);
 
-	    GoogleMap theMap = GoogleMap.create( mapPanel.getElement(), options ) ;
+	    theMap = GoogleMap.create( mapPanel.getElement(), options ) ;
 	   
 	    //sample of how to add marker-------------
 	    MarkerOptions markerOptions = MarkerOptions.create(); 
 	    markerOptions.setMap(theMap); 
-	    markerOptions.setTitle("Hello World!"); 
+	    markerOptions.setTitle("this is you"); 
 	    markerOptions.setDraggable(false); 
 	    markerOptions.setPosition(LatLng.create( 49.242931,-123.184547));
 	    Marker start = Marker.create(markerOptions);
@@ -253,6 +255,7 @@ public class SchoolViewer implements EntryPoint {
 	 			}
 
 	 			public void onSuccess(ArrayList<SchoolValue> result) {
+	 				ListOfSchools = result;
 	 				updateTableSchool(result);
 	 			}
 	 		};
@@ -305,6 +308,7 @@ public class SchoolViewer implements EntryPoint {
 	 	private void addToCompList() {
 	 		int numCompRows = 1;
 	 		int rowCount = schoolFlexTable.getRowCount();
+	 		
 	 		// go through all rows in school table
 	 		for (int i = 1; i < rowCount; i++) {
 	 			if (((CheckBox) schoolFlexTable.getWidget(i, 4)).getValue()) {
@@ -323,6 +327,10 @@ public class SchoolViewer implements EntryPoint {
 	 					for (int k = 0; k < 4; k++) {
 	 						// add data to comp table
 	 						compFlexTable.setText(newRow, k, schooldata.get(k));
+	 						if (k == 0){
+	 							AddMarker(schooldata.get(k));
+	 						}
+	 							
 	 					}
 	 					// Add a checkbox for removal
 	 					CheckBox removeBox = new CheckBox();
@@ -354,6 +362,22 @@ public class SchoolViewer implements EntryPoint {
 	 		}
 	 		CheckBox checkedBox = (CheckBox) compFlexTable.getWidget(0, 4);
 	 		checkedBox.setValue(false);
+			// Re - load map 
+		    options.setCenter(LatLng.create( 49.242931,-123.184547));   
+		    options.setZoom( 12 ) ;
+		    options.setMapTypeId( MapTypeId.ROADMAP );
+		    options.setDraggable(true);
+		    options.setMapTypeControl(true);
+		    options.setScaleControl(true) ;
+		    options.setScrollwheel(true) ;
+		    
+		    SimplePanel mapPanel = new SimplePanel() ;
+		    mapPanel.setSize("500px","500px");
+		    mapPanel.setVisible(true);
+
+		    theMap = GoogleMap.create( mapPanel.getElement(), options ) ;
+		    RootPanel.get("mapPanelContainer").add(mapPanel);
+	 		
 	 	}
 
 	 	private void checkAllBoxes() {
@@ -369,5 +393,24 @@ public class SchoolViewer implements EntryPoint {
 	 				compFlexTable.setWidget(i, 4, new CheckBox());
 	 			}
 	 		}
+	 	}
+	 	private void AddMarker(String name){
+	 		for(SchoolValue s : ListOfSchools){
+	 			if(name.equals(s.getName())){
+	 			    MarkerOptions markerOptions = MarkerOptions.create(); 
+	 			    markerOptions.setMap(theMap); 
+	 			    markerOptions.setTitle(s.getName()); 
+	 			    markerOptions.setDraggable(false); 
+	 			    markerOptions.setPosition(LatLng.create( s.getLatitude(),s.getLongitude()));
+	 			    Marker start = Marker.create(markerOptions);
+	 			    
+	 			    SimplePanel mapPanel = new SimplePanel() ;
+	 			    mapPanel.setSize("500px","500px");
+	 			    mapPanel.setVisible(true);
+	 			    RootPanel.get("mapPanelContainer").add(mapPanel);
+	 			}
+	 				
+	 		}
+	 		
 	 	}
 	 }

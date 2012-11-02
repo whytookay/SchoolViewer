@@ -9,16 +9,28 @@ public class SchoolValue implements Serializable {
 	String location;
 	String district;
 	String pCode;
+	double latitude;
+	double longitude;
 	
 	public SchoolValue(){}
 	
-	public SchoolValue(String name, ArrayList<String> values, String location, String district, String pCode) {
+	public SchoolValue(String name, ArrayList<String> values, String location, String district, String pCode, double latitude, double longitude) {
 		this.name = name;
 		this.values = values;
 		this.location = location;
 		this.district = district;
 		this.pCode = pCode;
+		this.latitude = latitude;
+		this.longitude = longitude;
 	}
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
+
 	public String getName() {
 		return name;
 	}
