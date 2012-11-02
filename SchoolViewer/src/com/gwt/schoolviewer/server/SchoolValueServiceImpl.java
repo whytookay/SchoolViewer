@@ -27,7 +27,9 @@ public class SchoolValueServiceImpl extends RemoteServiceServlet implements Scho
 					school.getValues(),
 					school.getLocation(),
 					school.getDistrict().getName(),
-					school.getPCode()));
+					school.getPCode(),
+					school.getLat(),
+					school.getLon()));
 		}
 		//TODO: construct schoolvalues from schools
 		return schoolValues;

@@ -44,7 +44,7 @@ public class BCDistricts {
 	private ArrayList<ArrayList<String>> pageToList() throws IOException {
 		TxtSplitter splitter = new TxtSplitter("http://www.bced.gov.bc.ca/reporting/odefiles/BoardLocations_Current.txt");
 		ArrayList<ArrayList<String>> temp = splitter.split();
-		String[] accepted = new String[4];
+		String[] accepted = new String[5];
 		accepted[0] = "DISTRICT_NAME";
 		accepted[1] = "DISTRICT_CITY";
 		accepted[2] = "DISTRICT_PHONE_NUMBER";
@@ -97,12 +97,21 @@ public class BCDistricts {
 			{
 				if (tempLine.get(3).equals(districts.get(j).getName()))
 				{
-					double lat = Double.parseDouble(tempLine.get(13));
-					double lon = Double.parseDouble(tempLine.get(14));
-					LatLng gpsLoc = LatLng.create(lat, lon);
+					Double lat;
+					Double lon;
+					try{
+					lat = Double.parseDouble(tempLine.get(13));
+					lon = Double.parseDouble(tempLine.get(14));
+					} catch (NumberFormatException e) {
+						lat = -1.0;
+						lon = -1.0;
+					}
+					//Double lat = -1.0;
+					//Double lon = -1.0;
+//					LatLng gpsLoc = LatLng.create(lat, lon);
 					schoolnames.add(tempLine.get(5));
 					School temp = new School(tempLine.get(5),tempLine.get(7),tempLine.get(11),tempLine.get(1),tempLine.get(8)
-							,tempLine.get(15),tempLine.get(16),tempLine.get(10),districts.get(j), gpsLoc);
+							,tempLine.get(15),tempLine.get(16),tempLine.get(10),districts.get(j), lat, lon);
 					districts.get(j).addSchool(temp);
 				}
 			}
