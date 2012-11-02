@@ -398,7 +398,8 @@ public class SchoolViewer implements EntryPoint {
 	 	private void RemoveMarker(String name){
 	 		for(int k = 0; k < Markers.size(); k++){
 	 			if(name.equals(Markers.get(k).getTitle())){
-	 				Markers.get(k).setVisible(false);
+	 				//Markers.get(k).setVisible(false);
+	 				Markers.get(k).setMap((GoogleMap) null);
 	 				Markers.remove(k);
 	 			}
 	 		}
