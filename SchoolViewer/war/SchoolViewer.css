@@ -1,10 +1,12 @@
 /** Add css rules here for your application. */
 
 body {
+	/**
   background-image:url("war/images/magic-bus2.jpg");
   background-repeat:no-repeat;
   background-attachment: fixed;
   background-position: left top;
+  */
   
 }
 
