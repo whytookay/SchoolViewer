@@ -1,13 +1,13 @@
 /** Add css rules here for your application. */
 
 body {
-	/**
-  background-image:url("war/images/magic-bus2.jpg");
-  background-repeat:no-repeat;
+  margin: 10px;
+  /*
+  background-image:url("http://blog.scienceinsociety.northwestern.edu/wp-content/uploads/2012/02/magic-bus2.jpg");
+  background-repeat:repeat;
   background-attachment: fixed;
-  background-position: left top;
+  background-position: left top;  
   */
-  
 }
 
 /* school list header row */
@@ -31,7 +31,7 @@ h1 {
   font-family: Comic Sans MS;
   font-weight: bold;
   color: #ff9900;
-  margin: 40px 0px 70px;
+  margin: 40px 40px 70px;
   text-align: center;
 }
 
