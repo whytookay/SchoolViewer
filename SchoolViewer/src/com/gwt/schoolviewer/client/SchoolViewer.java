@@ -9,6 +9,7 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.gwt.schoolviewer.client.SchoolValue;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -29,6 +30,7 @@ import com.google.maps.gwt.client.MapOptions;
 import com.google.maps.gwt.client.MapTypeId;
 import com.google.maps.gwt.client.Marker;
 import com.google.maps.gwt.client.MarkerOptions;
+import com.google.maps.gwt.client.MouseEvent;
 
 import java.util.ArrayList;
 
@@ -388,7 +390,17 @@ public class SchoolViewer implements EntryPoint {
 	 			    markerOptions.setDraggable(false); 
 	 			    markerOptions.setPosition(LatLng.create( s.getLatitude(),s.getLongitude()));
 	 			    Marker marker = Marker.create(markerOptions);
-	 			    Markers.add(marker);
+	 			    final String txt = s.getName() +" @ "+ s.getDistrict();
+                    marker.addClickListener(new Marker.ClickHandler() {
+                    
+						@Override
+						public void handle(MouseEvent event) {
+
+					            Window.alert(txt);
+							
+						}
+                    });
+                    Markers.add(marker);
 	 			    
 	 			}
 	 				
