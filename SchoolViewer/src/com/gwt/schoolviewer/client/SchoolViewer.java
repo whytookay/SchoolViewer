@@ -9,6 +9,7 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.gwt.schoolviewer.client.SchoolValue;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -23,12 +24,14 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.VerticalSplitPanel;
 import com.google.maps.gwt.client.GoogleMap;
 import com.google.maps.gwt.client.LatLng;
 import com.google.maps.gwt.client.MapOptions;
 import com.google.maps.gwt.client.MapTypeId;
 import com.google.maps.gwt.client.Marker;
 import com.google.maps.gwt.client.MarkerOptions;
+import com.google.maps.gwt.client.MouseEvent;
 
 import java.util.ArrayList;
 
@@ -66,6 +69,7 @@ public class SchoolViewer implements EntryPoint {
 	private ArrayList<SchoolValue> ListOfSchools;
 	private GoogleMap theMap;
 	private ArrayList<Marker> Markers = new ArrayList<Marker>();
+	private VerticalSplitPanel tablePanel = new VerticalSplitPanel();
 	
 
 	/**
@@ -173,8 +177,10 @@ public class SchoolViewer implements EntryPoint {
 	 		RootPanel.get("sendButtonContainer").add(searchButton);
 	 		RootPanel.get("compButtonContainer").add(compButton);
 	 		RootPanel.get("clearButtonContainer").add(clearButton);
-	 		RootPanel.get("compTableContainer").add(compFlexTable);
-	 		RootPanel.get("flexTableContainer").add(schoolFlexTable);
+	 		tablePanel.setSize("50em", "50em");
+	 		tablePanel.add(compFlexTable);
+	 		tablePanel.add(schoolFlexTable);
+	 		RootPanel.get("TableContainer").add(tablePanel);
 	 		// Focus the cursor on the name field when the app loads
 	 		nameField.setFocus(true);
 	 		nameField.selectAll();
@@ -388,7 +394,17 @@ public class SchoolViewer implements EntryPoint {
 	 			    markerOptions.setDraggable(false); 
 	 			    markerOptions.setPosition(LatLng.create( s.getLatitude(),s.getLongitude()));
 	 			    Marker marker = Marker.create(markerOptions);
-	 			    Markers.add(marker);
+	 			    final String txt = s.getName() +" @ "+ s.getDistrict();
+                    marker.addClickListener(new Marker.ClickHandler() {
+                    
+						@Override
+						public void handle(MouseEvent event) {
+
+					            Window.alert(txt);
+							
+						}
+                    });
+                    Markers.add(marker);
 	 			    
 	 			}
 	 				
