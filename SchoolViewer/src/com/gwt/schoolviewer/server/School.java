@@ -16,6 +16,7 @@ public class School {
 	private District district;
 	private Double latitude;
 	private Double longitude;
+	private Double classSize = -1.0;
 //	private LatLng gpsloc;
 	
 	public School(String name, String location, String phone, String pubOrInd,
@@ -100,6 +101,16 @@ public class School {
 //	{
 //		return district.getValues();
 //	}
+	
+	public void setClassSize(double size)
+	{
+		this.classSize = size;
+	}
+	
+	public double getClassSize()
+	{
+		return classSize;
+	}
 	
 	public ArrayList<String> getValues()
 	{

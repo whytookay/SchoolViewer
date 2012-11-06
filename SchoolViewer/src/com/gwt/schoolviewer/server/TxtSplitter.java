@@ -31,7 +31,7 @@ public class TxtSplitter {
 		return (processed);
 	}
 
-	private ArrayList<String> procLine(String pLine)
+	protected ArrayList<String> procLine(String pLine)
 	{
 		Scanner scanner = new Scanner(pLine);
 		scanner.useDelimiter("\t");
@@ -43,7 +43,7 @@ public class TxtSplitter {
 		return chLine;
 	}
 	
-	private ArrayList<ArrayList<String>> transpose(ArrayList<ArrayList<String>> orig){
+	protected ArrayList<ArrayList<String>> transpose(ArrayList<ArrayList<String>> orig){
 		ArrayList<ArrayList<String>> temp = new ArrayList<ArrayList<String>>();
 		for(int i = 0; i < orig.get(0).size(); i++)
 		{
