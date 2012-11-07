@@ -16,7 +16,6 @@ public class BCDistricts {
 	
 //	public static void main(String args[]) throws IOException{
 //		BCDistricts temp = new BCDistricts();
-//		School sTemp = temp.getDistricts().get(0).getSchools().get(0);
 //		//sTemp.printSchool();
 //	}
 
@@ -27,7 +26,7 @@ public class BCDistricts {
 		try{
 		populateDistricts(pageToList());
 		populateSchools();
-		//populateValues();
+		populateValues();
 		} catch (IOException e){}
 	}
 	
@@ -129,29 +128,48 @@ public class BCDistricts {
 		ArrayList<ArrayList<String>> tempList = transpose(splitter.split());
 		//System.out.println("is it here?");
 		int startIndex = -1;
-		for(int i = 0; i < tempList.size(); i++)
+		for(int i = 1; i < tempList.size(); i++)
 		{
-			if(schoolnames.contains(tempList.get(i).get(6)))
+			if("".compareTo(tempList.get(i).get(6)) < 0)
 			{
 				startIndex = i;
 				break;
 			}
 		}
-		
-		if(startIndex >= 0)
+				
+		for(int i = 1; i < startIndex; i++)
 		{
-			for(int i = 1; i < startIndex; i++)
-			{
-				tempList.remove(0);
-			}
-			
-			for(int i = 0; i < tempList.size(); i++)
-			{
-				System.out.println(tempList.get(i).get(6));
-			}
+			tempList.remove(1);
 		}
 		
-
+		for (int i = 1; i < tempList.size(); i++)
+		{
+			int numIn = 0;
+			double sum = 0;
+			for (int j = 11; j < 15; j++)
+			{
+				double temp = 0;
+				try{
+					temp = Double.parseDouble(tempList.get(i).get(j));
+					sum += temp;
+					numIn++;
+				}catch(NumberFormatException e){
+					}
+			}
+			double classSize = sum/numIn;
+			
+			for(int j = 0; j < districts.size(); j++)
+			{
+				ArrayList<School> schools = districts.get(j).getSchools();
+					for(int k = 0; k < schools.size(); k++)
+					{
+						if(schools.get(k).getName().equals(tempList.get(i).get(6)))
+						{
+							districts.get(j).getSchools().get(k).setClassSize(classSize);
+						}
+					}
+			}
+		}
 	}
 	
 	/*
