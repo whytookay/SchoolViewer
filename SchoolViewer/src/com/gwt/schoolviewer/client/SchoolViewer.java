@@ -31,6 +31,7 @@ import com.google.maps.gwt.client.LatLng;
 import com.google.maps.gwt.client.MapOptions;
 import com.google.maps.gwt.client.MapTypeId;
 import com.google.maps.gwt.client.Marker;
+import com.google.maps.gwt.client.MarkerImage;
 import com.google.maps.gwt.client.MarkerOptions;
 import com.google.maps.gwt.client.MouseEvent;
 
@@ -139,8 +140,9 @@ public class SchoolViewer implements EntryPoint {
 	    //sample of how to add marker-------------
 	    MarkerOptions markerOptions = MarkerOptions.create(); 
 	    markerOptions.setMap(theMap); 
-	    markerOptions.setTitle("this is you"); 
-	    markerOptions.setDraggable(false); 
+	    markerOptions.setTitle("THIS IS YOU"); 
+	    markerOptions.setDraggable(true); 
+	    markerOptions.setIcon(MarkerImage.create("http://mapicons.nicolasmollet.com/wp-content/uploads/mapicons/shape-default/color-ffc11f/shapecolor-color/shadow-1/border-dark/symbolstyle-white/symbolshadowstyle-dark/gradient-no/male-2.png"));
 	    markerOptions.setPosition(LatLng.create( 49.242931,-123.184547));
 	    Marker start = Marker.create(markerOptions);
 	    
@@ -418,7 +420,7 @@ public class SchoolViewer implements EntryPoint {
 						public void handle(MouseEvent event){
                                IW.close();
                                IW.setPosition(pos);
-                               IW.setContent(txt);
+                               IW.setContent(txt);  
 							   IW.open(theMap);
 							    
 //							    w.addCloseClickListener(new InfoWindow.CloseClickHandler() {
