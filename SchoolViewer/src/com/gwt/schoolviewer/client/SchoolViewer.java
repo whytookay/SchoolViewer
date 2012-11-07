@@ -76,6 +76,19 @@ public class SchoolViewer implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
+		// TODO: REMOVE TESTING CODE
+		AsyncCallback callback = new AsyncCallback<Boolean>()  {
+ 			public void onFailure(Throwable caught) {
+ 				// 
+ 			}
+
+ 			public void onSuccess(Boolean result) {
+ 				//
+ 			}
+ 		};
+ 		
+		schoolValueSvc.setCode(new PostalCodeValue("V5J2C4"), callback);
+		
 		// Check login status using login service.
 		LoginServiceAsync loginService = GWT.create(LoginService.class);
 		loginService.login(GWT.getHostPageBaseURL(),
@@ -104,7 +117,7 @@ public class SchoolViewer implements EntryPoint {
 
 	}
 
-	private void loadschoolviewer() {
+	private void loadschoolviewer() {		
 		// load map 
 	    options.setCenter(LatLng.create( 49.242931,-123.184547));   
 	    options.setZoom( 12 ) ;
@@ -114,7 +127,7 @@ public class SchoolViewer implements EntryPoint {
 	    options.setScaleControl(true) ;
 	    options.setScrollwheel(true) ;
 	    
-	    SimplePanel mapPanel = new SimplePanel() ;
+	    SimplePanel mapPanel = new SimplePanel();
 	    mapPanel.setSize("500px","500px");
 	    mapPanel.setVisible(true);
 

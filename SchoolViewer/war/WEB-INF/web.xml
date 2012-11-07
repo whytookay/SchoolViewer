@@ -50,15 +50,5 @@
     <url-pattern>/schoolviewer/schoolvalue</url-pattern>
   </servlet-mapping>
   
-      <servlet>
-    <servlet-name>postalCodeServiceImpl</servlet-name>
-    <servlet-class>com.gwt.schoolviewer.server.PostalCodeServiceImpl</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>postalCodeServiceImpl</servlet-name>
-    <url-pattern>/schoolviewer/postalcode</url-pattern>
-  </servlet-mapping>
-  
   
 </web-app>

@@ -7,5 +7,9 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 @RemoteServiceRelativePath("schoolvalue")
 public interface SchoolValueService extends RemoteService {
+	public PostalCodeValue getCode();
+	public Boolean clearCode(); // previously void, bool as placeholder for callback
+	public Boolean setCode(PostalCodeValue pCode) throws NotLoggedInException; // previously void, bool as placeholder for callback
+	public ArrayList<SchoolValue> getValuesRange(Double radius);
 	public ArrayList<SchoolValue> getValues();
 }

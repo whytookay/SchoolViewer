@@ -5,5 +5,9 @@ import java.util.ArrayList;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface SchoolValueServiceAsync {
-	public void getValues(AsyncCallback<ArrayList<SchoolValue>> async); // TODO: remove comment
+	public void getCode(AsyncCallback<PostalCodeValue> async);
+	public void clearCode(AsyncCallback<Boolean> async); // previously void, bool as placeholder for callback
+	public void setCode(PostalCodeValue pCode, AsyncCallback<Boolean> async); // previously void, bool as placeholder for callback
+	public void getValuesRange(Double radius, AsyncCallback<ArrayList<SchoolValue>> async);
+	public void getValues(AsyncCallback<ArrayList<SchoolValue>> async);
 }
