@@ -26,6 +26,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.VerticalSplitPanel;
 import com.google.maps.gwt.client.GoogleMap;
+import com.google.maps.gwt.client.InfoWindow;
 import com.google.maps.gwt.client.LatLng;
 import com.google.maps.gwt.client.MapOptions;
 import com.google.maps.gwt.client.MapTypeId;
@@ -69,6 +70,8 @@ public class SchoolViewer implements EntryPoint {
 	private ArrayList<SchoolValue> ListOfSchools;
 	private GoogleMap theMap;
 	private ArrayList<Marker> Markers = new ArrayList<Marker>();
+	private InfoWindow IW = InfoWindow.create();
+	
 	private VerticalSplitPanel tablePanel = new VerticalSplitPanel();
 	
 
@@ -408,15 +411,29 @@ public class SchoolViewer implements EntryPoint {
 	 			    markerOptions.setPosition(LatLng.create( s.getLatitude(),s.getLongitude()));
 	 			    Marker marker = Marker.create(markerOptions);
 	 			    final String txt = s.getName() +" @ "+ s.getDistrict();
+	 			    final LatLng pos = LatLng.create(s.getLatitude(),s.getLongitude());
                     marker.addClickListener(new Marker.ClickHandler() {
-                    
+                   
 						@Override
-						public void handle(MouseEvent event) {
+						public void handle(MouseEvent event){
+                               IW.close();
+                               IW.setPosition(pos);
+                               IW.setContent(txt);
+							   IW.open(theMap);
+							    
+//							    w.addCloseClickListener(new InfoWindow.CloseClickHandler() {
+//									
+//									@Override
+//									public void handle() {
+//										w.close();
+//										
+//									}
+//								});
 
-					            Window.alert(txt);
+					       //     Window.alert(txt);
 							
 						}
-                    });
+                   });
                     Markers.add(marker);
 	 			    
 	 			}
@@ -429,7 +446,10 @@ public class SchoolViewer implements EntryPoint {
 	 			if(name.equals(Markers.get(k).getTitle())){
 	 				//Markers.get(k).setVisible(false);
 	 				Markers.get(k).setMap((GoogleMap) null);
+	 				if(Markers.get(k).getPosition().equals(IW.getPosition()))
+	 					IW.close();
 	 				Markers.remove(k);
+	 				
 	 			}
 	 		}
 	 	}
