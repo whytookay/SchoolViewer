@@ -142,7 +142,7 @@ public class SchoolViewer implements EntryPoint {
 	    markerOptions.setMap(theMap); 
 	    markerOptions.setTitle("THIS IS YOU"); 
 	    markerOptions.setDraggable(true); 
-	    markerOptions.setIcon(MarkerImage.create("http://mapicons.nicolasmollet.com/wp-content/uploads/mapicons/shape-default/color-ffc11f/shapecolor-color/shadow-1/border-dark/symbolstyle-white/symbolshadowstyle-dark/gradient-no/male-2.png"));
+	    markerOptions.setIcon(MarkerImage.create("http://google-maps-icons.googlecode.com/files/walking-tour.png"));
 	    markerOptions.setPosition(LatLng.create( 49.242931,-123.184547));
 	    Marker start = Marker.create(markerOptions);
 	    
