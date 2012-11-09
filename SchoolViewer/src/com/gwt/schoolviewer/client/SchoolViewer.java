@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -74,6 +75,7 @@ public class SchoolViewer implements EntryPoint {
 	private InfoWindow IW = InfoWindow.create();
 	
 	private VerticalSplitPanel tablePanel = new VerticalSplitPanel();
+	private HorizontalPanel layoutPanel = new HorizontalPanel();
 	
 
 	/**
@@ -132,7 +134,7 @@ public class SchoolViewer implements EntryPoint {
 	    options.setScrollwheel(true) ;
 	    
 	    SimplePanel mapPanel = new SimplePanel();
-	    mapPanel.setSize("500px","500px");
+	    mapPanel.setSize("600px","600px");
 	    mapPanel.setVisible(true);
 
 	    theMap = GoogleMap.create( mapPanel.getElement(), options ) ;
@@ -188,17 +190,19 @@ public class SchoolViewer implements EntryPoint {
 	 		schoolFlexTable.getRowFormatter().addStyleName(0, "schoolListHeader");
 	 		schoolFlexTable.addStyleName("schoolList");
 
-	 		// Add the nameField and sendButton to the RootPanel
 	 		// Use RootPanel.get() to get the entire body element
-	 		RootPanel.get("mapPanelContainer").add(mapPanel);
+	 		//layoutPanel.insert(nameField,0);
 	 		RootPanel.get("nameFieldContainer").add(nameField);
-	 		RootPanel.get("sendButtonContainer").add(searchButton);
-	 		RootPanel.get("compButtonContainer").add(compButton);
-	 		RootPanel.get("clearButtonContainer").add(clearButton);
+	 		RootPanel.get("nameFieldContainer").add(searchButton);
+	 		RootPanel.get("nameFieldContainer").add(compButton);
+	 		RootPanel.get("nameFieldContainer").add(clearButton);
+	 		
 	 		tablePanel.setSize("50em", "50em");
 	 		tablePanel.add(compFlexTable);
 	 		tablePanel.add(schoolFlexTable);
-	 		RootPanel.get("TableContainer").add(tablePanel);
+	 		layoutPanel.insert(tablePanel, 0);
+	 		layoutPanel.insert(mapPanel, 1);
+	 		RootPanel.get("compButtonContainer").add(layoutPanel);
 	 		// Focus the cursor on the name field when the app loads
 	 		nameField.setFocus(true);
 	 		nameField.selectAll();
