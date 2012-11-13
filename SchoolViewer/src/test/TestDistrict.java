@@ -26,24 +26,28 @@ public class TestDistrict {
 	@Test
 	public void testGetName() {
 		String name = temp.getName();
+		assertFalse(name == null);
 		assertTrue(name == "tempdistrict");
 	}
 
 	@Test
 	public void testGetCity() {
 		String city = temp.getCity();
+		assertFalse(city == null);
 		assertTrue(city == "Vancouver");
 	}
 
 	@Test
 	public void testGetPhone() {
 		String phone = temp.getPhone();
+		assertFalse(phone == null);
 		assertTrue(phone == "1111111111");
 	}
 
 	@Test
 	public void testGetWeb() {
 		String web = temp.getWeb();
+		assertFalse(web == null);
 		assertTrue(web == "www.google.ca");
 	}
 
@@ -54,7 +58,9 @@ public class TestDistrict {
 		temp.addSchool(tempschool);
 		schools = temp.getSchools();
 		assertTrue(schools.size() == 1);
-		assertTrue(schools.get(0) == tempschool);
+		School testschool = schools.get(0);
+		assertFalse(testschool == null);
+		assertTrue(testschool == tempschool);
 		
 	}
 

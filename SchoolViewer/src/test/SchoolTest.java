@@ -37,24 +37,28 @@ public class SchoolTest {
 	@Test
 	public void testGetName() {
 		String name = temp.getName();
+		assertFalse(name == null);
 		assertTrue(name == "tempSchool");
 	}
 
 	@Test
 	public void testGetLocation() {
 		String loc = temp.getLocation();
+		assertFalse(loc == null);
 		assertTrue(loc == "location");
 	}
 
 	@Test
 	public void testGetPCode() {
 		String pcode = temp.getPCode();
+		assertFalse(pcode == null);
 		assertTrue(pcode == "V6R2Z0");
 	}
 
 	@Test
 	public void testGetDistrict() {
 		District d = temp.getDistrict();
+		assertFalse(d == null);
 		assertTrue(d == tempdist);
 	}
 
