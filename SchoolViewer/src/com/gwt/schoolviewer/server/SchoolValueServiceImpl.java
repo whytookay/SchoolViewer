@@ -82,8 +82,7 @@ public class SchoolValueServiceImpl extends RemoteServiceServlet implements Scho
 					school.getDistrict().getName(),
 					school.getPCode(),
 					school.getLat(),
-					school.getLon(),
-					randomGenerator.nextInt(100)));
+					school.getLon()));
 			}
 		}
 		return schoolValues;
@@ -142,8 +141,7 @@ public class SchoolValueServiceImpl extends RemoteServiceServlet implements Scho
 					school.getDistrict().getName(),
 					school.getPCode(),
 					school.getLat(),
-					school.getLon(),
-					randomGenerator.nextInt(100)));
+					school.getLon()));
 		}
 		//TODO: construct schoolvalues from schools
 		return schoolValues;

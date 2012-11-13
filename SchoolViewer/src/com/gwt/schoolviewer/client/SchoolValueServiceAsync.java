@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+/**
+ * The async counterpart of <code>SchoolValueService</code>.
+ */
 public interface SchoolValueServiceAsync {
 	public void getCode(AsyncCallback<PostalCodeValue> async);
 	public void clearCode(AsyncCallback<Boolean> async); // previously void, bool as placeholder for callback

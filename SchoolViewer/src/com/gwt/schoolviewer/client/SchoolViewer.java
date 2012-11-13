@@ -50,32 +50,43 @@ public class SchoolViewer implements EntryPoint {
 			+ "attempting to contact the server. Please check your network "
 			+ "connection and try again.";
 
-	private LoginInfo loginInfo = null;
+
+	// data stuff
+	/**
+	 * Create a remote service proxy to talk to the server-side compare service
+	 */
+	private final CompareServiceAsync compareService = GWT
+			.create(CompareService.class);
 
 	/**
-	 * Create a remote service proxy to talk to the server-side Greeting
-	 * service.
+	 * Create a remote service proxy to talk to the server-side SchoolValue service
 	 */
-	private final GreetingServiceAsync greetingService = GWT
-			.create(GreetingService.class);
-
+	private final SchoolValueServiceAsync schoolValueSvc = GWT
+			.create(SchoolValueService.class);
+	
+	private ArrayList<SchoolValue> ListOfSchools;
+	
+	// login stuff
+	private LoginInfo loginInfo = null;
 	private VerticalPanel loginPanel = new VerticalPanel();
 	private Label loginLabel = new Label(
 			"Please sign in to your Google Account to access the StockWatcher application.");
 	private Anchor signInLink = new Anchor("Sign In");
 	private Anchor signOutLink = new Anchor("Sign Out");
-	private SchoolValueServiceAsync schoolValueSvc = GWT
-			.create(SchoolValueService.class);
+
+	// main layout stuff
 	final FlexTable compFlexTable = new FlexTable();
 	final FlexTable schoolFlexTable = new FlexTable();
+	private VerticalSplitPanel tablePanel = new VerticalSplitPanel(); // TODO: yo this is deprecated
+	private HorizontalPanel layoutPanel = new HorizontalPanel();
+	
+	// map stuff
 	private MapOptions options  = MapOptions.create() ;
-	private ArrayList<SchoolValue> ListOfSchools;
 	private GoogleMap theMap;
 	private ArrayList<Marker> Markers = new ArrayList<Marker>();
 	private InfoWindow IW = InfoWindow.create();
 	
-	private VerticalSplitPanel tablePanel = new VerticalSplitPanel();
-	private HorizontalPanel layoutPanel = new HorizontalPanel();
+
 	
 
 	/**

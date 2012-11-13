@@ -1,10 +1,8 @@
 package com.gwt.schoolviewer.server;
 
 import java.util.ArrayList;
-import com.google.maps.gwt.client.LatLng;
 
 public class School {
-
 	private String name;
 	private String location;
 	private String phone;
@@ -17,7 +15,6 @@ public class School {
 	private Double latitude;
 	private Double longitude;
 	private Double classSize = -1.0;
-//	private LatLng gpsloc;
 	
 	public School(String name, String location, String phone, String pubOrInd,
 						String city, String eduLevel, String grades, String pCode,
@@ -33,14 +30,8 @@ public class School {
 		this.pCode = pCode;
 		this.latitude = latitude;
 		this.longitude = longitude;
-//		this.gpsloc = gpsloc;
 		
 	}
-	
-//	public LatLng getGPSloc()
-//	{
-//		return gpsloc;
-//	}
 	
 	public Double getLat()
 	{

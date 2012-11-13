@@ -11,7 +11,6 @@ public class SchoolValue implements Serializable {
 	String pCode;
 	double latitude;
 	double longitude;
-	int testval;
 	
 
 
@@ -27,7 +26,7 @@ public class SchoolValue implements Serializable {
 	
 	public SchoolValue(){}
 	
-	public SchoolValue(String name, ArrayList<String> values, String location, String district, String pCode, double latitude, double longitude, int testval) {
+	public SchoolValue(String name, ArrayList<String> values, String location, String district, String pCode, double latitude, double longitude) {
 		this.name = name;
 		this.values = values;
 		this.location = location;
@@ -35,7 +34,6 @@ public class SchoolValue implements Serializable {
 		this.pCode = pCode;
 		this.latitude = latitude;
 		this.longitude = longitude;
-		this.testval = testval;
 	}
 	public double getLatitude() {
 		return latitude;
@@ -76,13 +74,5 @@ public class SchoolValue implements Serializable {
 	
 	public void setpCode(String pCode) {
 		this.pCode = pCode;
-	}
-	
-	public int getTestval() {
-		return testval;
-	}
-
-	public void setTestval(int testval) {
-		this.testval = testval;
 	}
 }
