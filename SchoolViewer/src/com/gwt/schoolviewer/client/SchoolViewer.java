@@ -77,8 +77,6 @@ public class SchoolViewer implements EntryPoint {
 	// main layout stuff
 	final FlexTable compFlexTable = new FlexTable();
 	final FlexTable schoolFlexTable = new FlexTable();
-	private VerticalSplitPanel tablePanel = new VerticalSplitPanel(); // TODO: yo this is deprecated
-	private HorizontalPanel layoutPanel = new HorizontalPanel();
 	
 	// map stuff
 	private MapOptions options  = MapOptions.create() ;
@@ -169,8 +167,11 @@ public class SchoolViewer implements EntryPoint {
 		
 	        // Set up sign out hyperlink.
 	 		signOutLink.setHref(loginInfo.getLogoutUrl());
+	 		
+	 		final VerticalSplitPanel tablePanel = new VerticalSplitPanel(); // TODO: yo this is deprecated
+	 		final HorizontalPanel layoutPanel = new HorizontalPanel();
 
-	 		final Button searchButton = new Button("Search");
+	 		final Button refreshButton = new Button("Refresh");
 	 		final TextBox nameField = new TextBox();
 	 		nameField.setText("Enter school information:");
 	 		final Button compButton = new Button("Compare");
@@ -202,21 +203,21 @@ public class SchoolViewer implements EntryPoint {
 	 		schoolFlexTable.addStyleName("schoolList");
 
 	 		// Use RootPanel.get() to get the entire body element
-	 		//layoutPanel.insert(nameField,0);
-	 		RootPanel.get("nameFieldContainer").add(nameField);
-	 		RootPanel.get("nameFieldContainer").add(searchButton);
-	 		RootPanel.get("nameFieldContainer").add(compButton);
-	 		RootPanel.get("nameFieldContainer").add(clearButton);
-	 		
-	 		tablePanel.setSize("50em", "50em");
-	 		tablePanel.add(compFlexTable);
-	 		tablePanel.add(schoolFlexTable);
-	 		layoutPanel.insert(tablePanel, 0);
-	 		layoutPanel.insert(mapPanel, 1);
-	 		RootPanel.get("compButtonContainer").add(layoutPanel);
-	 		// Focus the cursor on the name field when the app loads
-	 		nameField.setFocus(true);
-	 		nameField.selectAll();
+	 		RootPanel.get("nameFieldContainer").add(refreshButton);
+			RootPanel.get("nameFieldContainer").add(nameField);
+			RootPanel.get("buttonContainer").add(compButton);
+			RootPanel.get("buttonContainer").add(clearButton);
+
+			tablePanel.setSize("640px", "600px");
+			tablePanel.add(compFlexTable);
+			tablePanel.add(schoolFlexTable);
+			tablePanel.addStyleName("schoolTable");
+			layoutPanel.insert(tablePanel, 0);
+			layoutPanel.insert(mapPanel, 1);
+			RootPanel.get("tableMapContainer").add(layoutPanel);
+			// Focus the cursor on the name field when the app loads
+			nameField.setFocus(true);
+			nameField.selectAll();
 
 	 		// Create a handler for the sendButton and nameField
 	 		class MyHandler implements ClickHandler, KeyUpHandler {
@@ -272,7 +273,7 @@ public class SchoolViewer implements EntryPoint {
 
 	 		// Add a handler to send the name to the server
 	 		MyHandler handler = new MyHandler();
-	 		searchButton.addClickHandler(handler);
+	 		refreshButton.addClickHandler(handler);
 	 		nameField.addKeyUpHandler(handler);
 	 		CompHandler comphandler = new CompHandler();
 	 		compButton.addClickHandler(comphandler);

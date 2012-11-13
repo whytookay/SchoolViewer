@@ -24,15 +24,22 @@ body {
   margin-bottom:6px;
 }
 
+.schoolTable {
+	border: 3px solid cyan;
+}
+
 
 /** Example rules used by the template application (remove for your app) */
 h1 {
-  font-size: 5em;
+  font-size: 6em;
   font-family: Comic Sans MS;
   font-weight: bold;
-  color: #ff9900;
-  margin: 40px 40px 70px;
-  text-align: center;
+  color: orange;
+  margin: 30px;
+  text-align: left;
+  background-image:url("http://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Flag_of_British_Columbia.svg/200px-Flag_of_British_Columbia.svg.png");
+  background-repeat: no-repeat;
+  background-position: right;
 }
 
 .Button {
