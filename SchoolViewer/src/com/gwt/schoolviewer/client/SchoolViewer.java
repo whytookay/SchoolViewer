@@ -11,6 +11,7 @@ import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.gwt.schoolviewer.client.SchoolValue;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -19,6 +20,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -168,15 +170,31 @@ public class SchoolViewer implements EntryPoint {
 	        // Set up sign out hyperlink.
 	 		signOutLink.setHref(loginInfo.getLogoutUrl());
 	 		
-	 		final VerticalSplitPanel tablePanel = new VerticalSplitPanel(); // TODO: yo this is deprecated
+	 		//panels for holding widgets
+	 		@SuppressWarnings("deprecation") // may rewrite later if I have time
+			final VerticalSplitPanel tablePanel = new VerticalSplitPanel(); // TODO: yo this is deprecated
 	 		final HorizontalPanel layoutPanel = new HorizontalPanel();
-
+	 		final AbsolutePanel filterPanel = new AbsolutePanel();
+	 		
+	 		// compare and school table widgets
 	 		final Button refreshButton = new Button("Refresh");
 	 		final TextBox nameField = new TextBox();
 	 		nameField.setText("Enter school information:");
 	 		final Button compButton = new Button("Compare");
 	 		final Button clearButton = new Button("Clear Checked");
 	 		final CheckBox checkAllComp = new CheckBox("Check All");
+	 		
+	 		//filterPanel widgets
+	 		final Label filterLabel = new Label("Filters");
+	 		final TextBox postalField = new TextBox();
+	 		final TextBox radiusField = new TextBox();
+	 		
+	 		//setup dropbox for districts
+	 		final ListBox districtDropBox = new ListBox();
+	 		// Manually Adding districts later will query for districts
+	 		districtDropBox.addItem("Vancouver");
+	 		districtDropBox.addItem("Surrey");
+	 		districtDropBox.addItem("Chilliwack");
 
 	 		// Create table for comparing school data.
 	 		compFlexTable.setText(0, 0, "Name");
@@ -184,7 +202,7 @@ public class SchoolViewer implements EntryPoint {
 	 		compFlexTable.setText(0, 2, "District");
 	 		compFlexTable.setText(0, 3, "Postal Code");
 	 		compFlexTable.setWidget(0, 4, checkAllComp);
-
+	 		
 	 		// Create table for stock data.
 	 		schoolFlexTable.setText(0, 0, "Name");
 	 		schoolFlexTable.setText(0, 1, "Location");
@@ -203,11 +221,22 @@ public class SchoolViewer implements EntryPoint {
 	 		schoolFlexTable.addStyleName("schoolList");
 
 	 		// Use RootPanel.get() to get the entire body element
+	 		filterPanel.setSize("640px", "100px");
+	 		filterPanel.add(filterLabel);
+	 		filterPanel.add(postalField, 50, 15 );
+	 		filterPanel.add(radiusField, 50, 50); 
+	 		filterPanel.add(districtDropBox, 250, 15);
+	 		filterPanel.addStyleName("filterTable");
+	 		RootPanel.get("filterContainer").add(filterPanel);
+	 		
+	 		// Setup search and compare buttons and search field
 	 		RootPanel.get("nameFieldContainer").add(refreshButton);
 			RootPanel.get("nameFieldContainer").add(nameField);
 			RootPanel.get("buttonContainer").add(compButton);
 			RootPanel.get("buttonContainer").add(clearButton);
-
+			
+			
+// Setup Compare and Map panel layout in RootPanel
 			tablePanel.setSize("640px", "600px");
 			tablePanel.add(compFlexTable);
 			tablePanel.add(schoolFlexTable);
@@ -301,6 +330,8 @@ public class SchoolViewer implements EntryPoint {
 	 		// Make the call to the school price service.
 	 		schoolValueSvc.getValues(callback);
 	 	}
+	 	
+	 	
 
 	 	/**
 	 	 * Update the Name, Location, and District fields all the rows in the school
