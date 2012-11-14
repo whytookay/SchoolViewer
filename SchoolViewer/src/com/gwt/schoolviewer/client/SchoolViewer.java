@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
@@ -39,6 +40,21 @@ import com.google.maps.gwt.client.MarkerOptions;
 import com.google.maps.gwt.client.MouseEvent;
 
 import java.util.ArrayList;
+
+import com.google.api.gwt.client.GoogleApiRequestTransport;
+import com.google.api.gwt.client.OAuth2Login;
+import com.google.api.gwt.services.plus.shared.Plus;
+import com.google.api.gwt.services.plus.shared.Plus.ActivitiesContext.ListRequest.Collection;
+import com.google.api.gwt.services.plus.shared.Plus.PlusAuthScope;
+import com.google.api.gwt.services.plus.shared.model.Activity;
+import com.google.api.gwt.services.plus.shared.model.ActivityFeed;
+import com.google.api.gwt.services.plus.shared.model.Person;
+import com.google.gwt.core.client.Callback;
+import com.google.web.bindery.requestfactory.shared.Receiver;
+import com.google.api.gwt.oauth2.client.Auth;
+import com.google.api.gwt.oauth2.client.AuthRequest;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -69,12 +85,10 @@ public class SchoolViewer implements EntryPoint {
 	private ArrayList<SchoolValue> ListOfSchools;
 	
 	// login stuff
-	private LoginInfo loginInfo = null;
-	private VerticalPanel loginPanel = new VerticalPanel();
-	private Label loginLabel = new Label(
-			"Please sign in to your Google Account to access the StockWatcher application.");
-	private Anchor signInLink = new Anchor("Sign In");
-	private Anchor signOutLink = new Anchor("Sign Out");
+	 private final HorizontalPanel loginPanel = new HorizontalPanel();
+	 private final Anchor signInLink = new Anchor("");
+	 private final Image loginImage = new Image();
+	 private final TextBox nameField = new TextBox();
 
 	// main layout stuff
 	final FlexTable compFlexTable = new FlexTable();
@@ -86,53 +100,120 @@ public class SchoolViewer implements EntryPoint {
 	private ArrayList<Marker> Markers = new ArrayList<Marker>();
 	private InfoWindow IW = InfoWindow.create();
 	
+	//google +
+	 private static final Auth AUTH = Auth.get();
+	 private static final String GOOGLE_AUTH_URL = 
+	        "https://accounts.google.com/o/oauth2/auth";
+	 private static final String GOOGLE_CLIENT_ID = 
+	        "700088417733.apps.googleusercontent.com";
+	 private static final String PLUS_ME_SCOPE = 
+	        "https://www.googleapis.com/auth/userinfo.profile";
+	 
 
+     private final GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
+
+	
+//	private static final Plus plus = GWT.create(Plus.class);
+//	private static final String CLIENT_ID = "700088417733.apps.googleusercontent.com";
+//	private static final String API_KEY = "AIzaSyDGS6xMhkUEiR7FVCp5lslzcWOKGXWxooc";
+//	private static final String APPLICATION_NAME = "projecttesting40702";
+//	
+	    private void loadLogin(final LoginInfo loginInfo) {
+	    	    AUTH.clearAllTokens();
+	            signInLink.setHref(loginInfo.getLoginUrl());
+	            signInLink.setText("Please, sign in with your Google Account");
+	            signInLink.setTitle("Sign in");
+	        }
+	        private void loadLogout(final LoginInfo loginInfo) {
+	            signInLink.setHref(loginInfo.getLogoutUrl());
+	            signInLink.setText(loginInfo.getName());
+	            signInLink.setTitle("Sign out");
+	        }
+
+	        
 	
 
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		// TODO: REMOVE TESTING CODE
-		AsyncCallback callback = new AsyncCallback<Boolean>()  {
- 			public void onFailure(Throwable caught) {
- 				// 
- 			}
+		signInLink.getElement().setClassName("login-area");
+        signInLink.setTitle("sign out");
+        loginImage.getElement().setClassName("login-area");
+        loginPanel.add(signInLink);
+        RootPanel.get("loginPanelContainer").add(loginPanel);
+        final StringBuilder userEmail = new StringBuilder();
+        System.out.println(GWT.getHostPageBaseURL());
+        greetingService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
+            @Override
+            public void onFailure(final Throwable caught) {
+                GWT.log("login -> onFailure");
+                System.out.println(caught.toString());
+            }
 
- 			public void onSuccess(Boolean result) {
- 				//
- 			}
- 		};
- 		
-		schoolValueSvc.setCode(new PostalCodeValue("V5J2C4"), callback);
-		
-		// Check login status using login service.
-		LoginServiceAsync loginService = GWT.create(LoginService.class);
-		loginService.login(GWT.getHostPageBaseURL(),
-				new AsyncCallback<LoginInfo>() {
-					public void onFailure(Throwable error) {
-					}
-
-					public void onSuccess(LoginInfo result) {
-						loginInfo = result;
-						if (loginInfo.isLoggedIn()) {
-							loadschoolviewer();
-						} else {
-							loadLogin();
-						}
-					}
-				});
-
+            @Override
+            public void onSuccess(final LoginInfo result) {
+                if (result.getName() != null && !result.getName().isEmpty()) {
+                    addGoogleAuthHelper();
+                    loadLogout(result);
+                } else {
+                    loadLogin(result);
+                }
+                userEmail.append(result.getEmailAddress());
+            }
+        });
+        loadschoolviewer();
 	}
+	private void addGoogleAuthHelper() {
+        final AuthRequest req = 
+            new AuthRequest(GOOGLE_AUTH_URL, GOOGLE_CLIENT_ID).withScopes(PLUS_ME_SCOPE);
+        AUTH.login(req, new Callback<String, Throwable>() {
+            @Override
+            public void onSuccess(final String token) {
+                if (!token.isEmpty()) {
+                    greetingService.loginDetails(token, new AsyncCallback<LoginInfo>() {
+                        @Override
+                        public void onFailure(final Throwable caught) {
+                            GWT.log("loginDetails -> onFailure");
+                        }
 
-	private void loadLogin() {
-		// Assemble login panel.
-		signInLink.setHref(loginInfo.getLoginUrl());
-		loginPanel.add(loginLabel);
-		loginPanel.add(signInLink);
-		RootPanel.get(null).add(loginPanel);
+                        @Override
+                        public void onSuccess(final LoginInfo loginInfo) {
+                            signInLink.setText(loginInfo.getName());
+                            nameField.setText(loginInfo.getName());
+                            signInLink.setStyleName("login-area");
+                            loginImage.setUrl(loginInfo.getPictureUrl());
+                            loginImage.setVisible(false);
+                            loginPanel.add(loginImage);
+                            loginImage.addLoadHandler(new LoadHandler() {
+                                @Override
+                                public void onLoad(final LoadEvent event) {
+                                    final int newWidth = 24;
+                                    final com.google.gwt.dom.client.Element element = 
+                                            event.getRelativeElement();
+                                    if (element.equals(loginImage.getElement())) {
+                                        final int originalHeight = loginImage.getOffsetHeight();
+                                        final int originalWidth = loginImage.getOffsetWidth();
+                                        if (originalHeight > originalWidth) {
+                                            loginImage.setHeight(newWidth + "px");
+                                        } else {
+                                            loginImage.setWidth(newWidth + "px");
+                                        }
+                                        loginImage.setVisible(true);
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+            }
 
-	}
+            @Override
+            public void onFailure(final Throwable caught) {
+                GWT.log("Error -> loginDetails\n" + caught.getMessage());
+            }
+        });
+    }
 
 	private void loadschoolviewer() {		
 		// load map 
@@ -161,14 +242,6 @@ public class SchoolViewer implements EntryPoint {
 	    
 	    Markers.add(start);
 	    //----------------------------------------
-	    
-		
-		
-		
-		
-		
-	        // Set up sign out hyperlink.
-	 		signOutLink.setHref(loginInfo.getLogoutUrl());
 	 		
 	 		//panels for holding widgets
 	 		@SuppressWarnings("deprecation") // may rewrite later if I have time
