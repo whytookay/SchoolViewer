@@ -5,12 +5,16 @@
     <servlet-name>loginService</servlet-name>
     <servlet-class>com.gwt.schoolviewer.server.LoginServiceImpl</servlet-class>
   </servlet>
-
-  <servlet-mapping>
-    <servlet-name>loginService</servlet-name>
-    <url-pattern>/schoolviewer/login</url-pattern>
-  </servlet-mapping>
   
+    <servlet>
+    <servlet-name>greetServlet</servlet-name>
+    <servlet-class>com.gwt.schoolviewer.server.GreetingServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>greetServlet</servlet-name>
+    <url-pattern>/schoolviewer/greet</url-pattern>
+  </servlet-mapping>
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>SchoolViewer.html</welcome-file>

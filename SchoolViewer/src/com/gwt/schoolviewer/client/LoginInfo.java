@@ -3,50 +3,68 @@ package com.gwt.schoolviewer.client;
 import java.io.Serializable;
 
 public class LoginInfo implements Serializable {
-	 private boolean loggedIn = false;
-	  private String loginUrl;
-	  private String logoutUrl;
-	  private String emailAddress;
-	  private String nickname;
 
-	  public boolean isLoggedIn() {
-	    return loggedIn;
-	  }
+    private static final long serialVersionUID = 1L;
 
-	  public void setLoggedIn(boolean loggedIn) {
-	    this.loggedIn = loggedIn;
-	  }
+    private boolean loggedIn = false;
 
-	  public String getLoginUrl() {
-	    return loginUrl;
-	  }
+    private String loginUrl;
 
-	  public void setLoginUrl(String loginUrl) {
-	    this.loginUrl = loginUrl;
-	  }
+    private String logoutUrl;
 
-	  public String getLogoutUrl() {
-	    return logoutUrl;
-	  }
+    private String emailAddress;
 
-	  public void setLogoutUrl(String logoutUrl) {
-	    this.logoutUrl = logoutUrl;
-	  }
+    private String nickname;
 
-	  public String getEmailAddress() {
-	    return emailAddress;
-	  }
+    private String pictureUrl;
 
-	  public void setEmailAddress(String emailAddress) {
-	    this.emailAddress = emailAddress;
-	  }
+    public boolean isLoggedIn() {
+        return loggedIn;
+    }
 
-	  public String getNickname() {
-	    return nickname;
-	  }
+    public void setLoggedIn(final boolean loggedIn) {
+        this.loggedIn = loggedIn;
+    }
 
-	  public void setNickname(String nickname) {
-	    this.nickname = nickname;
-	  }
+    public String getLoginUrl() {
+        return loginUrl;
+    }
+
+    public void setLoginUrl(final String loginUrl) {
+        this.loginUrl = loginUrl;
+    }
+
+    public String getLogoutUrl() {
+        return logoutUrl;
+    }
+
+    public void setLogoutUrl(final String logoutUrl) {
+        this.logoutUrl = logoutUrl;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(final String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
+    public String getName() {
+        return nickname;
+    }
+
+    public void setName(final String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setPictureUrl(final String pictureUrl) {
+        this.pictureUrl = pictureUrl;
+
+    }
+
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
 
 }

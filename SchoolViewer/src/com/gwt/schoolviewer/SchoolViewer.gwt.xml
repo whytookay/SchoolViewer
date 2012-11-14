@@ -15,6 +15,7 @@
   <inherits name="com.google.maps.gwt.GoogleMaps" />
   <inherits name="com.google.gwt.user.User" />
   <inherits name="com.google.api.gwt.services.Plus" />
+  <inherits name="com.google.api.gwt.oauth2.OAuth2" />
   <script src="http://maps.google.com/maps/api/js?sensor=false" />
   <!-- Specify the app entry point class.                         -->
   <entry-point class='com.gwt.schoolviewer.client.SchoolViewer'/>
