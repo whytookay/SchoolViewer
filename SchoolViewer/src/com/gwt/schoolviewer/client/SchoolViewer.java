@@ -68,7 +68,6 @@ public class SchoolViewer implements EntryPoint {
 			+ "attempting to contact the server. Please check your network "
 			+ "connection and try again.";
 
-
 	// data stuff
 	/**
 	 * Create a remote service proxy to talk to the server-side compare service
@@ -77,502 +76,513 @@ public class SchoolViewer implements EntryPoint {
 			.create(CompareService.class);
 
 	/**
-	 * Create a remote service proxy to talk to the server-side SchoolValue service
+	 * Create a remote service proxy to talk to the server-side SchoolValue
+	 * service
 	 */
 	private final SchoolValueServiceAsync schoolValueSvc = GWT
 			.create(SchoolValueService.class);
-	
+
 	private ArrayList<SchoolValue> ListOfSchools;
-	
+	private ArrayList<SchoolValue> ListOfCompSchools = new ArrayList<SchoolValue>();
+
 	// login stuff
-	 private final HorizontalPanel loginPanel = new HorizontalPanel();
-	 private final Anchor signInLink = new Anchor("");
-	 private final Image loginImage = new Image();
-	 private final TextBox nameField = new TextBox();
+	private final HorizontalPanel loginPanel = new HorizontalPanel();
+	private final Anchor signInLink = new Anchor("");
+	private final Image loginImage = new Image();
+	private final TextBox nameField = new TextBox();
 
 	// main layout stuff
 	final FlexTable compFlexTable = new FlexTable();
 	final FlexTable schoolFlexTable = new FlexTable();
-	
+
 	// map stuff
-	private MapOptions options  = MapOptions.create() ;
+	private MapOptions options = MapOptions.create();
 	private GoogleMap theMap;
 	private ArrayList<Marker> Markers = new ArrayList<Marker>();
 	private InfoWindow IW = InfoWindow.create();
-	
-	//google +
-	 private static final Auth AUTH = Auth.get();
-	 private static final String GOOGLE_AUTH_URL = 
-	        "https://accounts.google.com/o/oauth2/auth";
-	 private static final String GOOGLE_CLIENT_ID = 
-	        "700088417733.apps.googleusercontent.com";
-	 private static final String PLUS_ME_SCOPE = 
-	        "https://www.googleapis.com/auth/userinfo.profile";
-	 
 
-     private final GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
+	// google +
+	private static final Auth AUTH = Auth.get();
+	private static final String GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/auth";
+	private static final String GOOGLE_CLIENT_ID = "700088417733.apps.googleusercontent.com";
+	private static final String PLUS_ME_SCOPE = "https://www.googleapis.com/auth/userinfo.profile";
 
-	
-//	private static final Plus plus = GWT.create(Plus.class);
-//	private static final String CLIENT_ID = "700088417733.apps.googleusercontent.com";
-//	private static final String API_KEY = "AIzaSyDGS6xMhkUEiR7FVCp5lslzcWOKGXWxooc";
-//	private static final String APPLICATION_NAME = "projecttesting40702";
-//	
-	    private void loadLogin(final LoginInfo loginInfo) {
-	    	    AUTH.clearAllTokens();
-	            signInLink.setHref(loginInfo.getLoginUrl());
-	            signInLink.setText("Please, sign in with your Google Account");
-	            signInLink.setTitle("Sign in");
-	        }
-	        private void loadLogout(final LoginInfo loginInfo) {
-	            signInLink.setHref(loginInfo.getLogoutUrl());
-	            signInLink.setText(loginInfo.getName());
-	            signInLink.setTitle("Sign out");
-	        }
+	private final GreetingServiceAsync greetingService = GWT
+			.create(GreetingService.class);
 
-	        
-	
+	// private static final Plus plus = GWT.create(Plus.class);
+	// private static final String CLIENT_ID =
+	// "700088417733.apps.googleusercontent.com";
+	// private static final String API_KEY =
+	// "AIzaSyDGS6xMhkUEiR7FVCp5lslzcWOKGXWxooc";
+	// private static final String APPLICATION_NAME = "projecttesting40702";
+	//
+	private void loadLogin(final LoginInfo loginInfo) {
+		AUTH.clearAllTokens();
+		signInLink.setHref(loginInfo.getLoginUrl());
+		signInLink.setText("Please, sign in with your Google Account");
+		signInLink.setTitle("Sign in");
+	}
+
+	private void loadLogout(final LoginInfo loginInfo) {
+		signInLink.setHref(loginInfo.getLogoutUrl());
+		signInLink.setText(loginInfo.getName());
+		signInLink.setTitle("Sign out");
+	}
 
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
 		signInLink.getElement().setClassName("login-area");
-        signInLink.setTitle("sign out");
-        loginImage.getElement().setClassName("login-area");
-        loginPanel.add(signInLink);
-        RootPanel.get("loginPanelContainer").add(loginPanel);
-        final StringBuilder userEmail = new StringBuilder();
-        System.out.println(GWT.getHostPageBaseURL());
-        greetingService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
-            @Override
-            public void onFailure(final Throwable caught) {
-                GWT.log("login -> onFailure");
-                System.out.println(caught.toString());
-            }
+		signInLink.setTitle("sign out");
+		loginImage.getElement().setClassName("login-area");
+		loginPanel.add(signInLink);
+		RootPanel.get("loginPanelContainer").add(loginPanel);
+		final StringBuilder userEmail = new StringBuilder();
+		System.out.println(GWT.getHostPageBaseURL());
+		greetingService.login(GWT.getHostPageBaseURL(),
+				new AsyncCallback<LoginInfo>() {
+					@Override
+					public void onFailure(final Throwable caught) {
+						GWT.log("login -> onFailure");
+						System.out.println(caught.toString());
+					}
 
-            @Override
-            public void onSuccess(final LoginInfo result) {
-                if (result.getName() != null && !result.getName().isEmpty()) {
-                    addGoogleAuthHelper();
-                    loadLogout(result);
-                } else {
-                    loadLogin(result);
-                }
-                userEmail.append(result.getEmailAddress());
-            }
-        });
-        loadschoolviewer();
-	}
-	private void addGoogleAuthHelper() {
-        final AuthRequest req = 
-            new AuthRequest(GOOGLE_AUTH_URL, GOOGLE_CLIENT_ID).withScopes(PLUS_ME_SCOPE);
-        AUTH.login(req, new Callback<String, Throwable>() {
-            @Override
-            public void onSuccess(final String token) {
-                if (!token.isEmpty()) {
-                    greetingService.loginDetails(token, new AsyncCallback<LoginInfo>() {
-                        @Override
-                        public void onFailure(final Throwable caught) {
-                            GWT.log("loginDetails -> onFailure");
-                        }
-
-                        @Override
-                        public void onSuccess(final LoginInfo loginInfo) {
-                            signInLink.setText(loginInfo.getName());
-                            nameField.setText(loginInfo.getName());
-                            signInLink.setStyleName("login-area");
-                            loginImage.setUrl(loginInfo.getPictureUrl());
-                            loginImage.setVisible(false);
-                            loginPanel.add(loginImage);
-                            loginImage.addLoadHandler(new LoadHandler() {
-                                @Override
-                                public void onLoad(final LoadEvent event) {
-                                    final int newWidth = 24;
-                                    final com.google.gwt.dom.client.Element element = 
-                                            event.getRelativeElement();
-                                    if (element.equals(loginImage.getElement())) {
-                                        final int originalHeight = loginImage.getOffsetHeight();
-                                        final int originalWidth = loginImage.getOffsetWidth();
-                                        if (originalHeight > originalWidth) {
-                                            loginImage.setHeight(newWidth + "px");
-                                        } else {
-                                            loginImage.setWidth(newWidth + "px");
-                                        }
-                                        loginImage.setVisible(true);
-                                    }
-                                }
-                            });
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onFailure(final Throwable caught) {
-                GWT.log("Error -> loginDetails\n" + caught.getMessage());
-            }
-        });
-    }
-
-	private void loadschoolviewer() {		
-		// load map 
-	    options.setCenter(LatLng.create( 49.242931,-123.184547));   
-	    options.setZoom( 12 ) ;
-	    options.setMapTypeId( MapTypeId.ROADMAP );
-	    options.setDraggable(true);
-	    options.setMapTypeControl(true);
-	    options.setScaleControl(true) ;
-	    options.setScrollwheel(true) ;
-	    
-	    SimplePanel mapPanel = new SimplePanel();
-	    mapPanel.setSize("600px","600px");
-	    mapPanel.setVisible(true);
-
-	    theMap = GoogleMap.create( mapPanel.getElement(), options ) ;
-	   
-	    //sample of how to add marker-------------
-	    MarkerOptions markerOptions = MarkerOptions.create(); 
-	    markerOptions.setMap(theMap); 
-	    markerOptions.setTitle("THIS IS YOU"); 
-	    markerOptions.setDraggable(true); 
-	    markerOptions.setIcon(MarkerImage.create("http://google-maps-icons.googlecode.com/files/walking-tour.png"));
-	    markerOptions.setPosition(LatLng.create( 49.242931,-123.184547));
-	    Marker start = Marker.create(markerOptions);
-	    
-	    Markers.add(start);
-	    //----------------------------------------
-	 		
-	 		//panels for holding widgets
-	 		@SuppressWarnings("deprecation") // may rewrite later if I have time
-			final VerticalSplitPanel tablePanel = new VerticalSplitPanel(); // TODO: yo this is deprecated
-	 		final HorizontalPanel layoutPanel = new HorizontalPanel();
-	 		final AbsolutePanel filterPanel = new AbsolutePanel();
-	 		
-	 		// compare and school table widgets
-	 		final Button refreshButton = new Button("Refresh");
-	 		final TextBox nameField = new TextBox();
-	 		nameField.setText("Enter school information:");
-	 		final Button compButton = new Button("Compare");
-	 		final Button clearButton = new Button("Clear Checked");
-	 		final CheckBox checkAllComp = new CheckBox("Check All");
-	 		
-	 		//filterPanel widgets
-	 		final Label filterLabel = new Label("Filters");
-	 		final TextBox postalField = new TextBox();
-	 		final TextBox radiusField = new TextBox();
-	 		
-	 		//setup dropbox for districts
-	 		final ListBox districtDropBox = new ListBox();
-	 		// Manually Adding districts later will query for districts
-	 		districtDropBox.addItem("Vancouver");
-	 		districtDropBox.addItem("Surrey");
-	 		districtDropBox.addItem("Chilliwack");
-
-	 		// Create table for comparing school data.
-	 		compFlexTable.setText(0, 0, "Name");
-	 		compFlexTable.setText(0, 1, "Location");
-	 		compFlexTable.setText(0, 2, "District");
-	 		compFlexTable.setText(0, 3, "Postal Code");
-	 		compFlexTable.setWidget(0, 4, checkAllComp);
-	 		
-	 		// Create table for stock data.
-	 		schoolFlexTable.setText(0, 0, "Name");
-	 		schoolFlexTable.setText(0, 1, "Location");
-	 		schoolFlexTable.setText(0, 2, "District");
-	 		schoolFlexTable.setText(0, 3, "Postal Code");
-	 		schoolFlexTable.setText(0, 4, "Select");
-
-	 		// Add styles to elements in the compare table
-	 		compFlexTable.setCellPadding(6);
-	 		compFlexTable.getRowFormatter().addStyleName(0, "schoolListHeader");
-	 		compFlexTable.addStyleName("schoolList");
-
-	 		// Add styles to elements in the school list table.
-	 		schoolFlexTable.setCellPadding(6);
-	 		schoolFlexTable.getRowFormatter().addStyleName(0, "schoolListHeader");
-	 		schoolFlexTable.addStyleName("schoolList");
-
-	 		// Use RootPanel.get() to get the entire body element
-	 		filterPanel.setSize("640px", "100px");
-	 		filterPanel.add(filterLabel);
-	 		filterPanel.add(postalField, 50, 15 );
-	 		filterPanel.add(radiusField, 50, 50); 
-	 		filterPanel.add(districtDropBox, 250, 15);
-	 		filterPanel.addStyleName("filterTable");
-	 		RootPanel.get("filterContainer").add(filterPanel);
-	 		
-	 		// Setup search and compare buttons and search field
-	 		RootPanel.get("nameFieldContainer").add(refreshButton);
-			RootPanel.get("nameFieldContainer").add(nameField);
-			RootPanel.get("buttonContainer").add(compButton);
-			RootPanel.get("buttonContainer").add(clearButton);
-			
-			
-// Setup Compare and Map panel layout in RootPanel
-			tablePanel.setSize("640px", "600px");
-			tablePanel.add(compFlexTable);
-			tablePanel.add(schoolFlexTable);
-			tablePanel.addStyleName("schoolTable");
-			layoutPanel.insert(tablePanel, 0);
-			layoutPanel.insert(mapPanel, 1);
-			RootPanel.get("tableMapContainer").add(layoutPanel);
-			// Focus the cursor on the name field when the app loads
-			nameField.setFocus(true);
-			nameField.selectAll();
-
-	 		// Create a handler for the sendButton and nameField
-	 		class MyHandler implements ClickHandler, KeyUpHandler {
-	 			/**
-	 			 * Fired when the user clicks on the sendButton.
-	 			 */
-	 			public void onClick(ClickEvent event) {
-	 				refreshSchoolList();
-	 			}
-
-	 			/**
-	 			 * Fired when the user types in the nameField.
-	 			 */
-	 			public void onKeyUp(KeyUpEvent event) {
-	 				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-	 					refreshSchoolList();
-	 				}
-	 			}
-	 		}
-
-	 		// Create a handler for the compare button
-	 		class CompHandler implements ClickHandler {
-	 			/**
-	 			 * Fired when the user clicks on the compButton.
-	 			 */
-	 			public void onClick(ClickEvent event) {
-	 				addToCompList();
-	 			}
-	 		}
-
-	 		// Create a handler for the clear checked button
-	 		class ClearHandler implements ClickHandler {
-	 			/**
-	 			 * Fired when the user clicks on the clearChecked Button.
-	 			 */
-	 			public void onClick(ClickEvent event) {
-	 				removeFromCompList();
-	 			}
-	 		}
-
-	 		// Create a handler for the select all box {
-	 		class CheckHandler implements ClickHandler {
-	 			public void onClick(ClickEvent event) {
-	 				checkAllBoxes();
-	 			}
-
-	 		}
-
-	 		/*
-	 		 * // Create a hndler for the checkAll boxes class CheckAllHandler
-	 		 * implements
-	 		 */
-
-	 		// Add a handler to send the name to the server
-	 		MyHandler handler = new MyHandler();
-	 		refreshButton.addClickHandler(handler);
-	 		nameField.addKeyUpHandler(handler);
-	 		CompHandler comphandler = new CompHandler();
-	 		compButton.addClickHandler(comphandler);
-	 		ClearHandler clearhandler = new ClearHandler();
-	 		clearButton.addClickHandler(clearhandler);
-	 		CheckHandler checkhandler = new CheckHandler();
-	 		checkAllComp.addClickHandler(checkhandler);
-
-	 	}
-
-	 	private void refreshSchoolList() {
-
-	 		// Set up the callback object for Schools
-	 		AsyncCallback<ArrayList<SchoolValue>> callback = new AsyncCallback<ArrayList<SchoolValue>>() {
-	 			public void onFailure(Throwable caught) {
-	 				// TODO: Do something with errors.
-	 			}
-
-	 			public void onSuccess(ArrayList<SchoolValue> result) {
-	 				ListOfSchools = result;
-	 				updateTableSchool(result);
-	 			}
-	 		};
-
-	 		// Make the call to the school price service.
-	 		schoolValueSvc.getValues(callback);
-	 	}
-	 	
-	 	
-
-	 	/**
-	 	 * Update the Name, Location, and District fields all the rows in the school
-	 	 * table.
-	 	 * 
-	 	 * @param values
-	 	 *            School data for all rows.
-	 	 */
-	 	private void updateTableSchool(ArrayList<SchoolValue> values) {
-	 		for (int i = 0; i < 25; i++) {
-	 			final CheckBox checkBox = new CheckBox(); // create new checkbox per
-	 														// row
-	 			updateTableSchoolRow(values.get(i), i, checkBox);
-	 		}
-	 	}
-
-	 	/**
-	 	 * Update a single row in the school table.
-	 	 * 
-	 	 * @param value
-	 	 *            School data for a single row.
-	 	 * @param index
-	 	 *            the row to be updated
-	 	 */
-	 	private void updateTableSchoolRow(SchoolValue value, int index,
-	 			CheckBox checkBox) {
-
-	 		int row = index + 1;
-
-	 		// Populate name, location and district
-	 		schoolFlexTable.setText(row, 0, value.getName());
-	 		schoolFlexTable.setText(row, 1, value.getLocation());
-	 		schoolFlexTable.setText(row, 2, value.getDistrict());
-	 		schoolFlexTable.setText(row, 3, value.getpCode());// TODO: CHECK IF THIS
-	 															// IS FINE
-	 		schoolFlexTable.setWidget(row, 4, checkBox);
-
-	 	}
-
-	 	/**
-	 	 * Add all checked rows to the compare table table
-	 	 */
-	 	private void addToCompList() {
-	 		int numCompRows = 1;
-	 		int rowCount = schoolFlexTable.getRowCount();
-	 		
-	 		// go through all rows in school table
-	 		for (int i = 1; i < rowCount; i++) {
-	 			if (((CheckBox) schoolFlexTable.getWidget(i, 4)).getValue()) {
-	 				// check if entry is already in comparison table
-	 				if (notInCompTable(schoolFlexTable.getText(i, 0))) {
-	 					// make an ArrayList to hold row data
-	 					ArrayList<String> schooldata = new ArrayList<String>();
-	 					for (int j = 0; j < 4; j++) {
-	 						// add current row data to ArrayList
-	 						schooldata.add(schoolFlexTable.getText(i, j));
-	 					}
-	 					// insert row in comptable and return index of row to insert
-	 					int newRow = compFlexTable.insertRow(numCompRows);
-	 					// increment next index position for insert
-	 					numCompRows++;
-	 					for (int k = 0; k < 4; k++) {
-	 						// add data to comp table
-	 						compFlexTable.setText(newRow, k, schooldata.get(k));
-	 						if (k == 0){
-	 							AddMarker(schooldata.get(k));
-	 						}
-	 							
-	 					}
-	 					// Add a checkbox for removal
-	 					CheckBox removeBox = new CheckBox();
-	 					compFlexTable.setWidget(newRow, 4, removeBox);
-	 				}
-	 			}
-	 		}
-	 	}
-
-	 	private boolean notInCompTable(String school) {
-	 		for (int i = 1; i < compFlexTable.getRowCount(); i++) {
-	 			if (school.equals(compFlexTable.getText(i, 0)))
-	 				return false;
-	 		}
-	 		return true;
-	 	}
-
-	 	/**
-	 	 * Remove all checked rows from compare table
-	 	 * 
-	 	 */
-	 	private void removeFromCompList() {
-	 		int rowCount = compFlexTable.getRowCount();
-	 		// go backward to avoid messed up row indices
-	 		for (int i = rowCount - 1; i > 0; i--) {
-	 			if (((CheckBox) compFlexTable.getWidget(i, 4)).getValue()) {
-                    RemoveMarker(compFlexTable.getText(i, 0));
-	 				compFlexTable.removeRow(i);
-	 			}
-	 		}
-	 		CheckBox checkedBox = (CheckBox) compFlexTable.getWidget(0, 4);
-	 		checkedBox.setValue(false);
-			
-	 		
-	 	}
-
-	 	private void checkAllBoxes() {
-	 		int rowCount = compFlexTable.getRowCount();
-	 		if (((CheckBox) compFlexTable.getWidget(0, 4)).getValue()) {
-	 			for (int j = 1; j < rowCount; j++) {
-	 				CheckBox checkedBox = new CheckBox();
-	 				checkedBox.setValue(true);
-	 				compFlexTable.setWidget(j, 4, checkedBox);
-	 			}
-	 		} else {
-	 			for (int i = 1; i < rowCount; i++) {
-	 				compFlexTable.setWidget(i, 4, new CheckBox());
-	 			}
-	 		}
-	 	}
-	 	private void AddMarker(String name){
-	 		for(SchoolValue s : ListOfSchools){
-	 			if(name.equals(s.getName())){
-	 			    MarkerOptions markerOptions = MarkerOptions.create(); 
-	 			    markerOptions.setMap(theMap); 
-	 			    markerOptions.setTitle(s.getName()); 
-	 			    markerOptions.setDraggable(false); 
-	 			    markerOptions.setPosition(LatLng.create( s.getLatitude(),s.getLongitude()));
-	 			    Marker marker = Marker.create(markerOptions);
-	 			    final String txt = s.getName() +" @ "+ s.getDistrict();
-	 			    final LatLng pos = LatLng.create(s.getLatitude(),s.getLongitude());
-                    marker.addClickListener(new Marker.ClickHandler() {
-                   
-						@Override
-						public void handle(MouseEvent event){
-                               IW.close();
-                               IW.setPosition(pos);
-                               IW.setContent(txt);  
-							   IW.open(theMap);
-							    
-//							    w.addCloseClickListener(new InfoWindow.CloseClickHandler() {
-//									
-//									@Override
-//									public void handle() {
-//										w.close();
-//										
-//									}
-//								});
-
-					       //     Window.alert(txt);
-							
+					@Override
+					public void onSuccess(final LoginInfo result) {
+						if (result.getName() != null
+								&& !result.getName().isEmpty()) {
+							addGoogleAuthHelper();
+							loadLogout(result);
+						} else {
+							loadLogin(result);
 						}
-                   });
-                    Markers.add(marker);
-	 			    
-	 			}
-	 				
-	 		}
-	 		
-	 	}
-	 	private void RemoveMarker(String name){
-	 		for(int k = 0; k < Markers.size(); k++){
-	 			if(name.equals(Markers.get(k).getTitle())){
-	 				//Markers.get(k).setVisible(false);
-	 				Markers.get(k).setMap((GoogleMap) null);
-	 				if(Markers.get(k).getPosition().equals(IW.getPosition()))
-	 					IW.close();
-	 				Markers.remove(k);
-	 				
-	 			}
-	 		}
-	 	}
-	 }
+						userEmail.append(result.getEmailAddress());
+					}
+				});
+		loadschoolviewer();
+	}
+
+	private void addGoogleAuthHelper() {
+		final AuthRequest req = new AuthRequest(GOOGLE_AUTH_URL,
+				GOOGLE_CLIENT_ID).withScopes(PLUS_ME_SCOPE);
+		AUTH.login(req, new Callback<String, Throwable>() {
+			@Override
+			public void onSuccess(final String token) {
+				if (!token.isEmpty()) {
+					greetingService.loginDetails(token,
+							new AsyncCallback<LoginInfo>() {
+								@Override
+								public void onFailure(final Throwable caught) {
+									GWT.log("loginDetails -> onFailure");
+								}
+
+								@Override
+								public void onSuccess(final LoginInfo loginInfo) {
+									signInLink.setText(loginInfo.getName());
+									nameField.setText(loginInfo.getName());
+									signInLink.setStyleName("login-area");
+									loginImage.setUrl(loginInfo.getPictureUrl());
+									loginImage.setVisible(false);
+									loginPanel.add(loginImage);
+									loginImage
+											.addLoadHandler(new LoadHandler() {
+												@Override
+												public void onLoad(
+														final LoadEvent event) {
+													final int newWidth = 24;
+													final com.google.gwt.dom.client.Element element = event
+															.getRelativeElement();
+													if (element.equals(loginImage
+															.getElement())) {
+														final int originalHeight = loginImage
+																.getOffsetHeight();
+														final int originalWidth = loginImage
+																.getOffsetWidth();
+														if (originalHeight > originalWidth) {
+															loginImage
+																	.setHeight(newWidth
+																			+ "px");
+														} else {
+															loginImage
+																	.setWidth(newWidth
+																			+ "px");
+														}
+														loginImage
+																.setVisible(true);
+													}
+												}
+											});
+								}
+							});
+				}
+			}
+
+			@Override
+			public void onFailure(final Throwable caught) {
+				GWT.log("Error -> loginDetails\n" + caught.getMessage());
+			}
+		});
+	}
+
+	private void loadschoolviewer() {
+		// load map
+		options.setCenter(LatLng.create(49.242931, -123.184547));
+		options.setZoom(12);
+		options.setMapTypeId(MapTypeId.ROADMAP);
+		options.setDraggable(true);
+		options.setMapTypeControl(true);
+		options.setScaleControl(true);
+		options.setScrollwheel(true);
+
+		SimplePanel mapPanel = new SimplePanel();
+		mapPanel.setSize("600px", "600px");
+		mapPanel.setVisible(true);
+
+		theMap = GoogleMap.create(mapPanel.getElement(), options);
+
+		// sample of how to add marker-------------
+		MarkerOptions markerOptions = MarkerOptions.create();
+		markerOptions.setMap(theMap);
+		markerOptions.setTitle("THIS IS YOU");
+		markerOptions.setDraggable(true);
+		markerOptions
+				.setIcon(MarkerImage
+						.create("http://google-maps-icons.googlecode.com/files/walking-tour.png"));
+		markerOptions.setPosition(LatLng.create(49.242931, -123.184547));
+		Marker start = Marker.create(markerOptions);
+
+		Markers.add(start);
+		// ----------------------------------------
+
+		// panels for holding widgets
+		@SuppressWarnings("deprecation")
+		// may rewrite later if I have time
+		final VerticalSplitPanel tablePanel = new VerticalSplitPanel(); // TODO:
+																		// yo
+																		// this
+																		// is
+																		// deprecated
+		final HorizontalPanel layoutPanel = new HorizontalPanel();
+		final AbsolutePanel filterPanel = new AbsolutePanel();
+
+		// compare and school table widgets
+		final Button refreshButton = new Button("Refresh");
+		final TextBox nameField = new TextBox();
+		nameField.setText("Enter school information:");
+		final Button compButton = new Button("Compare");
+		final Button clearButton = new Button("Clear Checked");
+		final CheckBox checkAllComp = new CheckBox("Check All");
+
+		// filterPanel widgets
+		final Label filterLabel = new Label("Filters");
+		final TextBox postalField = new TextBox();
+		final TextBox radiusField = new TextBox();
+
+		// setup dropbox for districts
+		final ListBox districtDropBox = new ListBox();
+		// Manually Adding districts later will query for districts
+		districtDropBox.addItem("Vancouver");
+		districtDropBox.addItem("Surrey");
+		districtDropBox.addItem("Chilliwack");
+
+		// Create table for comparing school data.
+		compFlexTable.setText(0, 0, "Name");
+		compFlexTable.setText(0, 1, "Location");
+		compFlexTable.setText(0, 2, "District");
+		compFlexTable.setText(0, 3, "Postal Code");
+		compFlexTable.setWidget(0, 4, checkAllComp);
+
+		// Create table for stock data.
+		schoolFlexTable.setText(0, 0, "Name");
+		schoolFlexTable.setText(0, 1, "Location");
+		schoolFlexTable.setText(0, 2, "District");
+		schoolFlexTable.setText(0, 3, "Postal Code");
+		schoolFlexTable.setText(0, 4, "Select");
+
+		// Add styles to elements in the compare table
+		compFlexTable.setCellPadding(6);
+		compFlexTable.getRowFormatter().addStyleName(0, "schoolListHeader");
+		compFlexTable.addStyleName("schoolList");
+
+		// Add styles to elements in the school list table.
+		schoolFlexTable.setCellPadding(6);
+		schoolFlexTable.getRowFormatter().addStyleName(0, "schoolListHeader");
+		schoolFlexTable.addStyleName("schoolList");
+
+		// Use RootPanel.get() to get the entire body element
+		filterPanel.setSize("640px", "100px");
+		filterPanel.add(filterLabel);
+		filterPanel.add(postalField, 50, 15);
+		postalField.setText("Enter Postal Code");
+		filterPanel.add(radiusField, 50, 50);
+		radiusField.setText("Enter Radius");
+		filterPanel.add(districtDropBox, 250, 15);
+		filterPanel.addStyleName("filterTable");
+		RootPanel.get("filterContainer").add(filterPanel);
+
+		// Setup search and compare buttons and search field
+		RootPanel.get("nameFieldContainer").add(refreshButton);
+		RootPanel.get("nameFieldContainer").add(nameField);
+		RootPanel.get("buttonContainer").add(compButton);
+		RootPanel.get("buttonContainer").add(clearButton);
+
+		// Setup Compare and Map panel layout in RootPanel
+		tablePanel.setSize("640px", "600px");
+		tablePanel.add(compFlexTable);
+		tablePanel.add(schoolFlexTable);
+		tablePanel.addStyleName("schoolTable");
+		layoutPanel.insert(tablePanel, 0);
+		layoutPanel.insert(mapPanel, 1);
+		RootPanel.get("tableMapContainer").add(layoutPanel);
+		// Focus the cursor on the name field when the app loads
+		nameField.setFocus(true);
+		nameField.selectAll();
+
+		// Create a handler for the sendButton and nameField
+		class MyHandler implements ClickHandler, KeyUpHandler {
+			/**
+			 * Fired when the user clicks on the sendButton.
+			 */
+			public void onClick(ClickEvent event) {
+				refreshSchoolList();
+			}
+
+			/**
+			 * Fired when the user types in the nameField.
+			 */
+			public void onKeyUp(KeyUpEvent event) {
+				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+					refreshSchoolList();
+				}
+			}
+		}
+
+		// Create a handler for the compare button
+		class CompHandler implements ClickHandler {
+			/**
+			 * Fired when the user clicks on the compButton.
+			 */
+			public void onClick(ClickEvent event) {
+				addToCompList();
+			}
+		}
+
+		// Create a handler for the clear checked button
+		class ClearHandler implements ClickHandler {
+			/**
+			 * Fired when the user clicks on the clearChecked Button.
+			 */
+			public void onClick(ClickEvent event) {
+				removeFromCompList();
+			}
+		}
+
+		// Create a handler for the select all box {
+		class CheckHandler implements ClickHandler {
+			public void onClick(ClickEvent event) {
+				checkAllBoxes();
+			}
+
+		}
+
+		/*
+		 * // Create a hndler for the checkAll boxes class CheckAllHandler
+		 * implements
+		 */
+
+		// Add a handler to send the name to the server
+		MyHandler handler = new MyHandler();
+		refreshButton.addClickHandler(handler);
+		nameField.addKeyUpHandler(handler);
+		CompHandler comphandler = new CompHandler();
+		compButton.addClickHandler(comphandler);
+		ClearHandler clearhandler = new ClearHandler();
+		clearButton.addClickHandler(clearhandler);
+		CheckHandler checkhandler = new CheckHandler();
+		checkAllComp.addClickHandler(checkhandler);
+
+	}
+
+	private void refreshSchoolList() {
+
+		// Set up the callback object for Schools
+		AsyncCallback<ArrayList<SchoolValue>> callback = new AsyncCallback<ArrayList<SchoolValue>>() {
+			public void onFailure(Throwable caught) {
+				// TODO: Do something with errors.
+				System.out.println("Failed");
+			}
+
+			public void onSuccess(ArrayList<SchoolValue> result) {
+				System.out.println("Success");
+				ListOfSchools = result;
+				populateSchoolTable(ListOfSchools);
+			}
+		};
+
+		// Make the call to the school value service.
+		schoolValueSvc.getValues(callback);
+	}
+
+	/**
+	 * Update the Name, Location, and District fields all the rows in the school
+	 * table.
+	 * 
+	 * @param values
+	 *            School data for all rows.
+	 */
+	private void populateSchoolTable(ArrayList<SchoolValue> values) {
+		for (int i = 0; i < 25; i++) {
+			final CheckBox checkBox = new CheckBox(); // create new checkbox per
+														// row
+			schoolFlexTable.setText(i + 1, 0, values.get(i).getName());
+			schoolFlexTable.setText(i + 1, 1, values.get(i).getLocation());
+			schoolFlexTable.setText(i + 1, 2, values.get(i).getDistrict());
+			schoolFlexTable.setText(i + 1, 3, values.get(i).getpCode());
+			schoolFlexTable.setWidget(i + 1, 4, checkBox);
+
+		}
+	}
+
+	/**
+	 * Add all checked rows to the compare table table
+	 */
+	private void addToCompList() {
+		// int numCompRows = 1;
+
+		for (int i = 1; i < schoolFlexTable.getRowCount(); i++) {
+			if (((CheckBox) schoolFlexTable.getWidget(i,4)).getValue()) {
+				SchoolValue currentSchool = ListOfSchools.get(i-1);
+				// check if entry is already in comparison table
+				if (notInCompTable(currentSchool)) {
+					// add to comp table array
+					ListOfCompSchools.add(currentSchool);
+					AddMarker(currentSchool.getName());
+					// add to async addschoolValue Compare service
+				}
+			}
+		}
+		// clear rows before adding current list of compared schools
+		for (int i = compFlexTable.getRowCount()-1; i>0; i--)
+			compFlexTable.removeRow(i);
+		for (int i = 0; i < ListOfCompSchools.size(); i++) {
+
+			// insert row in comptable and return index of row to insert
+			int newRow = compFlexTable.insertRow(i + 1);
+
+			String name = ListOfCompSchools.get(i).getName();
+			String location = ListOfCompSchools.get(i).getLocation();
+			String district = ListOfCompSchools.get(i).getDistrict();
+			String pcode = ListOfCompSchools.get(i).getpCode();
+			CheckBox removeBox = new CheckBox();
+
+			compFlexTable.setText(newRow, 0, name);
+			compFlexTable.setText(newRow, 1, location);
+			compFlexTable.setText(newRow, 2, district);
+			compFlexTable.setText(newRow, 3, pcode);
+			compFlexTable.setWidget(newRow, 4, removeBox);
+		}
+
+	}
+
+	private boolean notInCompTable(SchoolValue school) {
+		if (ListOfCompSchools.size() == 0)
+			return true;
+		for (int i = 0; i < ListOfCompSchools.size(); i++) {
+			if (school.equals(ListOfCompSchools.get(i)))
+				return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Remove all checked rows from compare table
+	 * 
+	 */
+	private void removeFromCompList() {
+		// go backward to avoid messed up row indices
+		for (int i = compFlexTable.getRowCount() - 1; i > 0; i--) {
+			if (((CheckBox) compFlexTable.getWidget(i, 4)).getValue()) {
+				ListOfCompSchools.remove(i-1);
+				RemoveMarker(compFlexTable.getText(i, 0));
+				compFlexTable.removeRow(i);
+			}
+		}
+		CheckBox checkedBox = (CheckBox) compFlexTable.getWidget(0, 4);
+		checkedBox.setValue(false);
+
+	}
+
+	private void checkAllBoxes() {
+		int rowCount = compFlexTable.getRowCount();
+		if (((CheckBox) compFlexTable.getWidget(0, 4)).getValue()) {
+			for (int j = 1; j < rowCount; j++) {
+				CheckBox checkedBox = new CheckBox();
+				checkedBox.setValue(true);
+				compFlexTable.setWidget(j, 4, checkedBox);
+			}
+		} else {
+			for (int i = 1; i < rowCount; i++) {
+				compFlexTable.setWidget(i, 4, new CheckBox());
+			}
+		}
+	}
+
+	private void AddMarker(String name) {
+		for (SchoolValue s : ListOfSchools) {
+			if (name.equals(s.getName())) {
+				MarkerOptions markerOptions = MarkerOptions.create();
+				markerOptions.setMap(theMap);
+				markerOptions.setTitle(s.getName());
+				markerOptions.setDraggable(false);
+				markerOptions.setPosition(LatLng.create(s.getLatitude(),
+						s.getLongitude()));
+				Marker marker = Marker.create(markerOptions);
+				final String txt = s.getName() + " @ " + s.getDistrict();
+				final LatLng pos = LatLng.create(s.getLatitude(),
+						s.getLongitude());
+				marker.addClickListener(new Marker.ClickHandler() {
+
+					@Override
+					public void handle(MouseEvent event) {
+						IW.close();
+						IW.setPosition(pos);
+						IW.setContent(txt);
+						IW.open(theMap);
+
+						// w.addCloseClickListener(new
+						// InfoWindow.CloseClickHandler() {
+						//
+						// @Override
+						// public void handle() {
+						// w.close();
+						//
+						// }
+						// });
+
+						// Window.alert(txt);
+
+					}
+				});
+				Markers.add(marker);
+
+			}
+
+		}
+
+	}
+
+	private void RemoveMarker(String name) {
+		for (int k = 0; k < Markers.size(); k++) {
+			if (name.equals(Markers.get(k).getTitle())) {
+				// Markers.get(k).setVisible(false);
+				Markers.get(k).setMap((GoogleMap) null);
+				if (Markers.get(k).getPosition().equals(IW.getPosition()))
+					IW.close();
+				Markers.remove(k);
+
+			}
+		}
+	}
+}
