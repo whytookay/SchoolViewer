@@ -16,6 +16,7 @@ import com.gwt.schoolviewer.client.NotLoggedInException;
 import com.gwt.schoolviewer.client.PostalCodeValue;
 import com.gwt.schoolviewer.client.SchoolValue;
 import com.gwt.schoolviewer.client.SchoolValueService;
+import com.gwt.schoolviewer.client.LatLong;
 
 public class SchoolValueServiceImpl extends RemoteServiceServlet implements SchoolValueService {
 	private PostalCode code = new PostalCode(getUser(), "V5J2C4");
@@ -38,24 +39,15 @@ public class SchoolValueServiceImpl extends RemoteServiceServlet implements Scho
 		code = new PostalCode(getUser(), pCode.getCode());
 		
 		if (code != null) {
-		// some simple code inspired by http://stackoverflow.com/questions/7467568/parsing-json-from-url
-		try {
-			JSONObject geoCodeJSON = new JSONObject(readUrl("http://maps.googleapis.com/maps/api/geocode/json?address=" + code.getCode() + "&sensor=false"));
-			String latit = geoCodeJSON.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lat");
-			String longit = geoCodeJSON.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lng");
-			latitude = Double.parseDouble(latit);
-			longitude = Double.parseDouble(longit);
-			System.out.println("latitude, longitude are" + latitude + " " + longitude);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
+			String placeString = code.getCode();
+			LatLong aLatLong = findLatLong(placeString);
+			if (aLatLong != null) {
+				latitude = aLatLong.getLatitude();
+				longitude = aLatLong.getLongitude();
+				return true;
+			}
 		}
-			return true;
-		} else {
-			return false; // invalid code
-		}
-			
+			return false;
 	}
 	
 	// returns all schoolvalues within a given range of this class's set postal code. If postal code is null, returns false.
@@ -86,6 +78,24 @@ public class SchoolValueServiceImpl extends RemoteServiceServlet implements Scho
 			}
 		}
 		return schoolValues;
+	}
+	
+	@Override
+	public LatLong findLatLong(String place) { // place can be a postal code string or an address string
+		// some simple code inspired by http://stackoverflow.com/questions/7467568/parsing-json-from-url
+		LatLong aLatLong = null;
+		try {
+			JSONObject geoCodeJSON = new JSONObject(readUrl("http://maps.googleapis.com/maps/api/geocode/json?address=" + place + "&sensor=false"));
+			String latit = geoCodeJSON.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lat");
+			String longit = geoCodeJSON.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lng");
+			aLatLong = new LatLong(Double.parseDouble(latit), Double.parseDouble(longit));
+			System.out.println("latitude, longitude are" + latitude + " " + longitude);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return aLatLong;
 	}
 	
 	// helper for getValuesRange: determines whether two co-ordinates are within a given kilometer range
