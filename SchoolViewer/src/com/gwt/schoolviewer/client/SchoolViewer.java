@@ -92,8 +92,10 @@ public class SchoolViewer implements EntryPoint {
 	private final TextBox nameField = new TextBox();
 
 	// main layout stuff
-	final FlexTable compFlexTable = new FlexTable();
-	final FlexTable schoolFlexTable = new FlexTable();
+	private final FlexTable compFlexTable = new FlexTable();
+	private final FlexTable schoolFlexTable = new FlexTable();
+	private final TextBox postalField = new TextBox();
+	private final TextBox radiusField = new TextBox();
 
 	// map stuff
 	private MapOptions options = MapOptions.create();
@@ -268,7 +270,7 @@ public class SchoolViewer implements EntryPoint {
 		final AbsolutePanel filterPanel = new AbsolutePanel();
 
 		// compare and school table widgets
-		final Button refreshButton = new Button("Refresh");
+		final Button refreshButton = new Button("Search");
 		final TextBox nameField = new TextBox();
 		nameField.setText("Enter school information:");
 		final Button compButton = new Button("Compare");
@@ -277,8 +279,7 @@ public class SchoolViewer implements EntryPoint {
 
 		// filterPanel widgets
 		final Label filterLabel = new Label("Filters");
-		final TextBox postalField = new TextBox();
-		final TextBox radiusField = new TextBox();
+		final Button postalSearchButton = new Button("Search");
 
 		// setup dropbox for districts
 		final ListBox districtDropBox = new ListBox();
@@ -312,12 +313,13 @@ public class SchoolViewer implements EntryPoint {
 		schoolFlexTable.addStyleName("schoolList");
 
 		// Use RootPanel.get() to get the entire body element
-		filterPanel.setSize("640px", "100px");
+		filterPanel.setSize("640px", "120px");
 		filterPanel.add(filterLabel);
 		filterPanel.add(postalField, 50, 15);
 		postalField.setText("Enter Postal Code");
 		filterPanel.add(radiusField, 50, 50);
 		radiusField.setText("Enter Radius");
+		filterPanel.add(postalSearchButton, 50, 85);
 		filterPanel.add(districtDropBox, 250, 15);
 		filterPanel.addStyleName("filterTable");
 		RootPanel.get("filterContainer").add(filterPanel);
@@ -346,7 +348,7 @@ public class SchoolViewer implements EntryPoint {
 			 * Fired when the user clicks on the sendButton.
 			 */
 			public void onClick(ClickEvent event) {
-				refreshSchoolList();
+				filterSchools();
 			}
 
 			/**
@@ -354,7 +356,7 @@ public class SchoolViewer implements EntryPoint {
 			 */
 			public void onKeyUp(KeyUpEvent event) {
 				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-					refreshSchoolList();
+					filterSchools();
 				}
 			}
 		}
@@ -387,6 +389,12 @@ public class SchoolViewer implements EntryPoint {
 
 		}
 
+		class PCodeHandler implements ClickHandler {
+			public void onClick(ClickEvent event) {
+				searchByRadius();
+			}
+		}
+
 		/*
 		 * // Create a hndler for the checkAll boxes class CheckAllHandler
 		 * implements
@@ -402,22 +410,60 @@ public class SchoolViewer implements EntryPoint {
 		clearButton.addClickHandler(clearhandler);
 		CheckHandler checkhandler = new CheckHandler();
 		checkAllComp.addClickHandler(checkhandler);
+		PCodeHandler phandler = new PCodeHandler();
+		postalSearchButton.addClickHandler(phandler);
 
 	}
 
-	private void refreshSchoolList() {
+	private void searchByRadius() {
+		AsyncCallback<Boolean> setCodeBool = new AsyncCallback<Boolean>() {
+			public void onFailure(Throwable caught) {
+				// TODO: Do something with errors.
+				System.out.println("Failed to setPcode");
+			}
+
+			public void onSuccess(Boolean result) {
+				if (result) {
+					System.out.println("Successfully set PCode");
+					returnInRadius();
+				}
+			}
+		};
+		schoolValueSvc.setCode(new PostalCodeValue(postalField.getText()),
+				setCodeBool);
+	}
+
+	private void returnInRadius() {
+		AsyncCallback<ArrayList<SchoolValue>> callback = new AsyncCallback<ArrayList<SchoolValue>>() {
+			public void onFailure(Throwable caught) {
+				// TODO: Do something with errors.
+				System.out.println("Postal Search Failed");
+			}
+
+			public void onSuccess(ArrayList<SchoolValue> result) {
+				System.out.println("Postal Search Success");
+				ListOfSchools = result;
+				populateSchoolTable(result);
+			}
+		};
+		String radius = radiusField.getText();
+		schoolValueSvc.getValuesRange(Double.parseDouble(radius), callback);
+
+	}
+
+	private void filterSchools() {
 
 		// Set up the callback object for Schools
 		AsyncCallback<ArrayList<SchoolValue>> callback = new AsyncCallback<ArrayList<SchoolValue>>() {
 			public void onFailure(Throwable caught) {
 				// TODO: Do something with errors.
-				System.out.println("Failed");
+				System.out.println("Search Failed");
 			}
 
 			public void onSuccess(ArrayList<SchoolValue> result) {
-				System.out.println("Success");
+				System.out.println("Search Success");
 				ListOfSchools = result;
-				populateSchoolTable(ListOfSchools);
+				populateSchoolTable(result);
 			}
 		};
 
@@ -433,7 +479,10 @@ public class SchoolViewer implements EntryPoint {
 	 *            School data for all rows.
 	 */
 	private void populateSchoolTable(ArrayList<SchoolValue> values) {
-		for (int i = 0; i < 25; i++) {
+		// clear rows before adding current list of compared schools
+		for (int i = schoolFlexTable.getRowCount() - 1; i > 0; i--)
+			schoolFlexTable.removeRow(i);
+		for (int i = 0; i < values.size(); i++) {
 			final CheckBox checkBox = new CheckBox(); // create new checkbox per
 														// row
 			schoolFlexTable.setText(i + 1, 0, values.get(i).getName());
@@ -452,8 +501,8 @@ public class SchoolViewer implements EntryPoint {
 		// int numCompRows = 1;
 
 		for (int i = 1; i < schoolFlexTable.getRowCount(); i++) {
-			if (((CheckBox) schoolFlexTable.getWidget(i,4)).getValue()) {
-				SchoolValue currentSchool = ListOfSchools.get(i-1);
+			if (((CheckBox) schoolFlexTable.getWidget(i, 4)).getValue()) {
+				SchoolValue currentSchool = ListOfSchools.get(i - 1);
 				// check if entry is already in comparison table
 				if (notInCompTable(currentSchool)) {
 					// add to comp table array
@@ -464,7 +513,7 @@ public class SchoolViewer implements EntryPoint {
 			}
 		}
 		// clear rows before adding current list of compared schools
-		for (int i = compFlexTable.getRowCount()-1; i>0; i--)
+		for (int i = compFlexTable.getRowCount() - 1; i > 0; i--)
 			compFlexTable.removeRow(i);
 		for (int i = 0; i < ListOfCompSchools.size(); i++) {
 
@@ -504,7 +553,7 @@ public class SchoolViewer implements EntryPoint {
 		// go backward to avoid messed up row indices
 		for (int i = compFlexTable.getRowCount() - 1; i > 0; i--) {
 			if (((CheckBox) compFlexTable.getWidget(i, 4)).getValue()) {
-				ListOfCompSchools.remove(i-1);
+				ListOfCompSchools.remove(i - 1);
 				RemoveMarker(compFlexTable.getText(i, 0));
 				compFlexTable.removeRow(i);
 			}
