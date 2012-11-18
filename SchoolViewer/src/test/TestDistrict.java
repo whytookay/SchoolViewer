@@ -17,7 +17,7 @@ public class TestDistrict {
 
 	@Before
 	public void setUp() throws Exception {
-		temp = new District("tempdistrict", "Vancouver", "1111111111", "www.google.ca");
+		temp = new District("tempdistrict", "www.google.ca");
 		tempschool = new School("tempSchool", "location", "0000000000", "pub",
 					 "Vancouver", "elem", "1-7", "V6R2Z0",
 					 temp, 1.0, -1.0);
@@ -28,20 +28,6 @@ public class TestDistrict {
 		String name = temp.getName();
 		assertFalse(name == null);
 		assertTrue(name == "tempdistrict");
-	}
-
-	@Test
-	public void testGetCity() {
-		String city = temp.getCity();
-		assertFalse(city == null);
-		assertTrue(city == "Vancouver");
-	}
-
-	@Test
-	public void testGetPhone() {
-		String phone = temp.getPhone();
-		assertFalse(phone == null);
-		assertTrue(phone == "1111111111");
 	}
 
 	@Test

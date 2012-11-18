@@ -22,6 +22,10 @@ public class BCDistricts {
 	ArrayList<District> districts = new ArrayList<District>();
 	private ArrayList<String> schoolnames = new ArrayList<String>();
 	
+	/*
+	 * Constructor for the BCDistricts class.  Because this is a singleton
+	 * class, it will only be called when the class is first initialized.
+	 */
 	public BCDistricts() {
 		try{
 		populateDistricts(pageToList());
@@ -30,12 +34,16 @@ public class BCDistricts {
 		} catch (IOException e){}
 	}
 	
+	/*
+	 * Populates the 'districts' ArrayList with all of the various school districts from the BC government's website
+	 * The data from these websites is passed into this method from the 'pageToList' method
+	 */
 	private void populateDistricts(ArrayList<ArrayList<String>> temp) {
 		ArrayList<ArrayList<String>> disList = transpose(temp);
 		for(int i = 1; i < disList.size(); i++)
 		{
 			ArrayList<String> tempList = disList.get(i);
-			District tempDistrict = new District(tempList.get(0), tempList.get(1), tempList.get(2), tempList.get(3));
+			District tempDistrict = new District(tempList.get(0), tempList.get(1));
 			districts.add(tempDistrict);
 		}
 	}
@@ -43,11 +51,9 @@ public class BCDistricts {
 	private ArrayList<ArrayList<String>> pageToList() throws IOException {
 		TxtSplitter splitter = new TxtSplitter("http://www.bced.gov.bc.ca/reporting/odefiles/BoardLocations_Current.txt");
 		ArrayList<ArrayList<String>> temp = splitter.split();
-		String[] accepted = new String[5];
+		String[] accepted = new String[2];
 		accepted[0] = "DISTRICT_NAME";
-		accepted[1] = "DISTRICT_CITY";
-		accepted[2] = "DISTRICT_PHONE_NUMBER";
-		accepted[3] = "DISTRICT_WEBSITE";
+		accepted[1] = "DISTRICT_WEBSITE";
 		for(int i = 0; i < temp.size();) {
 			if (requiredLine(temp.get(i), accepted)){
 				i++;
@@ -105,9 +111,6 @@ public class BCDistricts {
 						lat = -1.0;
 						lon = -1.0;
 					}
-					//Double lat = -1.0;
-					//Double lon = -1.0;
-//					LatLng gpsLoc = LatLng.create(lat, lon);
 					schoolnames.add(tempLine.get(5));
 					School temp = new School(tempLine.get(5),tempLine.get(7),tempLine.get(11),tempLine.get(1),tempLine.get(8)
 							,tempLine.get(15),tempLine.get(16),tempLine.get(10),districts.get(j), lat, lon);
@@ -126,7 +129,6 @@ public class BCDistricts {
 	{
 		valSplitter splitter = new valSplitter("http://www.bced.gov.bc.ca/reporting/odefiles/ClassSizeCurr.txt");
 		ArrayList<ArrayList<String>> tempList = transpose(splitter.split());
-		//System.out.println("is it here?");
 		int startIndex = -1;
 		for(int i = 1; i < tempList.size(); i++)
 		{

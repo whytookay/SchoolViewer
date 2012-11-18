@@ -15,7 +15,7 @@ public class SchoolTest {
 
 	@Before
 	public void setUp() throws Exception {
-		tempdist = new District("tempdistrict", "Vancouver", "1111111111", "www.google.ca");
+		tempdist = new District("tempdistrict", "www.google.ca");
 		temp = new School("tempSchool", "location", "0000000000", "pub",
 						"Vancouver", "elem", "1-7", "V6R2Z0",
 							tempdist, 1.0, -1.0);

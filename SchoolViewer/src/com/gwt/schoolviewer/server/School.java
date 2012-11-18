@@ -2,21 +2,19 @@ package com.gwt.schoolviewer.server;
 
 import java.util.ArrayList;
 
-import com.gwt.schoolviewer.client.SchoolValue;
-
 public class School {
-	private String name;
-	private String location;
-	private String phone;
-	private String pubOrInd;
-	private String city;
-	private String eduLevel;
-	private String grades;
-	private String pCode;
-	private District district;
-	private Double latitude;
-	private Double longitude;
-	private Double classSize = -1.0;
+	private String name; //
+	private String location; //
+	private String phone; //
+	private String pubOrInd; //
+	private String city; // remove
+	private String eduLevel; //
+	private String grades; // remove
+	private String pCode; //
+	private District district; //
+	private Double latitude; //
+	private Double longitude; //
+	private Double classSize = -1.0; //
 	
 	public School(String name, String location, String phone, String pubOrInd,
 						String city, String eduLevel, String grades, String pCode,
@@ -90,11 +88,6 @@ public class School {
 		return district;
 	}
 	
-//	public ArrayList<Value> getValues()
-//	{
-//		return district.getValues();
-//	}
-	
 	public void setClassSize(double size)
 	{
 		this.classSize = size;
@@ -103,31 +96,6 @@ public class School {
 	public double getClassSize()
 	{
 		return classSize;
-	}
-	
-	public ArrayList<String> getValues()
-	{
-		return district.getValues();
-	}
-	
-//	public void printSchool()
-//	{
-//		System.out.println(name + " " + location + " " + phone + " " + pubOrInd + " "
-//				+ city + " " + eduLevel + " " + grades + " " + pCode);
-//	}
-	
-	public SchoolValue getEquivSchoolValue() {
-		return (new SchoolValue(name,
-				location,
-				district.name,
-				district.website,
-				pCode,
-				latitude,
-				longitude,
-				classSize,
-				phone,
-				pubOrInd,
-				eduLevel));
 	}
 	
 }

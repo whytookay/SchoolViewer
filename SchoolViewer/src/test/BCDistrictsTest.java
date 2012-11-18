@@ -18,7 +18,6 @@ public class BCDistrictsTest {
 	@Test
 	public void testGetInstance() {
 		assertFalse(BCDistricts.getInstance() == null);
-		assertTrue(BCDistricts.getInstance() == BCDistricts.getInstance());
 		assertTrue(BCDistricts.getInstance().getDistricts().size() > 0);
 	}
 
@@ -42,7 +41,6 @@ public class BCDistrictsTest {
 		School test3 = testSchool(test1.getName());
 		assertTrue(test1.getDistrict().getName().equals(test3.getDistrict().getName()));
 		assertTrue(test1.getCity().equals(test3.getCity()));
-
 	}
 	
 	public School testSchool(String target)
