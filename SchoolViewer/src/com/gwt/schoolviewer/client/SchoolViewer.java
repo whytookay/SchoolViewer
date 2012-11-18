@@ -113,14 +113,12 @@ public class SchoolViewer implements EntryPoint {
 	private final GreetingServiceAsync greetingService = GWT
 			.create(GreetingService.class);
 
-    private static final Plus plus = GWT.create(Plus.class);
-	private static final String CLIENT_ID =
-	 "700088417733.apps.googleusercontent.com";
-	private static final String API_KEY =
-	 "AIzaSyDGS6xMhkUEiR7FVCp5lslzcWOKGXWxooc";
+	private static final Plus plus = GWT.create(Plus.class);
+	private static final String CLIENT_ID = "700088417733.apps.googleusercontent.com";
+	private static final String API_KEY = "AIzaSyDGS6xMhkUEiR7FVCp5lslzcWOKGXWxooc";
 	private static final String APPLICATION_NAME = "projecttesting40702";
 	private Person Self;
-	
+
 	private void loadLogin(final LoginInfo loginInfo) {
 		AUTH.clearAllTokens();
 		signInLink.setHref(loginInfo.getLoginUrl());
@@ -234,64 +232,71 @@ public class SchoolViewer implements EntryPoint {
 			}
 		});
 	}
-	private void InitSelf(){
-		plus.initialize(new SimpleEventBus(), new GoogleApiRequestTransport(APPLICATION_NAME, API_KEY));
-		OAuth2Login.get().authorize(GOOGLE_CLIENT_ID, PlusAuthScope.PLUS_ME, new Callback<Void, Exception>() {
-		      @Override
-		      public void onSuccess(Void v) {
-		    	  plus.people().get("me").to(new Receiver<Person>() {
-		    	      @Override
-		    	      public void onSuccess(Person person) {
-		    	        Self = person; 
-		    	      }
-		    	    }).fire();
-		      }
 
-		      @Override
-		      public void onFailure(Exception e) {
-		        println(e.getMessage());
-		      }
-		    });
+	private void InitSelf() {
+		plus.initialize(new SimpleEventBus(), new GoogleApiRequestTransport(
+				APPLICATION_NAME, API_KEY));
+		OAuth2Login.get().authorize(GOOGLE_CLIENT_ID, PlusAuthScope.PLUS_ME,
+				new Callback<Void, Exception>() {
+					@Override
+					public void onSuccess(Void v) {
+						plus.people().get("me").to(new Receiver<Person>() {
+							@Override
+							public void onSuccess(Person person) {
+								Self = person;
+							}
+						}).fire();
+					}
+
+					@Override
+					public void onFailure(Exception e) {
+						println(e.getMessage());
+					}
+				});
 	}
+
 	private void SetSelfLocationMarker() {
-		MarkerOptions markerOptions = MarkerOptions.create(); 
-	    markerOptions.setMap(theMap); 
-	    markerOptions.setTitle("this is you"); 
-	    markerOptions.setDraggable(false); 
-	    markerOptions.setIcon(MarkerImage.create("http://google-maps-icons.googlecode.com/files/walking-tour.png"));
-	    final Marker start = Marker.create(markerOptions);
-	    AsyncCallback<LatLong> callback = new AsyncCallback<LatLong>() {
+		MarkerOptions markerOptions = MarkerOptions.create();
+		markerOptions.setMap(theMap);
+		markerOptions.setTitle("this is you");
+		markerOptions.setDraggable(false);
+		markerOptions
+				.setIcon(MarkerImage
+						.create("http://google-maps-icons.googlecode.com/files/walking-tour.png"));
+		final Marker start = Marker.create(markerOptions);
+		AsyncCallback<LatLong> callback = new AsyncCallback<LatLong>() {
 			public void onFailure(Throwable caught) {
 				// TODO: Do something with errors.
 				println("failed to get self Lat Long");
 			}
 
 			public void onSuccess(LatLong result) {
-			    start.setPosition(LatLng.create(result.getLatitude(),result.getLongitude()));
+				start.setPosition(LatLng.create(result.getLatitude(),
+						result.getLongitude()));
 			}
 		};
 		String place = Self.getPlacesLived().get(0).getValue();
 		String placeURL = "";
-		for(int k = 0;k<place.length()-1; k++ ){
-			if (place.substring(k,k+1).equals(" ")){
-				placeURL= placeURL + "+";
-			}else
-				placeURL = placeURL + place.substring(k,k+1);
-			
+		for (int k = 0; k < place.length() - 1; k++) {
+			if (place.substring(k, k + 1).equals(" ")) {
+				placeURL = placeURL + "+";
+			} else
+				placeURL = placeURL + place.substring(k, k + 1);
+
 		}
 		println(placeURL);
 		schoolValueSvc.findLatLong(placeURL, callback);
-	    Markers.add(start);	
-	  }
-	
-	private void println(String txt){
+		Markers.add(start);
+	}
+
+	private void println(String txt) {
 		Window.alert(txt);
-		
+
 	}
 
 	private void loadschoolviewer() throws NotLoggedInException {
 		// load map
-		options.setCenter(LatLng.create(54.826008,-124.848633));
+		options.setCenter(LatLng.create(54.826008, -124.848633));
 		options.setZoom(5);
 		options.setMapTypeId(MapTypeId.ROADMAP);
 		options.setDraggable(true);
@@ -327,7 +332,7 @@ public class SchoolViewer implements EntryPoint {
 
 		// filterPanel widgets
 		final Label filterLabel = new Label("Filters");
-		final Button postalSearchButton = new Button("Search");
+		final Button postalSearchButton = new Button("Apply Filters");
 
 		// setup dropbox for districts
 		final ListBox districtDropBox = new ListBox();
@@ -341,14 +346,16 @@ public class SchoolViewer implements EntryPoint {
 		compFlexTable.setText(0, 1, "Location");
 		compFlexTable.setText(0, 2, "District");
 		compFlexTable.setText(0, 3, "Postal Code");
-		compFlexTable.setWidget(0, 4, checkAllComp);
+		compFlexTable.setText(0, 4, "Class Size");
+		compFlexTable.setWidget(0, 5, checkAllComp);
 
 		// Create table for stock data.
 		schoolFlexTable.setText(0, 0, "Name");
 		schoolFlexTable.setText(0, 1, "Location");
 		schoolFlexTable.setText(0, 2, "District");
 		schoolFlexTable.setText(0, 3, "Postal Code");
-		schoolFlexTable.setText(0, 4, "Select");
+		schoolFlexTable.setText(0, 4, "Class Size");
+		schoolFlexTable.setText(0, 5, "Select");
 
 		// Add styles to elements in the compare table
 		compFlexTable.setCellPadding(6);
@@ -390,7 +397,7 @@ public class SchoolViewer implements EntryPoint {
 		// Focus the cursor on the name field when the app loads
 		nameField.setFocus(true);
 		nameField.selectAll();
-		
+
 		AsyncCallback<ArrayList<SchoolValue>> callback = new AsyncCallback<ArrayList<SchoolValue>>() {
 			public void onFailure(Throwable caught) {
 				// TODO: Do something with errors.
@@ -401,19 +408,20 @@ public class SchoolViewer implements EntryPoint {
 				System.out.println("Persistent school get success");
 				ListOfCompSchools = result;
 				for (int i = 0; i < result.size(); i++) {
-					final CheckBox checkBox = new CheckBox(); // create new checkbox per
+					final CheckBox checkBox = new CheckBox(); // create new
+																// checkbox per
 																// row
 					compFlexTable.setText(i + 1, 0, result.get(i).getName());
-					compFlexTable.setText(i + 1, 1, result.get(i).getLocation());
-					compFlexTable.setText(i + 1, 2, result.get(i).getDistrict());
+					compFlexTable
+							.setText(i + 1, 1, result.get(i).getLocation());
+					compFlexTable
+							.setText(i + 1, 2, result.get(i).getDistrict());
 					compFlexTable.setText(i + 1, 3, result.get(i).getpCode());
-					compFlexTable.setWidget(i + 1, 4, checkBox);
+					compFlexTable.setWidget(i + 1, 5, checkBox);
 				}
 			}
 		};
 		compareService.getSchoolValues(callback);
-		
-		
 
 		// Create a handler for the sendButton and nameField
 		class MyHandler implements ClickHandler, KeyUpHandler {
@@ -477,12 +485,12 @@ public class SchoolViewer implements EntryPoint {
 				searchByRadius();
 			}
 		}
-		
+
 		class ShowMapHandler implements ClickHandler {
 			public void onClick(ClickEvent event) {
-			    //TODO
+				// TODO
 				if (Self != null)
-				SetSelfLocationMarker();
+					SetSelfLocationMarker();
 				else
 					println("please login");
 			}
@@ -514,7 +522,7 @@ public class SchoolViewer implements EntryPoint {
 
 			public void onSuccess(Boolean result) {
 				if (result) {
-					//System.out.println("Successfully set PCode");
+					// System.out.println("Successfully set PCode");
 					returnInRadius();
 				}
 			}
@@ -531,7 +539,7 @@ public class SchoolViewer implements EntryPoint {
 			}
 
 			public void onSuccess(ArrayList<SchoolValue> result) {
-				//System.out.println("Postal Search Success");
+				// System.out.println("Postal Search Success");
 				ListOfSchools = result;
 				populateSchoolTable(result);
 			}
@@ -551,7 +559,7 @@ public class SchoolViewer implements EntryPoint {
 			}
 
 			public void onSuccess(ArrayList<SchoolValue> result) {
-				//System.out.println("Search Success");
+				// System.out.println("Search Success");
 				ListOfSchools = result;
 				populateSchoolTable(result);
 			}
@@ -579,27 +587,33 @@ public class SchoolViewer implements EntryPoint {
 			schoolFlexTable.setText(i + 1, 1, values.get(i).getLocation());
 			schoolFlexTable.setText(i + 1, 2, values.get(i).getDistrict());
 			schoolFlexTable.setText(i + 1, 3, values.get(i).getpCode());
-			schoolFlexTable.setWidget(i + 1, 4, checkBox);
+			Double classSize = values.get(i).getClassSize();
+			if (classSize == -1.0)
+				schoolFlexTable.setText(i+1, 4, "N/A");
+			else
+				schoolFlexTable.setText(i + 1, 4, Integer.toString(classSize.intValue()));
+			schoolFlexTable.setWidget(i + 1, 5, checkBox);
 
 		}
 	}
 
 	/**
 	 * Add all checked rows to the compare table table
-	 * @throws NotLoggedInException 
+	 * 
+	 * @throws NotLoggedInException
 	 */
 	private void addToCompList() throws NotLoggedInException {
 		// int numCompRows = 1;
 
 		for (int i = 1; i < schoolFlexTable.getRowCount(); i++) {
-			if (((CheckBox) schoolFlexTable.getWidget(i, 4)).getValue()) {
+			if (((CheckBox) schoolFlexTable.getWidget(i, 5)).getValue()) {
 				SchoolValue currentSchool = ListOfSchools.get(i - 1);
 				// check if entry is already in comparison table
 				if (notInCompTable(currentSchool)) {
 					// add to comp table array
 					ListOfCompSchools.add(currentSchool);
 					AddMarker(currentSchool.getName());
-					
+
 					// add a schoolValue to compareServiceAsync
 					AsyncCallback<Void> callback = new AsyncCallback<Void>() {
 						public void onFailure(Throwable caught) {
@@ -608,7 +622,7 @@ public class SchoolViewer implements EntryPoint {
 						}
 
 						public void onSuccess(Void result) {
-							//System.out.println("Add Success");
+							// System.out.println("Add Success");
 						}
 
 					};
@@ -628,13 +642,18 @@ public class SchoolViewer implements EntryPoint {
 			String location = ListOfCompSchools.get(i).getLocation();
 			String district = ListOfCompSchools.get(i).getDistrict();
 			String pcode = ListOfCompSchools.get(i).getpCode();
+			Double classSize = ListOfCompSchools.get(i).getClassSize();
 			CheckBox removeBox = new CheckBox();
 
 			compFlexTable.setText(newRow, 0, name);
 			compFlexTable.setText(newRow, 1, location);
 			compFlexTable.setText(newRow, 2, district);
 			compFlexTable.setText(newRow, 3, pcode);
-			compFlexTable.setWidget(newRow, 4, removeBox);
+			if (classSize == -1.0)
+				compFlexTable.setText(newRow, 4, "N/A");
+			else
+				compFlexTable.setText(newRow, 4, Integer.toString(classSize.intValue()));
+			compFlexTable.setWidget(newRow, 5, removeBox);
 		}
 
 	}
@@ -651,14 +670,15 @@ public class SchoolViewer implements EntryPoint {
 
 	/**
 	 * Remove all checked rows from compare table
-	 * @throws NotLoggedInException 
+	 * 
+	 * @throws NotLoggedInException
 	 * 
 	 */
 	private void removeFromCompList() throws NotLoggedInException {
 		// go backward to avoid messed up row indices
 		for (int i = compFlexTable.getRowCount() - 1; i > 0; i--) {
-			if (((CheckBox) compFlexTable.getWidget(i, 4)).getValue()) {
-				
+			if (((CheckBox) compFlexTable.getWidget(i, 5)).getValue()) {
+
 				// add a schoolValue to compareServiceAsync
 				AsyncCallback<Void> callback = new AsyncCallback<Void>() {
 					public void onFailure(Throwable caught) {
@@ -671,29 +691,30 @@ public class SchoolViewer implements EntryPoint {
 					}
 
 				};
-				compareService.removeSchoolValue(ListOfCompSchools.get(i-1), callback);
-				
-				ListOfCompSchools.remove(i - 1);	
+				compareService.removeSchoolValue(ListOfCompSchools.get(i - 1),
+						callback);
+
+				ListOfCompSchools.remove(i - 1);
 				RemoveMarker(compFlexTable.getText(i, 0));
 				compFlexTable.removeRow(i);
 			}
 		}
-		CheckBox checkedBox = (CheckBox) compFlexTable.getWidget(0, 4);
+		CheckBox checkedBox = (CheckBox) compFlexTable.getWidget(0, 5);
 		checkedBox.setValue(false);
 
 	}
 
 	private void checkAllBoxes() {
 		int rowCount = compFlexTable.getRowCount();
-		if (((CheckBox) compFlexTable.getWidget(0, 4)).getValue()) {
+		if (((CheckBox) compFlexTable.getWidget(0, 5)).getValue()) {
 			for (int j = 1; j < rowCount; j++) {
 				CheckBox checkedBox = new CheckBox();
 				checkedBox.setValue(true);
-				compFlexTable.setWidget(j, 4, checkedBox);
+				compFlexTable.setWidget(j, 5, checkedBox);
 			}
 		} else {
 			for (int i = 1; i < rowCount; i++) {
-				compFlexTable.setWidget(i, 4, new CheckBox());
+				compFlexTable.setWidget(i, 5, new CheckBox());
 			}
 		}
 	}
@@ -709,14 +730,12 @@ public class SchoolViewer implements EntryPoint {
 						s.getLongitude()));
 				Marker marker = Marker.create(markerOptions);
 				final String txt = "<div id=\"content\">"
-					    + "<p style=\"text-align:left; color:BLACK; font-size: 16pt \"><b>"
-					    + s.getName()
-					    + "</b></p>"
-					    + "<p style=\"text-align:left;color: BLACK;\">"
-					    + "District: "+s.getDistrict()
-					    + "</b></p>"
-					    
-					    + "</div>";
+						+ "<p style=\"text-align:left; color:BLACK; font-size: 16pt \"><b>"
+						+ s.getName() + "</b></p>"
+						+ "<p style=\"text-align:left;color: BLACK;\">"
+						+ "District: " + s.getDistrict() + "</b></p>"
+
+						+ "</div>";
 				final LatLng pos = LatLng.create(s.getLatitude(),
 						s.getLongitude());
 				marker.addClickListener(new Marker.ClickHandler() {
