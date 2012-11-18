@@ -23,11 +23,11 @@ public class PersistentSchool {
 	@Persistent
 	String name;
 	@Persistent
-	ArrayList<String> values;
-	@Persistent
 	String location;
 	@Persistent
 	String district;
+	@Persistent
+	String districtWebsite;
 	@Persistent
 	String pCode;
 	@Persistent
@@ -47,13 +47,13 @@ public class PersistentSchool {
 		this.createDate = new Date();
 	}
 
-	public PersistentSchool(User user, String name, ArrayList<String> values, String location, String district, String pCode, double latitude, double longitude, double classSize, String phone, String pubOrInd, String eduLevel) {
+	public PersistentSchool(User user, String name, String location, String district, String districtWebsite, String pCode, double latitude, double longitude, double classSize, String phone, String pubOrInd, String eduLevel) {
 		this();
 		this.user = user;
 		this.name = name;
-		this.values = values;
 		this.location = location;
 		this.district = district;
+		this.districtWebsite = districtWebsite;
 		this.pCode = pCode;
 		this.latitude = latitude;
 		this.longitude = longitude;
@@ -79,16 +79,16 @@ public class PersistentSchool {
 		return name;
 	}
 
-	public ArrayList<String> getValues() {
-		return values;
-	}
-
 	public String getLocation() {
 		return location;
 	}
 
 	public String getDistrict() {
 		return district;
+	}
+
+	public String getDistrictWebsite() {
+		return districtWebsite;
 	}
 
 	public String getpCode() {
@@ -121,9 +121,9 @@ public class PersistentSchool {
 	
 	public SchoolValue getEquivSchoolValue() {
 		return (new SchoolValue(name,
-				this.getValues(),
 				location,
 				district,
+				districtWebsite,
 				pCode,
 				latitude,
 				longitude,

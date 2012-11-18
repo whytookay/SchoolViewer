@@ -37,9 +37,9 @@ public class CompareServiceImpl extends RemoteServiceServlet implements
 		try {
 			pm.makePersistent(new PersistentSchool(getUser(),
 													schoolVal.getName(),
-													schoolVal.getValues(),
 													schoolVal.getLocation(),
 													schoolVal.getDistrict(),
+													schoolVal.getDistrictWebsite(),
 													schoolVal.getpCode(),
 													schoolVal.getLatitude(),
 													schoolVal.getLongitude(),

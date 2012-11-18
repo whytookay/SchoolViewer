@@ -118,9 +118,9 @@ public class School {
 	
 	public SchoolValue getEquivSchoolValue() {
 		return (new SchoolValue(name,
-				this.getValues(),
 				location,
 				district.name,
+				district.website,
 				pCode,
 				latitude,
 				longitude,

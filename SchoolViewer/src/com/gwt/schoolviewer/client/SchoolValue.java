@@ -5,9 +5,9 @@ import java.util.ArrayList;
 
 public class SchoolValue implements Serializable {
 	String name;
-	ArrayList<String> values;
 	String location;
 	String district;
+	String districtWebsite;
 	String pCode;
 	double latitude;
 	double longitude;
@@ -28,12 +28,12 @@ public class SchoolValue implements Serializable {
 	public SchoolValue() {
 	}
 
-	public SchoolValue(String name, ArrayList<String> values, String location,
-			String district, String pCode, double latitude, double longitude, double classSize, String phone, String pubOrInd, String eduLevel) {
+	public SchoolValue(String name, String location,
+			String district, String districtWebsite, String pCode, double latitude, double longitude, double classSize, String phone, String pubOrInd, String eduLevel) {
 		this.name = name;
-		this.values = values;
 		this.location = location;
 		this.district = district;
+		this.districtWebsite = districtWebsite;
 		this.pCode = pCode;
 		this.latitude = latitude;
 		this.longitude = longitude;
@@ -59,14 +59,6 @@ public class SchoolValue implements Serializable {
 		this.name = name;
 	}
 
-	public ArrayList<String> getValues() {
-		return values;
-	}
-
-	public void setValues(ArrayList<String> values) {
-		this.values = values;
-	}
-
 	public String getLocation() {
 		return location;
 	}
@@ -81,6 +73,14 @@ public class SchoolValue implements Serializable {
 
 	public void setDistrict(String district) {
 		this.district = district;
+	}
+	
+	public String getDistrictWebsite() {
+		return districtWebsite;
+	}
+
+	public void setDistrictWebsite(String districtWebsite) {
+		this.districtWebsite = districtWebsite;
 	}
 
 	public String getpCode() {
