@@ -276,6 +276,7 @@ public class SchoolViewer implements EntryPoint {
 		final Button compButton = new Button("Compare");
 		final Button clearButton = new Button("Clear Checked");
 		final CheckBox checkAllComp = new CheckBox("Check All");
+		final Button showOnMapButton = new Button("Show on Map");
 
 		// filterPanel widgets
 		final Label filterLabel = new Label("Filters");
@@ -329,6 +330,7 @@ public class SchoolViewer implements EntryPoint {
 		RootPanel.get("nameFieldContainer").add(nameField);
 		RootPanel.get("buttonContainer").add(compButton);
 		RootPanel.get("buttonContainer").add(clearButton);
+		RootPanel.get("buttonContainer").add(showOnMapButton);
 
 		// Setup Compare and Map panel layout in RootPanel
 		tablePanel.setSize("640px", "600px");
@@ -367,7 +369,12 @@ public class SchoolViewer implements EntryPoint {
 			 * Fired when the user clicks on the compButton.
 			 */
 			public void onClick(ClickEvent event) {
-				addToCompList();
+				try {
+					addToCompList();
+				} catch (NotLoggedInException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 
@@ -394,11 +401,12 @@ public class SchoolViewer implements EntryPoint {
 				searchByRadius();
 			}
 		}
-
-		/*
-		 * // Create a hndler for the checkAll boxes class CheckAllHandler
-		 * implements
-		 */
+		
+		class ShowMapHandler implements ClickHandler {
+			public void onClick(ClickEvent event) {
+				//TODO: Put your show on map code here 
+			}
+		}
 
 		// Add a handler to send the name to the server
 		MyHandler handler = new MyHandler();
@@ -412,6 +420,8 @@ public class SchoolViewer implements EntryPoint {
 		checkAllComp.addClickHandler(checkhandler);
 		PCodeHandler phandler = new PCodeHandler();
 		postalSearchButton.addClickHandler(phandler);
+		ShowMapHandler showhandler = new ShowMapHandler();
+		showOnMapButton.addClickHandler(showhandler);
 
 	}
 
@@ -496,8 +506,9 @@ public class SchoolViewer implements EntryPoint {
 
 	/**
 	 * Add all checked rows to the compare table table
+	 * @throws NotLoggedInException 
 	 */
-	private void addToCompList() {
+	private void addToCompList() throws NotLoggedInException {
 		// int numCompRows = 1;
 
 		for (int i = 1; i < schoolFlexTable.getRowCount(); i++) {
@@ -508,7 +519,20 @@ public class SchoolViewer implements EntryPoint {
 					// add to comp table array
 					ListOfCompSchools.add(currentSchool);
 					AddMarker(currentSchool.getName());
-					// add to async addschoolValue Compare service
+					
+					// add a schoolValue to compareServiceAsync
+					AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+						public void onFailure(Throwable caught) {
+							// TODO: Do something with errors.
+							System.out.println("Add Failed");
+						}
+
+						public void onSuccess(Void result) {
+							System.out.println("Add Success");
+						}
+
+					};
+					compareService.addSchoolValue(currentSchool, callback);
 				}
 			}
 		}
