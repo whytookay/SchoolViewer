@@ -11,7 +11,12 @@ public class SchoolValue implements Serializable {
 	String pCode;
 	double latitude;
 	double longitude;
-
+	Double classSize;
+	String phone;
+	String pubOrInd;
+	String eduLevel;
+	
+	
 	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
@@ -24,7 +29,7 @@ public class SchoolValue implements Serializable {
 	}
 
 	public SchoolValue(String name, ArrayList<String> values, String location,
-			String district, String pCode, double latitude, double longitude) {
+			String district, String pCode, double latitude, double longitude, double classSize, String phone, String pubOrInd, String eduLevel) {
 		this.name = name;
 		this.values = values;
 		this.location = location;
@@ -32,6 +37,10 @@ public class SchoolValue implements Serializable {
 		this.pCode = pCode;
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.classSize = classSize;
+		this.phone = phone;
+		this.pubOrInd = pubOrInd;
+		this.eduLevel = eduLevel;
 	}
 
 	public double getLatitude() {
@@ -81,6 +90,38 @@ public class SchoolValue implements Serializable {
 	public void setpCode(String pCode) {
 		this.pCode = pCode;
 	}
+	
+	public Double getClassSize() {
+		return classSize;
+	}
+
+	public void setClassSize(Double classSize) {
+		this.classSize = classSize;
+	}
+	
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getPubOrInd() {
+		return pubOrInd;
+	}
+
+	public void setPubOrInd(String pubOrInd) {
+		this.pubOrInd = pubOrInd;
+	}
+
+	public String getEduLevel() {
+		return eduLevel;
+	}
+
+	public void setEduLevel(String eduLevel) {
+		this.eduLevel = eduLevel;
+	}
 
 	// If either name,location, district, or pCode don't match then return
 	// false. Else true
@@ -94,4 +135,6 @@ public class SchoolValue implements Serializable {
 			return true;
 
 	}
+	
+	
 }

@@ -85,13 +85,7 @@ public class SchoolValueServiceImpl extends RemoteServiceServlet implements Scho
 		for (int i = 0; i<schools.size();i++) {
 			School school = schools.get(i);
 			if (areWithinRange(latitude, longitude, school.getLat(), school.getLon(), radius)) {
-			schoolValues.add(new SchoolValue(school.getName(),
-					school.getValues(),
-					school.getLocation(),
-					school.getDistrict().getName(),
-					school.getPCode(),
-					school.getLat(),
-					school.getLon()));
+			schoolValues.add(school.getEquivSchoolValue());
 			}
 		}
 		return schoolValues;
@@ -117,31 +111,14 @@ public class SchoolValueServiceImpl extends RemoteServiceServlet implements Scho
 		Random randomGenerator = new Random();
 		for (int i = 0; i<schoolList.size();i++) {
 			School school = schoolList.get(i);
-			schoolValues.add(new SchoolValue(school.getName(),
-					school.getValues(),
-					school.getLocation(),
-					school.getDistrict().getName(),
-					school.getPCode(),
-					school.getLat(),
-					school.getLon()));
+			schoolValues.add(school.getEquivSchoolValue());
 		}
 		return schoolValues;
 	}
 	
+	// returns all schoolvalues that pass the given filters.
 	@Override
 	public ArrayList<SchoolValue> getValuesFiltered(Boolean searchByPcode, String pCode, Double radius, Boolean searchByDistrict, String district, Boolean searchByString, String search) {
-		// populate a list of districts 
-		ArrayList<District> districts = BCDistricts.getInstance().getDistricts();
-
-		// populate a list of schools from districts
-		ArrayList<School> schools = new ArrayList<School>();
-		for (int i = 0; i<districts.size();i++) {
-			schools.addAll(districts.get(i).schools);
-		}
-
-		// populate a list of schoolvalues from schools, filtering
-		ArrayList<SchoolValue> schoolValues = new ArrayList<SchoolValue>();
-		
 		// 3 preps here, for defensive coding (not bothering to search for something if it's null) and to fill latitude, longitude
 		// pCode prep
 		LatLong aLatLong = null;
@@ -167,6 +144,18 @@ public class SchoolValueServiceImpl extends RemoteServiceServlet implements Scho
 		if (search == null)
 			searchByString = false;
 		
+		// populate a list of districts 
+		ArrayList<District> districts = BCDistricts.getInstance().getDistricts();
+
+		// populate a list of schools from districts
+		ArrayList<School> schools = new ArrayList<School>();
+		for (int i = 0; i<districts.size();i++) {
+			schools.addAll(districts.get(i).schools);
+		}
+		
+		// populate a list of schoolvalues from schools, filtering
+		ArrayList<SchoolValue> schoolValues = new ArrayList<SchoolValue>();
+		
 		for (int i = 0; i<schools.size();i++) {
 			School school = schools.get(i);
 			// (!searching || result) && (!searching || result) && (!searching || result)
@@ -179,13 +168,7 @@ public class SchoolValueServiceImpl extends RemoteServiceServlet implements Scho
 										stringMatchesTo(search, school.getLocation()) || 
 										stringMatchesTo(search, school.getDistrict().name)))) { 
 
-			schoolValues.add(new SchoolValue(school.getName(),
-					school.getValues(),
-					school.getLocation(),
-					school.getDistrict().getName(),
-					school.getPCode(),
-					school.getLat(),
-					school.getLon()));
+			schoolValues.add(school.getEquivSchoolValue());
 			}
 			
 			// TODO: ADD SORTING
@@ -226,7 +209,7 @@ public class SchoolValueServiceImpl extends RemoteServiceServlet implements Scho
 	}
 	
 	/*
-	 * This method takes two strings: searchString and targetString
+	 * This method takes two strings: searchString and targetString, and figures out if searchString matches loosely to targetString.
 	 */
 	private Boolean stringMatchesTo(String searchString, String targetString) {
 		searchString = searchString.toUpperCase().replaceAll("[.,\\-]", " ").replaceAll("\\b" + "(WAY|DR|ST)" + "\\b", "");  ; // Park-ville dr. way -> PARK VILLE 

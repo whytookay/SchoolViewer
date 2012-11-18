@@ -35,7 +35,18 @@ public class CompareServiceImpl extends RemoteServiceServlet implements
 		checkLoggedIn();
 		PersistenceManager pm = getPersistenceManager();
 		try {
-			pm.makePersistent(new PersistentSchool(getUser(), schoolVal.getName(), schoolVal.getValues(), schoolVal.getLocation(), schoolVal.getDistrict(), schoolVal.getpCode(), schoolVal.getLatitude(), schoolVal.getLongitude()));
+			pm.makePersistent(new PersistentSchool(getUser(),
+													schoolVal.getName(),
+													schoolVal.getValues(),
+													schoolVal.getLocation(),
+													schoolVal.getDistrict(),
+													schoolVal.getpCode(),
+													schoolVal.getLatitude(),
+													schoolVal.getLongitude(),
+													schoolVal.getClassSize(),
+													schoolVal.getPhone(),
+													schoolVal.getPubOrInd(),
+													schoolVal.getEduLevel()));
 		} finally {
 			pm.close();
 		}
@@ -76,7 +87,7 @@ public class CompareServiceImpl extends RemoteServiceServlet implements
 			q.setOrdering("createDate"); // NOTE: THESE WILL BE RETURNED IN ORDER THEY WERE ADDED. THE TABLE SHOULD BE SMALL ENOUGH THAT THIS SHOULD BE FINE.
 			List<PersistentSchool> pSchools = (List<PersistentSchool>) q.execute(getUser());
 			for (PersistentSchool pSchool : pSchools) {
-				schoolValues.add(new SchoolValue(pSchool.getName(), pSchool.getValues(), pSchool.getLocation(), pSchool.getDistrict(), pSchool.getpCode(), pSchool.getLatitude(), pSchool.getLongitude()));
+				schoolValues.add(pSchool.getEquivSchoolValue());
 			}
 		} finally {
 			pm.close();

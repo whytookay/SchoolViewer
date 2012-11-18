@@ -8,6 +8,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 import com.google.appengine.api.users.User;
+import com.gwt.schoolviewer.client.SchoolValue;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class PersistentSchool {
@@ -33,12 +34,20 @@ public class PersistentSchool {
 	double latitude;
 	@Persistent
 	double longitude;
+	@Persistent
+	double classSize;
+	@Persistent
+	String phone;
+	@Persistent
+	String pubOrInd;
+	@Persistent
+	String eduLevel;
 	
 	public PersistentSchool() {
 		this.createDate = new Date();
 	}
 
-	public PersistentSchool(User user, String name, ArrayList<String> values, String location, String district, String pCode, double latitude, double longitude) {
+	public PersistentSchool(User user, String name, ArrayList<String> values, String location, String district, String pCode, double latitude, double longitude, double classSize, String phone, String pubOrInd, String eduLevel) {
 		this();
 		this.user = user;
 		this.name = name;
@@ -48,6 +57,10 @@ public class PersistentSchool {
 		this.pCode = pCode;
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.classSize = classSize;
+		this.phone = phone;
+		this.pubOrInd = pubOrInd;
+		this.eduLevel = eduLevel;
 	}
 	
 	public Long getId() {
@@ -90,6 +103,34 @@ public class PersistentSchool {
 		return longitude;
 	}
 		  
+	public double getClassSize() {
+		return classSize;
+	}
 	
+	public String getPhone() {
+		return phone;
+	}
+
+	public String getPubOrInd() {
+		return pubOrInd;
+	}
+
+	public String getEduLevel() {
+		return eduLevel;
+	}
+	
+	public SchoolValue getEquivSchoolValue() {
+		return (new SchoolValue(name,
+				this.getValues(),
+				location,
+				district,
+				pCode,
+				latitude,
+				longitude,
+				classSize,
+				phone,
+				pubOrInd,
+				eduLevel));
+	}
 	
 }

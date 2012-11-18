@@ -2,6 +2,8 @@ package com.gwt.schoolviewer.server;
 
 import java.util.ArrayList;
 
+import com.gwt.schoolviewer.client.SchoolValue;
+
 public class School {
 	private String name;
 	private String location;
@@ -113,5 +115,19 @@ public class School {
 //		System.out.println(name + " " + location + " " + phone + " " + pubOrInd + " "
 //				+ city + " " + eduLevel + " " + grades + " " + pCode);
 //	}
+	
+	public SchoolValue getEquivSchoolValue() {
+		return (new SchoolValue(name,
+				this.getValues(),
+				location,
+				district.name,
+				pCode,
+				latitude,
+				longitude,
+				classSize,
+				phone,
+				pubOrInd,
+				eduLevel));
+	}
 	
 }
