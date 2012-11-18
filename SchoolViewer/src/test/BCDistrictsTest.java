@@ -32,15 +32,12 @@ public class BCDistrictsTest {
 	{
 		School test1 = testSchool("Isabella Dicken Elementary");
 		assertTrue(test1.getDistrict().getName().equals("Southeast Kootenay"));
-		assertTrue(test1.getCity().equals("Fernie"));
 		
 		School test2 = testSchool("Connaught Heights Elementary");
 		assertFalse(test1.getDistrict().getName().equals(test2.getDistrict().getName()));
-		assertFalse(test1.getCity().equals(test2.getCity()));
 		
 		School test3 = testSchool(test1.getName());
 		assertTrue(test1.getDistrict().getName().equals(test3.getDistrict().getName()));
-		assertTrue(test1.getCity().equals(test3.getCity()));
 	}
 	
 	public School testSchool(String target)

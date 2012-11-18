@@ -19,7 +19,7 @@ public class TestDistrict {
 	public void setUp() throws Exception {
 		temp = new District("tempdistrict", "www.google.ca");
 		tempschool = new School("tempSchool", "location", "0000000000", "pub",
-					 "Vancouver", "elem", "1-7", "V6R2Z0",
+					  "elem","V6R2Z0",
 					 temp, 1.0, -1.0);
 	}
 

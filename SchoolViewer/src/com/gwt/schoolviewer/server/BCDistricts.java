@@ -112,8 +112,8 @@ public class BCDistricts {
 						lon = -1.0;
 					}
 					schoolnames.add(tempLine.get(5));
-					School temp = new School(tempLine.get(5),tempLine.get(7),tempLine.get(11),tempLine.get(1),tempLine.get(8)
-							,tempLine.get(15),tempLine.get(16),tempLine.get(10),districts.get(j), lat, lon);
+					School temp = new School(tempLine.get(5),tempLine.get(7),tempLine.get(11),tempLine.get(1)
+							,tempLine.get(15),tempLine.get(10),districts.get(j), lat, lon);
 					districts.get(j).addSchool(temp);
 				}
 			}
