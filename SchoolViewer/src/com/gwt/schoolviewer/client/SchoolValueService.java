@@ -17,7 +17,9 @@ public interface SchoolValueService extends RemoteService {
 	public ArrayList<SchoolValue> getValues();
 	public ArrayList<SchoolValue> getValuesFiltered(Boolean searchByPcode,
 			String pCode, Double radius, Boolean searchByDistrict,
-			String district, Boolean searchByString, String search);
+			String district, Boolean searchByString, String search,
+			Boolean searchByClassSize, int minSize, int maxSize);
+	public ArrayList<String> getDistrictNames();
 	public LatLong findLatLong(String place);
 
 }

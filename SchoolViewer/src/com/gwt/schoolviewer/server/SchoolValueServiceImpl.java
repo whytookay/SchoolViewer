@@ -118,7 +118,7 @@ public class SchoolValueServiceImpl extends RemoteServiceServlet implements Scho
 	
 	// returns all schoolvalues that pass the given filters.
 	@Override
-	public ArrayList<SchoolValue> getValuesFiltered(Boolean searchByPcode, String pCode, Double radius, Boolean searchByDistrict, String district, Boolean searchByString, String search) {
+	public ArrayList<SchoolValue> getValuesFiltered(Boolean searchByPcode, String pCode, Double radius, Boolean searchByDistrict, String district, Boolean searchByString, String search, Boolean searchByClassSize, int minSize, int maxSize) {
 		// 3 preps here, for defensive coding (not bothering to search for something if it's null) and to fill latitude, longitude
 		// pCode prep
 		LatLong aLatLong = null;
@@ -166,7 +166,8 @@ public class SchoolValueServiceImpl extends RemoteServiceServlet implements Scho
 				(!searchByDistrict || stringMatchesTo(district, school.getDistrict().name)) &&
 				(!searchByString || ( stringMatchesTo(search, school.getName()) ||
 										stringMatchesTo(search, school.getLocation()) || 
-										stringMatchesTo(search, school.getDistrict().name)))) { 
+										stringMatchesTo(search, school.getDistrict().name))) &&
+				(!searchByClassSize || ((school.getClassSize() >= minSize) && (school.getClassSize() <= maxSize)))) { 
 
 			schoolValues.add(school.getEquivSchoolValue());
 			}
@@ -175,6 +176,16 @@ public class SchoolValueServiceImpl extends RemoteServiceServlet implements Scho
 		}
 		
 		return schoolValues;
+	}
+	
+	// returns all district names
+	public ArrayList<String> getDistrictNames() {
+		ArrayList<District> districts = BCDistricts.getInstance().getDistricts();
+		ArrayList<String> result = new ArrayList<String>();
+		for (int i = 0; i<districts.size();i++) {
+			result.add(districts.get(i).name);
+		}
+		return result;
 	}
 	
 	// helper for getValuesRange: determines whether two co-ordinates are within a given kilometer range

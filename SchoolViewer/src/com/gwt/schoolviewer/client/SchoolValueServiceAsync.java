@@ -16,6 +16,8 @@ public interface SchoolValueServiceAsync {
 	public void getValuesFiltered(Boolean searchByPcode,
 			String pCode, Double radius, Boolean searchByDistrict,
 			String district, Boolean searchByString, String search,
+			Boolean searchByClassSize, int minSize, int maxSize,
 			AsyncCallback<ArrayList<SchoolValue>> async);
+	public void getDistrictNames(AsyncCallback<ArrayList<String>> async);
 	public void findLatLong(String place, AsyncCallback<LatLong> async);
 }
