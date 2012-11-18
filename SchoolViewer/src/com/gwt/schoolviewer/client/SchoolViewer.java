@@ -163,7 +163,12 @@ public class SchoolViewer implements EntryPoint {
 						userEmail.append(result.getEmailAddress());
 					}
 				});
-		loadschoolviewer();
+		try {
+			loadschoolviewer();
+		} catch (NotLoggedInException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void addGoogleAuthHelper() {
@@ -228,7 +233,7 @@ public class SchoolViewer implements EntryPoint {
 		});
 	}
 
-	private void loadschoolviewer() {
+	private void loadschoolviewer() throws NotLoggedInException {
 		// load map
 		options.setCenter(LatLng.create(49.242931, -123.184547));
 		options.setZoom(12);
@@ -343,6 +348,30 @@ public class SchoolViewer implements EntryPoint {
 		// Focus the cursor on the name field when the app loads
 		nameField.setFocus(true);
 		nameField.selectAll();
+		
+		AsyncCallback<ArrayList<SchoolValue>> callback = new AsyncCallback<ArrayList<SchoolValue>>() {
+			public void onFailure(Throwable caught) {
+				// TODO: Do something with errors.
+				System.out.println("Persistent school get failed");
+			}
+
+			public void onSuccess(ArrayList<SchoolValue> result) {
+				System.out.println("Persistent school get success");
+				ListOfCompSchools = result;
+				for (int i = 0; i < result.size(); i++) {
+					final CheckBox checkBox = new CheckBox(); // create new checkbox per
+																// row
+					compFlexTable.setText(i + 1, 0, result.get(i).getName());
+					compFlexTable.setText(i + 1, 1, result.get(i).getLocation());
+					compFlexTable.setText(i + 1, 2, result.get(i).getDistrict());
+					compFlexTable.setText(i + 1, 3, result.get(i).getpCode());
+					compFlexTable.setWidget(i + 1, 4, checkBox);
+				}
+			}
+		};
+		compareService.getSchoolValues(callback);
+		
+		
 
 		// Create a handler for the sendButton and nameField
 		class MyHandler implements ClickHandler, KeyUpHandler {
@@ -384,7 +413,12 @@ public class SchoolViewer implements EntryPoint {
 			 * Fired when the user clicks on the clearChecked Button.
 			 */
 			public void onClick(ClickEvent event) {
-				removeFromCompList();
+				try {
+					removeFromCompList();
+				} catch (NotLoggedInException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 
@@ -571,13 +605,29 @@ public class SchoolViewer implements EntryPoint {
 
 	/**
 	 * Remove all checked rows from compare table
+	 * @throws NotLoggedInException 
 	 * 
 	 */
-	private void removeFromCompList() {
+	private void removeFromCompList() throws NotLoggedInException {
 		// go backward to avoid messed up row indices
 		for (int i = compFlexTable.getRowCount() - 1; i > 0; i--) {
 			if (((CheckBox) compFlexTable.getWidget(i, 4)).getValue()) {
-				ListOfCompSchools.remove(i - 1);
+				
+				// add a schoolValue to compareServiceAsync
+				AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+					public void onFailure(Throwable caught) {
+						// TODO: Do something with errors.
+						System.out.println("Remove Failed");
+					}
+
+					public void onSuccess(Void result) {
+						System.out.println("Remove Success");
+					}
+
+				};
+				compareService.removeSchoolValue(ListOfCompSchools.get(i-1), callback);
+				
+				ListOfCompSchools.remove(i - 1);	
 				RemoveMarker(compFlexTable.getText(i, 0));
 				compFlexTable.removeRow(i);
 			}
