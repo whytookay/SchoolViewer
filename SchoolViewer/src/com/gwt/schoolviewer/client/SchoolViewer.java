@@ -55,6 +55,7 @@ import com.google.api.gwt.oauth2.client.Auth;
 import com.google.api.gwt.oauth2.client.AuthRequest;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.event.shared.SimpleEventBus;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -112,13 +113,14 @@ public class SchoolViewer implements EntryPoint {
 	private final GreetingServiceAsync greetingService = GWT
 			.create(GreetingService.class);
 
-	// private static final Plus plus = GWT.create(Plus.class);
-	// private static final String CLIENT_ID =
-	// "700088417733.apps.googleusercontent.com";
-	// private static final String API_KEY =
-	// "AIzaSyDGS6xMhkUEiR7FVCp5lslzcWOKGXWxooc";
-	// private static final String APPLICATION_NAME = "projecttesting40702";
-	//
+    private static final Plus plus = GWT.create(Plus.class);
+	private static final String CLIENT_ID =
+	 "700088417733.apps.googleusercontent.com";
+	private static final String API_KEY =
+	 "AIzaSyDGS6xMhkUEiR7FVCp5lslzcWOKGXWxooc";
+	private static final String APPLICATION_NAME = "projecttesting40702";
+	private Person Self;
+	
 	private void loadLogin(final LoginInfo loginInfo) {
 		AUTH.clearAllTokens();
 		signInLink.setHref(loginInfo.getLoginUrl());
@@ -142,13 +144,12 @@ public class SchoolViewer implements EntryPoint {
 		loginPanel.add(signInLink);
 		RootPanel.get("loginPanelContainer").add(loginPanel);
 		final StringBuilder userEmail = new StringBuilder();
-		System.out.println(GWT.getHostPageBaseURL());
 		greetingService.login(GWT.getHostPageBaseURL(),
 				new AsyncCallback<LoginInfo>() {
 					@Override
 					public void onFailure(final Throwable caught) {
 						GWT.log("login -> onFailure");
-						System.out.println(caught.toString());
+						println(caught.toString());
 					}
 
 					@Override
@@ -213,6 +214,7 @@ public class SchoolViewer implements EntryPoint {
 														}
 														loginImage
 																.setVisible(true);
+														InitSelf();
 													}
 												}
 											});
@@ -227,11 +229,65 @@ public class SchoolViewer implements EntryPoint {
 			}
 		});
 	}
+	private void InitSelf(){
+		plus.initialize(new SimpleEventBus(), new GoogleApiRequestTransport(APPLICATION_NAME, API_KEY));
+		OAuth2Login.get().authorize(GOOGLE_CLIENT_ID, PlusAuthScope.PLUS_ME, new Callback<Void, Exception>() {
+		      @Override
+		      public void onSuccess(Void v) {
+		    	  plus.people().get("me").to(new Receiver<Person>() {
+		    	      @Override
+		    	      public void onSuccess(Person person) {
+		    	        Self = person; 
+		    	      }
+		    	    }).fire();
+		      }
+
+		      @Override
+		      public void onFailure(Exception e) {
+		        println(e.getMessage());
+		      }
+		    });
+	}
+	private void SetSelfLocationMarker() {
+		MarkerOptions markerOptions = MarkerOptions.create(); 
+	    markerOptions.setMap(theMap); 
+	    markerOptions.setTitle("this is you"); 
+	    markerOptions.setDraggable(false); 
+	    markerOptions.setIcon(MarkerImage.create("http://google-maps-icons.googlecode.com/files/walking-tour.png"));
+	    final Marker start = Marker.create(markerOptions);
+	    AsyncCallback<LatLong> callback = new AsyncCallback<LatLong>() {
+			public void onFailure(Throwable caught) {
+				// TODO: Do something with errors.
+				println("failed to get self Lat Long");
+			}
+
+			public void onSuccess(LatLong result) {
+			    start.setPosition(LatLng.create(result.getLatitude(),result.getLongitude()));
+			}
+		};
+		String place = Self.getPlacesLived().get(0).getValue();
+		String placeURL = "";
+		for(int k = 0;k<place.length()-1; k++ ){
+			if (place.substring(k,k+1).equals(" ")){
+				placeURL= placeURL + "+";
+			}else
+				placeURL = placeURL + place.substring(k,k+1);
+			
+		}
+		println(placeURL);
+		schoolValueSvc.findLatLong(placeURL, callback);
+	    Markers.add(start);	
+	  }
+	
+	private void println(String txt){
+		Window.alert(txt);
+		
+	}
 
 	private void loadschoolviewer() {
 		// load map
-		options.setCenter(LatLng.create(49.242931, -123.184547));
-		options.setZoom(12);
+		options.setCenter(LatLng.create(54.826008,-124.848633));
+		options.setZoom(5);
 		options.setMapTypeId(MapTypeId.ROADMAP);
 		options.setDraggable(true);
 		options.setMapTypeControl(true);
@@ -243,20 +299,6 @@ public class SchoolViewer implements EntryPoint {
 		mapPanel.setVisible(true);
 
 		theMap = GoogleMap.create(mapPanel.getElement(), options);
-
-		// sample of how to add marker-------------
-		MarkerOptions markerOptions = MarkerOptions.create();
-		markerOptions.setMap(theMap);
-		markerOptions.setTitle("THIS IS YOU");
-		markerOptions.setDraggable(true);
-		markerOptions
-				.setIcon(MarkerImage
-						.create("http://google-maps-icons.googlecode.com/files/walking-tour.png"));
-		markerOptions.setPosition(LatLng.create(49.242931, -123.184547));
-		Marker start = Marker.create(markerOptions);
-
-		Markers.add(start);
-		// ----------------------------------------
 
 		// panels for holding widgets
 		@SuppressWarnings("deprecation")
@@ -404,7 +446,11 @@ public class SchoolViewer implements EntryPoint {
 		
 		class ShowMapHandler implements ClickHandler {
 			public void onClick(ClickEvent event) {
-				//TODO: Put your show on map code here 
+			    //TODO
+				if (Self != null)
+				SetSelfLocationMarker();
+				else
+					println("please login");
 			}
 		}
 
@@ -429,12 +475,12 @@ public class SchoolViewer implements EntryPoint {
 		AsyncCallback<Boolean> setCodeBool = new AsyncCallback<Boolean>() {
 			public void onFailure(Throwable caught) {
 				// TODO: Do something with errors.
-				System.out.println("Failed to setPcode");
+				println("Failed to setPcode");
 			}
 
 			public void onSuccess(Boolean result) {
 				if (result) {
-					System.out.println("Successfully set PCode");
+					//System.out.println("Successfully set PCode");
 					returnInRadius();
 				}
 			}
@@ -447,11 +493,11 @@ public class SchoolViewer implements EntryPoint {
 		AsyncCallback<ArrayList<SchoolValue>> callback = new AsyncCallback<ArrayList<SchoolValue>>() {
 			public void onFailure(Throwable caught) {
 				// TODO: Do something with errors.
-				System.out.println("Postal Search Failed");
+				println("Postal Search Failed");
 			}
 
 			public void onSuccess(ArrayList<SchoolValue> result) {
-				System.out.println("Postal Search Success");
+				//System.out.println("Postal Search Success");
 				ListOfSchools = result;
 				populateSchoolTable(result);
 			}
@@ -467,11 +513,11 @@ public class SchoolViewer implements EntryPoint {
 		AsyncCallback<ArrayList<SchoolValue>> callback = new AsyncCallback<ArrayList<SchoolValue>>() {
 			public void onFailure(Throwable caught) {
 				// TODO: Do something with errors.
-				System.out.println("Search Failed");
+				println("Search Failed");
 			}
 
 			public void onSuccess(ArrayList<SchoolValue> result) {
-				System.out.println("Search Success");
+				//System.out.println("Search Success");
 				ListOfSchools = result;
 				populateSchoolTable(result);
 			}
@@ -524,11 +570,11 @@ public class SchoolViewer implements EntryPoint {
 					AsyncCallback<Void> callback = new AsyncCallback<Void>() {
 						public void onFailure(Throwable caught) {
 							// TODO: Do something with errors.
-							System.out.println("Add Failed");
+							println("Add Failed");
 						}
 
 						public void onSuccess(Void result) {
-							System.out.println("Add Success");
+							//System.out.println("Add Success");
 						}
 
 					};
@@ -612,7 +658,15 @@ public class SchoolViewer implements EntryPoint {
 				markerOptions.setPosition(LatLng.create(s.getLatitude(),
 						s.getLongitude()));
 				Marker marker = Marker.create(markerOptions);
-				final String txt = s.getName() + " @ " + s.getDistrict();
+				final String txt = "<div id=\"content\">"
+					    + "<p style=\"text-align:left; color:BLACK; font-size: 16pt \"><b>"
+					    + s.getName()
+					    + "</b></p>"
+					    + "<p style=\"text-align:left;color: BLACK;\">"
+					    + "District: "+s.getDistrict()
+					    + "</b></p>"
+					    
+					    + "</div>";
 				final LatLng pos = LatLng.create(s.getLatitude(),
 						s.getLongitude());
 				marker.addClickListener(new Marker.ClickHandler() {
@@ -623,18 +677,6 @@ public class SchoolViewer implements EntryPoint {
 						IW.setPosition(pos);
 						IW.setContent(txt);
 						IW.open(theMap);
-
-						// w.addCloseClickListener(new
-						// InfoWindow.CloseClickHandler() {
-						//
-						// @Override
-						// public void handle() {
-						// w.close();
-						//
-						// }
-						// });
-
-						// Window.alert(txt);
 
 					}
 				});
@@ -649,7 +691,6 @@ public class SchoolViewer implements EntryPoint {
 	private void RemoveMarker(String name) {
 		for (int k = 0; k < Markers.size(); k++) {
 			if (name.equals(Markers.get(k).getTitle())) {
-				// Markers.get(k).setVisible(false);
 				Markers.get(k).setMap((GoogleMap) null);
 				if (Markers.get(k).getPosition().equals(IW.getPosition()))
 					IW.close();
