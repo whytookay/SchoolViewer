@@ -15,5 +15,9 @@ public interface SchoolValueService extends RemoteService {
 	public Boolean setCode(PostalCodeValue pCode) throws NotLoggedInException; // previously void, bool as placeholder for callback
 	public ArrayList<SchoolValue> getValuesRange(Double radius);
 	public ArrayList<SchoolValue> getValues();
+	public ArrayList<SchoolValue> getValuesFiltered(Boolean searchByPcode,
+			String pCode, Double radius, Boolean searchByDistrict,
+			String district, Boolean searchByString, String search);
 	public LatLong findLatLong(String place);
+
 }
