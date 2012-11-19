@@ -18,22 +18,31 @@ import com.gwt.schoolviewer.client.SchoolValue;
 import com.gwt.schoolviewer.client.SchoolValueService;
 import com.gwt.schoolviewer.client.LatLong;
 
+/**
+ * The server side implementation of the RPC service.
+ * The purpose of this class is to allow the client to get school data from the server
+ * This class also allows some other related internet data to be pulled, such as a list
+ * of BC districts, and whether two lat/long pairs are within a given distance.
+ */
 public class SchoolValueServiceImpl extends RemoteServiceServlet implements SchoolValueService {
 	private PostalCode code = new PostalCode(getUser(), "V5J2C4");
 	private Double latitude = 49.25;
 	private Double longitude = -123.11;
 	
+	// get stored postalcode (TODO: remove mostly unused functionality)
 	@Override
 	public PostalCodeValue getCode() {
-		return new PostalCodeValue(code.getCode()); //codes;
+		return new PostalCodeValue(code.getCode());
 	}
 	
+	// clear stored postalcode (TODO: remove mostly unused functionality)
 	@Override
 	public Boolean clearCode() {
 		code = null;
 		return true;
 	}
 	
+	// set stored postalcode (TODO: remove mostly unused functionality)
 	@Override
 	public Boolean setCode(PostalCodeValue pCode) throws NotLoggedInException {
 		code = new PostalCode(getUser(), pCode.getCode());
@@ -50,6 +59,7 @@ public class SchoolValueServiceImpl extends RemoteServiceServlet implements Scho
 			return false;
 	}
 	
+	// given a String representing a location (address or postal code), returns an equivalent LatLong
 	@Override
 	public LatLong findLatLong(String place) { // place can be a postal code string or an address string
 		// some simple code inspired by http://stackoverflow.com/questions/7467568/parsing-json-from-url
@@ -68,7 +78,8 @@ public class SchoolValueServiceImpl extends RemoteServiceServlet implements Scho
 		return aLatLong;
 	}
 	
-	// returns all schoolvalues within a given range of this class's set postal code. If postal code is null, returns false.
+	// returns all schoolvalues from server within a given range of this class's set postal code. If postal code is null, returns false.
+	// (TODO: remove mostly unused functionality)
 	@Override
 	public ArrayList<SchoolValue> getValuesRange(Double radius) {
 		// populate a list of districts 
@@ -91,6 +102,8 @@ public class SchoolValueServiceImpl extends RemoteServiceServlet implements Scho
 		return schoolValues;
 	}
 	
+	// returns all schoolvalues from server
+	// (TODO: remove mostly unused functionality)
 	@Override
 	public ArrayList<SchoolValue> getValues() {
 		//Boolean test = stringMatchesTo("Park-ville dr. way st", "Park-Ville Secondary"); //TODO: REMOVE TEST CODE
@@ -117,6 +130,10 @@ public class SchoolValueServiceImpl extends RemoteServiceServlet implements Scho
 	}
 	
 	// returns all schoolvalues that pass the given filters.
+	// there are four main groups of filters (represented in the arguments): for each group, if the boolean value is true, then
+	// results will be filtered by the passed results. For example, if searchByPcode is true, then results will be narrowed to
+	// those within given radius of the given pCode as well as by any other filters activated.
+	// note: based on filter setup, even if a bool is false, sensible (albeit useless) values must still be passed in for that group
 	@Override
 	public ArrayList<SchoolValue> getValuesFiltered(Boolean searchByPcode, String pCode, Double radius, Boolean searchByDistrict, String district, Boolean searchByString, String search, Boolean searchByClassSize, int minSize, int maxSize) {
 		// 3 preps here, for defensive coding (not bothering to search for something if it's null) and to fill latitude, longitude
@@ -189,9 +206,10 @@ public class SchoolValueServiceImpl extends RemoteServiceServlet implements Scho
 	}
 	
 	// helper for getValuesRange: determines whether two co-ordinates are within a given kilometer range
-	private Boolean areWithinRange(Double latOne, Double longOne, Double latTwo, Double longTwo, Double kiloRange) {
+	public static Boolean areWithinRange(Double latOne, Double longOne, Double latTwo, Double longTwo, Double kiloRange) {
 		double calcDistance;
 		calcDistance = (Math.sqrt(Math.pow((latOne - latTwo), 2) + Math.pow((longOne - longTwo), 2)) * 111.3); // c^2 = a^2 + b^2, a = y_1 - y_2, b = x_1 - x_2, 111.3 km per degree
+		//System.out.println(calcDistance);
 		if (calcDistance < kiloRange) {
 			return true;
 		} else {
@@ -219,22 +237,27 @@ public class SchoolValueServiceImpl extends RemoteServiceServlet implements Scho
 	    }
 	}
 	
-	/*
-	 * This method takes two strings: searchString and targetString, and figures out if searchString matches loosely to targetString.
-	 */
-	private Boolean stringMatchesTo(String searchString, String targetString) {
+
+	// This method takes two strings: searchString and targetString, and figures out if searchString matches loosely to targetString.
+	public static Boolean stringMatchesTo(String searchString, String targetString) {
 		searchString = searchString.toUpperCase().replaceAll("[.,\\-]", " ").replaceAll("\\b" + "(WAY|DR|ST)" + "\\b", "");  ; // Park-ville dr. way -> PARK VILLE 
-		System.out.println("searchstring is " + searchString + ".");
+		//System.out.println("searchstring is " + searchString + ".");
 		String[] searchStrings = searchString.split("\\s+");
 		targetString = targetString.toUpperCase().replaceAll("\\W",""); // Park-Ville Secondary -> "PARKVILLESECONDARY"
-		System.out.println("targetString is "  +targetString + ".");
+		//System.out.println("targetString is "  +targetString + ".");
+		//System.out.println("searchStrings.length:" + searchStrings.length);
 		for (int i = 0; i < searchStrings.length; i++) {
-			if (targetString.contains(searchStrings[i]))
+			//System.out.println("searchStrings[i] is \"" + searchStrings[i] + "\"");
+			if (targetString.contains(searchStrings[i]) && !searchStrings[i].isEmpty()) {
+				//System.out.println("match!"); 
 				return true;
+			}
+
 		}
 		return false;
 	}
 	
+	// returns the current user (TODO: REMOVE UNUSED FUNCTIONALITY)
 	private User getUser() {
 		UserService userService = UserServiceFactory.getUserService();
 		return userService.getCurrentUser();

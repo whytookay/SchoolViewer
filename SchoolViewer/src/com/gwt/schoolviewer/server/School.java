@@ -86,6 +86,7 @@ public class School {
 		return classSize;
 	}
 	
+	// constructs an equivalent schoolvalue from any school instance's data.
 	public SchoolValue getEquivSchoolValue() {
 		return (new SchoolValue(name,
 				location,

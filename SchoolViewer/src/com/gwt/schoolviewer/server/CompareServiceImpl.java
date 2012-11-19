@@ -22,6 +22,8 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 /**
  * The server side implementation of the RPC service.
  * This class borrows from StockServiceImpl's persistence code.
+ * The purpose of this class is to provide the backend for the compare table's persistence.
+ * Schools can be added to and removed from the server's persistent store.
  */
 @SuppressWarnings("serial")
 public class CompareServiceImpl extends RemoteServiceServlet implements
@@ -30,6 +32,7 @@ public class CompareServiceImpl extends RemoteServiceServlet implements
 	private static final PersistenceManagerFactory PMF = 
 			JDOHelper.getPersistenceManagerFactory("transactions-optional");
 
+	// add a SchoolValue to the persistent store
 	@Override
 	public void addSchoolValue(SchoolValue schoolVal) throws NotLoggedInException {
 		checkLoggedIn();
@@ -52,8 +55,9 @@ public class CompareServiceImpl extends RemoteServiceServlet implements
 		}
 	}
 
+	// remove a SchoolValue from the persistent store
 	@Override
-	public void removeSchoolValue(SchoolValue schoolVal) // TODO: IMPLEMENT
+	public void removeSchoolValue(SchoolValue schoolVal)
 			throws NotLoggedInException {
 		checkLoggedIn();
 		PersistenceManager pm = getPersistenceManager();
@@ -76,8 +80,9 @@ public class CompareServiceImpl extends RemoteServiceServlet implements
 		}
 	}
 
+	// retrieve all SchoolValues from the persistent store
 	@Override
-	public ArrayList<SchoolValue> getSchoolValues() throws NotLoggedInException { // TODO: IMPLEMENT
+	public ArrayList<SchoolValue> getSchoolValues() throws NotLoggedInException {
 		checkLoggedIn();
 		PersistenceManager pm = getPersistenceManager();
 		ArrayList<SchoolValue> schoolValues = new ArrayList<SchoolValue>();
@@ -95,17 +100,20 @@ public class CompareServiceImpl extends RemoteServiceServlet implements
 		return schoolValues;
 	}
 
+	// check if the user is logged in
 	private void checkLoggedIn() throws NotLoggedInException {
 		if (getUser() == null) {
 			throw new NotLoggedInException("Not logged in.");
 		}
 	}
 
+	// get the current user
 	private User getUser() {
 		UserService userService = UserServiceFactory.getUserService();
 		return userService.getCurrentUser();
 	}
 	
+	// get a persistencemanager
 	private PersistenceManager getPersistenceManager() {
 		return PMF.getPersistenceManager();
 	}

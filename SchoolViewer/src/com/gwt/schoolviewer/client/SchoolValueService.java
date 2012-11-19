@@ -21,5 +21,4 @@ public interface SchoolValueService extends RemoteService {
 			Boolean searchByClassSize, int minSize, int maxSize);
 	public ArrayList<String> getDistrictNames();
 	public LatLong findLatLong(String place);
-
 }
