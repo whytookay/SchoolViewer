@@ -589,10 +589,13 @@ public class SchoolViewer implements EntryPoint {
 				.getSelectedIndex()); // or district value
 		Boolean isDistrict = !district.equals("None");
 		Double radius = Double.parseDouble(radiusField.getText());
-		Boolean minOrMaxValid = !(minSize.getText().equals("") && maxSize.getText().equals(""));
-		int min = Integer.parseInt(minSize.getText());
-		int max = Integer.parseInt(maxSize.getText());
-
+		
+		String minStr = minSize.getText();
+		String maxStr = maxSize.getText();
+		Boolean minOrMaxValid = !(minStr.equals("") && maxStr.equals(""));
+		int min = Integer.parseInt(minStr);
+		int max = Integer.parseInt(maxStr);
+		
 		schoolValueSvc.getValuesFiltered(isPostal, pCode, radius, isDistrict,
 				district, isSearch, search, minOrMaxValid, min, max, callback);
 
