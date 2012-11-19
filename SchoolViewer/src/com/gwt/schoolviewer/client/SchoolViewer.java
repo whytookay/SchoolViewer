@@ -418,25 +418,31 @@ public class SchoolViewer implements EntryPoint {
 		// Make the call to the school value service.
 		schoolValueSvc.getDistrictNames(callback);
 
-//		/**
-//		 * Get Persistent school values commented out until add/remove are
-//		 * working
-//		 */
-//		 AsyncCallback<ArrayList<SchoolValue>> comparecallback = new
-//		 AsyncCallback<ArrayList<SchoolValue>>() { public void
-//		 onFailure(Throwable caught) { // TODO: Do something with errors.
-//		 System.out.println("Persistent school get failed"); }
-//		  
-//		 public void onSuccess(ArrayList<SchoolValue> result) {
-//		 System.out.println("Persistent school get success");
-//		 ListOfCompSchools = result; for (int i = 0; i < result.size(); i++) {
-//		 final CheckBox checkBox = new CheckBox(); // create new // checkbox
-//		 per // row compFlexTable.setText(i + 1, 0, result.get(i).getName());
-//		 compFlexTable .setText(i + 1, 1, result.get(i).getLocation());
-//		 compFlexTable .setText(i + 1, 2, result.get(i).getDistrict());
-//		 compFlexTable.setText(i + 1, 3, result.get(i).getpCode());
-//		 compFlexTable.setWidget(i + 1, 5, checkBox); }}};
-//		 compareService.getSchoolValues(comparecallback);
+		AsyncCallback<ArrayList<SchoolValue>> compareCallback = new AsyncCallback<ArrayList<SchoolValue>>() {
+			public void onFailure(Throwable caught) {
+				// TODO: Do something with errors.
+				System.out.println("Persistent school get failed");
+			}
+
+			public void onSuccess(ArrayList<SchoolValue> result) {
+				System.out.println("Persistent school get success");
+				ListOfCompSchools = result;
+				for (int i = 0; i < result.size(); i++) {
+					final CheckBox checkBox = new CheckBox(); // create new
+																// checkbox per
+																// row
+					compFlexTable.setText(i + 1, 0, result.get(i).getName());
+					compFlexTable
+							.setText(i + 1, 1, result.get(i).getLocation());
+					compFlexTable
+							.setText(i + 1, 2, result.get(i).getDistrict());
+					compFlexTable.setText(i + 1, 3, result.get(i).getpCode());
+					//compFlexTable.setText(i+1,4, Double.toString(result.get(i).getClassSize()));
+					compFlexTable.setWidget(i + 1, 5, checkBox);
+				}
+			}
+		};
+		compareService.getSchoolValues(compareCallback);
 		 
 
 		// Create a handler for the sendButton and nameField
