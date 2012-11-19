@@ -113,16 +113,16 @@ public class SchoolViewer implements EntryPoint {
 	// google +
 	private static final Auth AUTH = Auth.get();
 	private static final String GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/auth";
-	private static final String GOOGLE_CLIENT_ID = "700088417733.apps.googleusercontent.com";
+	private static final String GOOGLE_CLIENT_ID = "588877069341.apps.googleusercontent.com";
 	private static final String PLUS_ME_SCOPE = "https://www.googleapis.com/auth/userinfo.profile";
 
 	private final GreetingServiceAsync greetingService = GWT
 			.create(GreetingService.class);
 
 	private static final Plus plus = GWT.create(Plus.class);
-	private static final String CLIENT_ID = "700088417733.apps.googleusercontent.com";
-	private static final String API_KEY = "AIzaSyDGS6xMhkUEiR7FVCp5lslzcWOKGXWxooc";
-	private static final String APPLICATION_NAME = "projecttesting40702";
+	private static final String CLIENT_ID = "588877069341.apps.googleusercontent.com";
+	private static final String API_KEY = "AIzaSyBh9EtSr6O_4K0bvFCkpxZMA_PheFKy3aI";
+	private static final String APPLICATION_NAME = "Schoolviewerq";
 	private Person Self;
 
 	private void loadLogin(final LoginInfo loginInfo) {
@@ -418,26 +418,26 @@ public class SchoolViewer implements EntryPoint {
 		// Make the call to the school value service.
 		schoolValueSvc.getDistrictNames(callback);
 
-		/**
-		 * Get Persistent school values commented out until add/remove are
-		 * working
-		 * 
-		 * AsyncCallback<ArrayList<SchoolValue>> comparecallback = new
-		 * AsyncCallback<ArrayList<SchoolValue>>() { public void
-		 * onFailure(Throwable caught) { // TODO: Do something with errors.
-		 * System.out.println("Persistent school get failed"); }
-		 * 
-		 * public void onSuccess(ArrayList<SchoolValue> result) {
-		 * System.out.println("Persistent school get success");
-		 * ListOfCompSchools = result; for (int i = 0; i < result.size(); i++) {
-		 * final CheckBox checkBox = new CheckBox(); // create new // checkbox
-		 * per // row compFlexTable.setText(i + 1, 0, result.get(i).getName());
-		 * compFlexTable .setText(i + 1, 1, result.get(i).getLocation());
-		 * compFlexTable .setText(i + 1, 2, result.get(i).getDistrict());
-		 * compFlexTable.setText(i + 1, 3, result.get(i).getpCode());
-		 * compFlexTable.setWidget(i + 1, 5, checkBox); } } };
-		 * compareService.getSchoolValues(comparecallback);
-		 */
+//		/**
+//		 * Get Persistent school values commented out until add/remove are
+//		 * working
+//		 */
+//		 AsyncCallback<ArrayList<SchoolValue>> comparecallback = new
+//		 AsyncCallback<ArrayList<SchoolValue>>() { public void
+//		 onFailure(Throwable caught) { // TODO: Do something with errors.
+//		 System.out.println("Persistent school get failed"); }
+//		  
+//		 public void onSuccess(ArrayList<SchoolValue> result) {
+//		 System.out.println("Persistent school get success");
+//		 ListOfCompSchools = result; for (int i = 0; i < result.size(); i++) {
+//		 final CheckBox checkBox = new CheckBox(); // create new // checkbox
+//		 per // row compFlexTable.setText(i + 1, 0, result.get(i).getName());
+//		 compFlexTable .setText(i + 1, 1, result.get(i).getLocation());
+//		 compFlexTable .setText(i + 1, 2, result.get(i).getDistrict());
+//		 compFlexTable.setText(i + 1, 3, result.get(i).getpCode());
+//		 compFlexTable.setWidget(i + 1, 5, checkBox); }}};
+//		 compareService.getSchoolValues(comparecallback);
+		 
 
 		// Create a handler for the sendButton and nameField
 		class MyHandler implements ClickHandler, KeyUpHandler {
@@ -651,7 +651,7 @@ public class SchoolViewer implements EntryPoint {
 					AsyncCallback<Void> callback = new AsyncCallback<Void>() {
 						public void onFailure(Throwable caught) {
 							// TODO: Do something with errors.
-							println("Add Failed");
+							println("Comp List Add Failed"); // TODO: FIX THIS ERROR
 						}
 
 						public void onSuccess(Void result) {

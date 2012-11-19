@@ -1,5 +1,6 @@
 package com.gwt.schoolviewer.server;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -11,7 +12,11 @@ import com.google.appengine.api.users.User;
 import com.gwt.schoolviewer.client.SchoolValue;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
-public class PersistentSchool {
+public class PersistentSchool implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5365277251804026439L;
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private Long id;

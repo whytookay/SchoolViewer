@@ -50,7 +50,7 @@
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>schoolValueServiceImpl</servlet-name>
+    <servlet-name>compareServiceImpl</servlet-name>
     <url-pattern>/schoolviewer/compare</url-pattern>
   </servlet-mapping>
   
