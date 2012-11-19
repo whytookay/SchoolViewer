@@ -24,6 +24,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -317,13 +318,11 @@ public class SchoolViewer implements EntryPoint {
 		theMap = GoogleMap.create(mapPanel.getElement(), options);
 
 		// panels for holding widgets
-		@SuppressWarnings("deprecation")
-		// may rewrite later if I have time
-		final VerticalSplitPanel tablePanel = new VerticalSplitPanel(); // TODO:
-																		// yo
-																		// this
-																		// is
-																		// deprecated
+
+		final VerticalPanel tablePanel = new VerticalPanel(); 
+		
+		final ScrollPanel compPanel = new ScrollPanel(compFlexTable);
+		final ScrollPanel schoolPanel = new ScrollPanel(schoolFlexTable);
 		final HorizontalPanel layoutPanel = new HorizontalPanel();
 		final AbsolutePanel filterPanel = new AbsolutePanel();
 
@@ -335,8 +334,8 @@ public class SchoolViewer implements EntryPoint {
 		final Button showOnMapButton = new Button("Show on Map");
 
 		// filterPanel widgets
-		final Label filterLabel = new Label("Filters");
-		final Button postalSearchButton = new Button("Apply Filters");
+		final Label filterLabel = new Label("Enter postal code and radius below:");
+		final Button postalSearchButton = new Button("Query schools within radius");
 
 		// Create table for comparing school data.
 		compFlexTable.setText(0, 0, "Name");
@@ -368,14 +367,15 @@ public class SchoolViewer implements EntryPoint {
 		filterPanel.setSize("640px", "120px");
 		filterPanel.add(filterLabel);
 		filterPanel.add(postalField, 50, 15);
-		postalField.setText("Enter Postal Code:");
 		filterPanel.add(radiusField, 50, 50);
 		radiusField.setText("0");
 		filterPanel.add(postalSearchButton, 50, 85);
 		filterPanel.add(districtDropBox, 250, 50);
 		minSize.setVisibleLength(2);
+		minSize.setText("-1");
 		filterPanel.add(minSize, 500, 50);
 		maxSize.setVisibleLength(2);
+		maxSize.setText("37");
 		filterPanel.add(maxSize, 560, 50);
 		filterPanel.addStyleName("filterTable");
 		RootPanel.get("filterContainer").add(filterPanel);
@@ -389,9 +389,13 @@ public class SchoolViewer implements EntryPoint {
 
 		// Setup Compare and Map panel layout in RootPanel
 		tablePanel.setSize("640px", "600px");
-		tablePanel.add(compFlexTable);
-		tablePanel.add(schoolFlexTable);
-		tablePanel.addStyleName("schoolTable");
+		compPanel.setSize("640px", "300px");
+		schoolPanel.setSize("640px", "300px");
+		compPanel.addStyleName("schoolTable");
+		schoolPanel.addStyleName("schoolTable");
+		tablePanel.add(compPanel);
+		tablePanel.add(schoolPanel);
+//		tablePanel.addStyleName("schoolTable");
 		layoutPanel.insert(tablePanel, 0);
 		layoutPanel.insert(mapPanel, 1);
 		RootPanel.get("tableMapContainer").add(layoutPanel);
