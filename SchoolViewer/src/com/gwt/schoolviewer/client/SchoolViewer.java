@@ -764,12 +764,25 @@ public class SchoolViewer implements EntryPoint {
 						s.getLongitude()));
 				Marker marker = Marker.create(markerOptions);
 				final String txt = "<div id=\"content\">"
-						+ "<p style=\"text-align:left; color:BLACK; font-size: 16pt \"><b>"
-						+ s.getName() + "</b></p>"
-						+ "<p style=\"text-align:left;color: BLACK;\">"
-						+ "District: " + s.getDistrict() + "</b></p>"
-
-						+ "</div>";
+					    + "<p style=\"text-align:left; color:BLACK; font-size: 16pt \"><b>"
+					    + s.getName()
+					    + "</b></p>"
+					    + "<p style=\"text-align:left;color: BLACK;\">"
+					    + s.getPubOrInd() + ". Education Level: " + s.getEduLevel()
+					    + "</b></p>"
+					    + "<p style=\"text-align:left;color: BLACK;\">"
+					    + "District: "+s.getDistrict()
+					    + "</b></p>"
+					    + "<p style=\"text-align:left;color: BLACK;\">"
+					    + "Address: " + s.getLocation()
+					    + "</b></p>"
+					    + "<p style=\"text-align:left;color: BLACK;\">"
+					    + "Phone Number: " + s.getPhone()
+					    + "</b></p>"
+					    + "<p style=\"text-align:left;color: BLACK;\">"
+					    + "Class size: " + s.getClassSize().intValue()
+					    + "</b></p>"  
+					    + "</div>";
 				final LatLng pos = LatLng.create(s.getLatitude(),
 						s.getLongitude());
 				marker.addClickListener(new Marker.ClickHandler() {
