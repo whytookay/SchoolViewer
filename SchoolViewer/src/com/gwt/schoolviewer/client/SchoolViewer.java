@@ -83,8 +83,10 @@ public class SchoolViewer implements EntryPoint {
 	private final SchoolValueServiceAsync schoolValueSvc = GWT
 			.create(SchoolValueService.class);
 
+	// data arrays
 	private ArrayList<SchoolValue> ListOfSchools;
 	private ArrayList<SchoolValue> ListOfCompSchools = new ArrayList<SchoolValue>();
+	// private ArrayList<String> ListOfDistricts = new ArrayList<String>();
 
 	// login stuff
 	private final HorizontalPanel loginPanel = new HorizontalPanel();
@@ -97,6 +99,10 @@ public class SchoolViewer implements EntryPoint {
 	private final FlexTable schoolFlexTable = new FlexTable();
 	private final TextBox postalField = new TextBox();
 	private final TextBox radiusField = new TextBox();
+	private final TextBox queryField = new TextBox();
+	private final ListBox districtDropBox = new ListBox();
+	private final TextBox minSize = new TextBox();
+	private final TextBox maxSize = new TextBox();
 
 	// map stuff
 	private MapOptions options = MapOptions.create();
@@ -323,8 +329,6 @@ public class SchoolViewer implements EntryPoint {
 
 		// compare and school table widgets
 		final Button refreshButton = new Button("Search");
-		final TextBox nameField = new TextBox();
-		nameField.setText("Enter school information:");
 		final Button compButton = new Button("Compare");
 		final Button clearButton = new Button("Clear Checked");
 		final CheckBox checkAllComp = new CheckBox("Check All");
@@ -333,13 +337,6 @@ public class SchoolViewer implements EntryPoint {
 		// filterPanel widgets
 		final Label filterLabel = new Label("Filters");
 		final Button postalSearchButton = new Button("Apply Filters");
-
-		// setup dropbox for districts
-		final ListBox districtDropBox = new ListBox();
-		// Manually Adding districts later will query for districts
-		districtDropBox.addItem("Vancouver");
-		districtDropBox.addItem("Surrey");
-		districtDropBox.addItem("Chilliwack");
 
 		// Create table for comparing school data.
 		compFlexTable.setText(0, 0, "Name");
@@ -371,17 +368,21 @@ public class SchoolViewer implements EntryPoint {
 		filterPanel.setSize("640px", "120px");
 		filterPanel.add(filterLabel);
 		filterPanel.add(postalField, 50, 15);
-		postalField.setText("Enter Postal Code");
+		postalField.setText("Enter Postal Code:");
 		filterPanel.add(radiusField, 50, 50);
-		radiusField.setText("Enter Radius");
+		radiusField.setText("0");
 		filterPanel.add(postalSearchButton, 50, 85);
-		filterPanel.add(districtDropBox, 250, 15);
+		filterPanel.add(districtDropBox, 250, 50);
+		minSize.setVisibleLength(2);
+		filterPanel.add(minSize, 500, 50);
+		maxSize.setVisibleLength(2);
+		filterPanel.add(maxSize, 560, 50);
 		filterPanel.addStyleName("filterTable");
 		RootPanel.get("filterContainer").add(filterPanel);
 
 		// Setup search and compare buttons and search field
 		RootPanel.get("nameFieldContainer").add(refreshButton);
-		RootPanel.get("nameFieldContainer").add(nameField);
+		RootPanel.get("nameFieldContainer").add(queryField);
 		RootPanel.get("buttonContainer").add(compButton);
 		RootPanel.get("buttonContainer").add(clearButton);
 		RootPanel.get("buttonContainer").add(showOnMapButton);
@@ -398,30 +399,45 @@ public class SchoolViewer implements EntryPoint {
 		nameField.setFocus(true);
 		nameField.selectAll();
 
-		AsyncCallback<ArrayList<SchoolValue>> callback = new AsyncCallback<ArrayList<SchoolValue>>() {
+		// Set up the callback object for Schools
+		AsyncCallback<ArrayList<String>> callback = new AsyncCallback<ArrayList<String>>() {
 			public void onFailure(Throwable caught) {
 				// TODO: Do something with errors.
-				System.out.println("Persistent school get failed");
+				println("Search Failed");
 			}
 
-			public void onSuccess(ArrayList<SchoolValue> result) {
-				System.out.println("Persistent school get success");
-				ListOfCompSchools = result;
+			public void onSuccess(ArrayList<String> result) {
+				districtDropBox.addItem("None");
+
 				for (int i = 0; i < result.size(); i++) {
-					final CheckBox checkBox = new CheckBox(); // create new
-																// checkbox per
-																// row
-					compFlexTable.setText(i + 1, 0, result.get(i).getName());
-					compFlexTable
-							.setText(i + 1, 1, result.get(i).getLocation());
-					compFlexTable
-							.setText(i + 1, 2, result.get(i).getDistrict());
-					compFlexTable.setText(i + 1, 3, result.get(i).getpCode());
-					compFlexTable.setWidget(i + 1, 5, checkBox);
+					districtDropBox.addItem(result.get(i));
 				}
 			}
 		};
-		compareService.getSchoolValues(callback);
+
+		// Make the call to the school value service.
+		schoolValueSvc.getDistrictNames(callback);
+
+		/**
+		 * Get Persistent school values commented out until add/remove are
+		 * working
+		 * 
+		 * AsyncCallback<ArrayList<SchoolValue>> comparecallback = new
+		 * AsyncCallback<ArrayList<SchoolValue>>() { public void
+		 * onFailure(Throwable caught) { // TODO: Do something with errors.
+		 * System.out.println("Persistent school get failed"); }
+		 * 
+		 * public void onSuccess(ArrayList<SchoolValue> result) {
+		 * System.out.println("Persistent school get success");
+		 * ListOfCompSchools = result; for (int i = 0; i < result.size(); i++) {
+		 * final CheckBox checkBox = new CheckBox(); // create new // checkbox
+		 * per // row compFlexTable.setText(i + 1, 0, result.get(i).getName());
+		 * compFlexTable .setText(i + 1, 1, result.get(i).getLocation());
+		 * compFlexTable .setText(i + 1, 2, result.get(i).getDistrict());
+		 * compFlexTable.setText(i + 1, 3, result.get(i).getpCode());
+		 * compFlexTable.setWidget(i + 1, 5, checkBox); } } };
+		 * compareService.getSchoolValues(comparecallback);
+		 */
 
 		// Create a handler for the sendButton and nameField
 		class MyHandler implements ClickHandler, KeyUpHandler {
@@ -539,7 +555,6 @@ public class SchoolViewer implements EntryPoint {
 			}
 
 			public void onSuccess(ArrayList<SchoolValue> result) {
-				// System.out.println("Postal Search Success");
 				ListOfSchools = result;
 				populateSchoolTable(result);
 			}
@@ -559,14 +574,28 @@ public class SchoolViewer implements EntryPoint {
 			}
 
 			public void onSuccess(ArrayList<SchoolValue> result) {
-				// System.out.println("Search Success");
+				// System.out.println(queryField.getText());
 				ListOfSchools = result;
 				populateSchoolTable(result);
 			}
 		};
 
 		// Make the call to the school value service.
-		schoolValueSvc.getValues(callback);
+		String pCode = postalField.getText();
+		Boolean isPostal = !pCode.equals("");
+		String search = queryField.getText();
+		Boolean isSearch = !search.equals("");
+		String district = districtDropBox.getItemText(districtDropBox
+				.getSelectedIndex()); // or district value
+		Boolean isDistrict = !district.equals("None");
+		Double radius = Double.parseDouble(radiusField.getText());
+		Boolean minOrMaxValid = !(minSize.getText().equals("") && maxSize.getText().equals(""));
+		int min = Integer.parseInt(minSize.getText());
+		int max = Integer.parseInt(maxSize.getText());
+
+		schoolValueSvc.getValuesFiltered(isPostal, pCode, radius, isDistrict,
+				district, isSearch, search, minOrMaxValid, min, max, callback);
+
 	}
 
 	/**
@@ -589,9 +618,10 @@ public class SchoolViewer implements EntryPoint {
 			schoolFlexTable.setText(i + 1, 3, values.get(i).getpCode());
 			Double classSize = values.get(i).getClassSize();
 			if (classSize == -1.0)
-				schoolFlexTable.setText(i+1, 4, "N/A");
+				schoolFlexTable.setText(i + 1, 4, "N/A");
 			else
-				schoolFlexTable.setText(i + 1, 4, Integer.toString(classSize.intValue()));
+				schoolFlexTable.setText(i + 1, 4,
+						Integer.toString(classSize.intValue()));
 			schoolFlexTable.setWidget(i + 1, 5, checkBox);
 
 		}
@@ -652,7 +682,8 @@ public class SchoolViewer implements EntryPoint {
 			if (classSize == -1.0)
 				compFlexTable.setText(newRow, 4, "N/A");
 			else
-				compFlexTable.setText(newRow, 4, Integer.toString(classSize.intValue()));
+				compFlexTable.setText(newRow, 4,
+						Integer.toString(classSize.intValue()));
 			compFlexTable.setWidget(newRow, 5, removeBox);
 		}
 
