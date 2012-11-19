@@ -312,7 +312,7 @@ public class SchoolViewer implements EntryPoint {
 		options.setScrollwheel(true);
 
 		SimplePanel mapPanel = new SimplePanel();
-		mapPanel.setSize("600px", "600px");
+		mapPanel.setSize("720px", "720px");
 		mapPanel.setVisible(true);
 
 		theMap = GoogleMap.create(mapPanel.getElement(), options);
@@ -336,6 +336,10 @@ public class SchoolViewer implements EntryPoint {
 		// filterPanel widgets
 		final Label filterLabel = new Label("Enter postal code and radius below:");
 		final Button postalSearchButton = new Button("Query schools within radius");
+		final Label districtLabel = new Label("Filter by district:");
+		final Label minLabel =  new Label("min");
+		final Label maxLabel = new Label ("max");
+		final Label classSizeLabel = new Label ("Filter by class size:");
 
 		// Create table for comparing school data.
 		compFlexTable.setText(0, 0, "Name");
@@ -363,9 +367,13 @@ public class SchoolViewer implements EntryPoint {
 		schoolFlexTable.getRowFormatter().addStyleName(0, "schoolListHeader");
 		schoolFlexTable.addStyleName("schoolList");
 
-		// Use RootPanel.get() to get the entire body element
+		// Set filter panel elements
 		filterPanel.setSize("640px", "120px");
 		filterPanel.add(filterLabel);
+		filterPanel.add(districtLabel, 250, 25);
+		filterPanel.add(minLabel, 500, 25);
+		filterPanel.add(maxLabel, 560, 25);
+		filterPanel.add(classSizeLabel, 500, 10);
 		filterPanel.add(postalField, 50, 15);
 		filterPanel.add(radiusField, 50, 50);
 		radiusField.setText("0");
@@ -378,7 +386,7 @@ public class SchoolViewer implements EntryPoint {
 		maxSize.setText("40");
 		filterPanel.add(maxSize, 560, 50);
 		filterPanel.addStyleName("filterTable");
-		RootPanel.get("filterContainer").add(filterPanel);
+		//RootPanel.get("filterContainer").add(filterPanel);
 
 		// Setup search and compare buttons and search field
 		RootPanel.get("nameFieldContainer").add(refreshButton);
@@ -393,6 +401,7 @@ public class SchoolViewer implements EntryPoint {
 		schoolPanel.setSize("640px", "300px");
 		compPanel.addStyleName("schoolTable");
 		schoolPanel.addStyleName("schoolTable");
+		tablePanel.add(filterPanel);
 		tablePanel.add(compPanel);
 		tablePanel.add(schoolPanel);
 //		tablePanel.addStyleName("schoolTable");
