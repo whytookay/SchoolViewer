@@ -375,7 +375,7 @@ public class SchoolViewer implements EntryPoint {
 		minSize.setText("-1");
 		filterPanel.add(minSize, 500, 50);
 		maxSize.setVisibleLength(2);
-		maxSize.setText("37");
+		maxSize.setText("40");
 		filterPanel.add(maxSize, 560, 50);
 		filterPanel.addStyleName("filterTable");
 		RootPanel.get("filterContainer").add(filterPanel);
