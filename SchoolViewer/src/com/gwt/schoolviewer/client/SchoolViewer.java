@@ -114,16 +114,16 @@ public class SchoolViewer implements EntryPoint {
 	// google +
 	private static final Auth AUTH = Auth.get();
 	private static final String GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/auth";
-	private static final String GOOGLE_CLIENT_ID = "588877069341.apps.googleusercontent.com";
+	private static final String GOOGLE_CLIENT_ID = "700088417733.apps.googleusercontent.com";
 	private static final String PLUS_ME_SCOPE = "https://www.googleapis.com/auth/userinfo.profile";
 
 	private final GreetingServiceAsync greetingService = GWT
 			.create(GreetingService.class);
 
 	private static final Plus plus = GWT.create(Plus.class);
-	private static final String CLIENT_ID = "588877069341.apps.googleusercontent.com";
-	private static final String API_KEY = "AIzaSyBh9EtSr6O_4K0bvFCkpxZMA_PheFKy3aI";
-	private static final String APPLICATION_NAME = "Schoolviewerq";
+	private static final String CLIENT_ID = "700088417733.apps.googleusercontent.com";
+	private static final String API_KEY = "AIzaSyDGS6xMhkUEiR7FVCp5lslzcWOKGXWxooc";
+	private static final String APPLICATION_NAME = "projecttesting40702";
 	private Person Self;
 
 	private void loadLogin(final LoginInfo loginInfo) {
@@ -151,24 +151,24 @@ public class SchoolViewer implements EntryPoint {
 		final StringBuilder userEmail = new StringBuilder();
 		greetingService.login(GWT.getHostPageBaseURL(),
 				new AsyncCallback<LoginInfo>() {
-					@Override
-					public void onFailure(final Throwable caught) {
-						GWT.log("login -> onFailure");
-						println(caught.toString());
-					}
+			@Override
+			public void onFailure(final Throwable caught) {
+				GWT.log("login -> onFailure");
+				println(caught.toString());
+			}
 
-					@Override
-					public void onSuccess(final LoginInfo result) {
-						if (result.getName() != null
-								&& !result.getName().isEmpty()) {
-							addGoogleAuthHelper();
-							loadLogout(result);
-						} else {
-							loadLogin(result);
-						}
-						userEmail.append(result.getEmailAddress());
-					}
-				});
+			@Override
+			public void onSuccess(final LoginInfo result) {
+				if (result.getName() != null
+						&& !result.getName().isEmpty()) {
+					addGoogleAuthHelper();
+					loadLogout(result);
+				} else {
+					loadLogin(result);
+				}
+				userEmail.append(result.getEmailAddress());
+			}
+		});
 		try {
 			loadschoolviewer();
 		} catch (NotLoggedInException e) {
@@ -186,50 +186,51 @@ public class SchoolViewer implements EntryPoint {
 				if (!token.isEmpty()) {
 					greetingService.loginDetails(token,
 							new AsyncCallback<LoginInfo>() {
-								@Override
-								public void onFailure(final Throwable caught) {
-									GWT.log("loginDetails -> onFailure");
-								}
+						@Override
+						public void onFailure(final Throwable caught) {
+							GWT.log("loginDetails -> onFailure");
+						}
 
+						@Override
+						public void onSuccess(final LoginInfo loginInfo) {
+							signInLink.setText(loginInfo.getName());
+							nameField.setText(loginInfo.getName());
+							signInLink.setStyleName("login-area");
+							loginImage.setUrl(loginInfo.getPictureUrl());
+							loginImage.setVisible(false);
+							loginPanel.add(loginImage);
+							loginImage
+							.addLoadHandler(new LoadHandler() {
 								@Override
-								public void onSuccess(final LoginInfo loginInfo) {
-									signInLink.setText(loginInfo.getName());
-									nameField.setText(loginInfo.getName());
-									signInLink.setStyleName("login-area");
-									loginImage.setUrl(loginInfo.getPictureUrl());
-									loginImage.setVisible(false);
-									loginPanel.add(loginImage);
-									loginImage
-											.addLoadHandler(new LoadHandler() {
-												@Override
-												public void onLoad(
-														final LoadEvent event) {
-													final int newWidth = 24;
-													final com.google.gwt.dom.client.Element element = event
-															.getRelativeElement();
-													if (element.equals(loginImage
-															.getElement())) {
-														final int originalHeight = loginImage
-																.getOffsetHeight();
-														final int originalWidth = loginImage
-																.getOffsetWidth();
-														if (originalHeight > originalWidth) {
-															loginImage
-																	.setHeight(newWidth
-																			+ "px");
-														} else {
-															loginImage
-																	.setWidth(newWidth
-																			+ "px");
-														}
-														loginImage
-																.setVisible(true);
-														InitSelf();
-													}
-												}
-											});
+								public void onLoad(
+										final LoadEvent event) {
+									final int newWidth = 24;
+									final com.google.gwt.dom.client.Element element = event
+											.getRelativeElement();
+									if (element.equals(loginImage
+											.getElement())) {
+										final int originalHeight = loginImage
+												.getOffsetHeight();
+										final int originalWidth = loginImage
+												.getOffsetWidth();
+										if (originalHeight > originalWidth) {
+											loginImage
+											.setHeight(newWidth
+													+ "px");
+										} else {
+											loginImage
+											.setWidth(newWidth
+													+ "px");
+										}
+										loginImage
+										.setVisible(true);
+
+									}
 								}
 							});
+							InitSelf();
+						}
+					});
 				}
 			}
 
@@ -245,55 +246,62 @@ public class SchoolViewer implements EntryPoint {
 				APPLICATION_NAME, API_KEY));
 		OAuth2Login.get().authorize(GOOGLE_CLIENT_ID, PlusAuthScope.PLUS_ME,
 				new Callback<Void, Exception>() {
+			@Override
+			public void onSuccess(Void v) {
+				plus.people().get("me").to(new Receiver<Person>() {
 					@Override
-					public void onSuccess(Void v) {
-						plus.people().get("me").to(new Receiver<Person>() {
-							@Override
-							public void onSuccess(Person person) {
-								Self = person;
-							}
-						}).fire();
+					public void onSuccess(Person person) {
+						Self = person;
 					}
+				}).fire();
+			}
 
-					@Override
-					public void onFailure(Exception e) {
-						println(e.getMessage());
-					}
-				});
+			@Override
+			public void onFailure(Exception e) {
+				println(e.getMessage());
+			}
+		});
 	}
 
 	private void SetSelfLocationMarker() {
-		MarkerOptions markerOptions = MarkerOptions.create();
-		markerOptions.setMap(theMap);
-		markerOptions.setTitle("this is you");
-		markerOptions.setDraggable(false);
-		markerOptions
+		if (Self != null ){
+			if (Self.getPlacesLived().get(0).getValue().length() > 4){
+				MarkerOptions markerOptions = MarkerOptions.create();
+				markerOptions.setMap(theMap);
+				markerOptions.setTitle("this is you");
+				markerOptions.setDraggable(false);
+				markerOptions
 				.setIcon(MarkerImage
 						.create("http://google-maps-icons.googlecode.com/files/walking-tour.png"));
-		final Marker start = Marker.create(markerOptions);
-		AsyncCallback<LatLong> callback = new AsyncCallback<LatLong>() {
-			public void onFailure(Throwable caught) {
-				// TODO: Do something with errors.
-				println("failed to get self Lat Long");
-			}
+				final Marker start = Marker.create(markerOptions);
+				AsyncCallback<LatLong> callback = new AsyncCallback<LatLong>() {
+					public void onFailure(Throwable caught) {
+						// TODO: Do something with errors.
+						println("failed to get self Lat Long");
+					}
 
-			public void onSuccess(LatLong result) {
-				start.setPosition(LatLng.create(result.getLatitude(),
-						result.getLongitude()));
-			}
-		};
-		String place = Self.getPlacesLived().get(0).getValue();
-		String placeURL = "";
-		for (int k = 0; k < place.length() - 1; k++) {
-			if (place.substring(k, k + 1).equals(" ")) {
-				placeURL = placeURL + "+";
-			} else
-				placeURL = placeURL + place.substring(k, k + 1);
+					public void onSuccess(LatLong result) {
+						start.setPosition(LatLng.create(result.getLatitude(),
+								result.getLongitude()));
+					}
+				};
+				String place = Self.getPlacesLived().get(0).getValue();
+				String placeURL = "";
+				for (int k = 0; k < place.length() ; k++) {
+					if (place.substring(k, k + 1).equals(" ")) {
+						placeURL = placeURL + "+";
+					} else
+						placeURL = placeURL + place.substring(k, k + 1);
 
+				}
+				schoolValueSvc.findLatLong(placeURL, callback);
+				Markers.add(start);
+			}else{
+				println("no location set in google+ account");
+			}
+		}else{
+			println("please login");
 		}
-		println(placeURL);
-		schoolValueSvc.findLatLong(placeURL, callback);
-		Markers.add(start);
 	}
 
 	private void println(String txt) {
@@ -320,7 +328,7 @@ public class SchoolViewer implements EntryPoint {
 		// panels for holding widgets
 
 		final VerticalPanel tablePanel = new VerticalPanel(); 
-		
+
 		final ScrollPanel compPanel = new ScrollPanel(compFlexTable);
 		final ScrollPanel schoolPanel = new ScrollPanel(schoolFlexTable);
 		final HorizontalPanel layoutPanel = new HorizontalPanel();
@@ -404,7 +412,7 @@ public class SchoolViewer implements EntryPoint {
 		tablePanel.add(filterPanel);
 		tablePanel.add(compPanel);
 		tablePanel.add(schoolPanel);
-//		tablePanel.addStyleName("schoolTable");
+		//		tablePanel.addStyleName("schoolTable");
 		layoutPanel.insert(tablePanel, 0);
 		layoutPanel.insert(mapPanel, 1);
 		RootPanel.get("tableMapContainer").add(layoutPanel);
@@ -442,13 +450,13 @@ public class SchoolViewer implements EntryPoint {
 				ListOfCompSchools = result;
 				for (int i = 0; i < result.size(); i++) {
 					final CheckBox checkBox = new CheckBox(); // create new
-																// checkbox per
-																// row
+					// checkbox per
+					// row
 					compFlexTable.setText(i + 1, 0, result.get(i).getName());
 					compFlexTable
-							.setText(i + 1, 1, result.get(i).getLocation());
+					.setText(i + 1, 1, result.get(i).getLocation());
 					compFlexTable
-							.setText(i + 1, 2, result.get(i).getDistrict());
+					.setText(i + 1, 2, result.get(i).getDistrict());
 					compFlexTable.setText(i + 1, 3, result.get(i).getpCode());
 					//compFlexTable.setText(i+1,4, Double.toString(result.get(i).getClassSize()));
 					compFlexTable.setWidget(i + 1, 5, checkBox);
@@ -456,7 +464,7 @@ public class SchoolViewer implements EntryPoint {
 			}
 		};
 		compareService.getSchoolValues(compareCallback);
-		 
+
 
 		// Create a handler for the sendButton and nameField
 		class MyHandler implements ClickHandler, KeyUpHandler {
@@ -608,13 +616,13 @@ public class SchoolViewer implements EntryPoint {
 				.getSelectedIndex()); // or district value
 		Boolean isDistrict = !district.equals("None");
 		Double radius = Double.parseDouble(radiusField.getText());
-		
+
 		String minStr = minSize.getText();
 		String maxStr = maxSize.getText();
 		Boolean minOrMaxValid = !(minStr.equals("") && maxStr.equals(""));
 		int min = Integer.parseInt(minStr);
 		int max = Integer.parseInt(maxStr);
-		
+
 		schoolValueSvc.getValuesFiltered(isPostal, pCode, radius, isDistrict,
 				district, isSearch, search, minOrMaxValid, min, max, callback);
 
@@ -633,7 +641,7 @@ public class SchoolViewer implements EntryPoint {
 			schoolFlexTable.removeRow(i);
 		for (int i = 0; i < values.size(); i++) {
 			final CheckBox checkBox = new CheckBox(); // create new checkbox per
-														// row
+			// row
 			schoolFlexTable.setText(i + 1, 0, values.get(i).getName());
 			schoolFlexTable.setText(i + 1, 1, values.get(i).getLocation());
 			schoolFlexTable.setText(i + 1, 2, values.get(i).getDistrict());
@@ -783,25 +791,25 @@ public class SchoolViewer implements EntryPoint {
 						s.getLongitude()));
 				Marker marker = Marker.create(markerOptions);
 				final String txt = "<div id=\"content\">"
-					    + "<p style=\"text-align:left; color:BLACK; font-size: 16pt \"><b>"
-					    + s.getName()
-					    + "</b></p>"
-					    + "<p style=\"text-align:left;color: BLACK;\">"
-					    + s.getPubOrInd() + ". Education Level: " + s.getEduLevel()
-					    + "</b></p>"
-					    + "<p style=\"text-align:left;color: BLACK;\">"
-					    + "District: "+s.getDistrict()
-					    + "</b></p>"
-					    + "<p style=\"text-align:left;color: BLACK;\">"
-					    + "Address: " + s.getLocation()
-					    + "</b></p>"
-					    + "<p style=\"text-align:left;color: BLACK;\">"
-					    + "Phone Number: " + s.getPhone()
-					    + "</b></p>"
-					    + "<p style=\"text-align:left;color: BLACK;\">"
-					    + "Class size: " + s.getClassSize().intValue()
-					    + "</b></p>"  
-					    + "</div>";
+						+ "<p style=\"text-align:left; color:BLACK; font-size: 16pt \"><b>"
+						+ s.getName()
+						+ "</b></p>"
+						+ "<p style=\"text-align:left;color: BLACK;\">"
+						+ s.getPubOrInd() + ". Education Level: " + s.getEduLevel()
+						+ "</b></p>"
+						+ "<p style=\"text-align:left;color: BLACK;\">"
+						+ "District: "+s.getDistrict()
+						+ "</b></p>"
+						+ "<p style=\"text-align:left;color: BLACK;\">"
+						+ "Address: " + s.getLocation()
+						+ "</b></p>"
+						+ "<p style=\"text-align:left;color: BLACK;\">"
+						+ "Phone Number: " + s.getPhone()
+						+ "</b></p>"
+						+ "<p style=\"text-align:left;color: BLACK;\">"
+						+ "Class size: " + s.getClassSize().intValue()
+						+ "</b></p>"  
+						+ "</div>";
 				final LatLng pos = LatLng.create(s.getLatitude(),
 						s.getLongitude());
 				marker.addClickListener(new Marker.ClickHandler() {
