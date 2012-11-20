@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<datastore-indexes  autoGenerate="true">
+    <datastore-index kind="PersistentSchool" ancestor="false" source="manual">
+        <property name="user" direction="asc"/>
+        <property name="createDate" direction="asc"/>
+        <property name="name" direction="asc"/>
+        <property name="location" direction="asc"/>
+        <property name="district" direction="asc"/>
+        <property name="districtWebsite" direction="asc"/>
+        <property name="pCode" direction="asc"/>
+        <property name="latitude" direction="asc"/>
+        <property name="longitude" direction="asc"/>
+        <property name="classSize" direction="asc"/>
+        <property name="phone" direction="asc"/>
+        <property name="pubOrInd" direction="asc"/>
+        <property name="eduLevel" direction="asc"/>
+    </datastore-index>
+</datastore-indexes>

@@ -114,16 +114,16 @@ public class SchoolViewer implements EntryPoint {
 	// google +
 	private static final Auth AUTH = Auth.get();
 	private static final String GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/auth";
-	private static final String GOOGLE_CLIENT_ID = "700088417733.apps.googleusercontent.com";
+	private static final String GOOGLE_CLIENT_ID = "588877069341.apps.googleusercontent.com";
 	private static final String PLUS_ME_SCOPE = "https://www.googleapis.com/auth/userinfo.profile";
 
 	private final GreetingServiceAsync greetingService = GWT
 			.create(GreetingService.class);
 
 	private static final Plus plus = GWT.create(Plus.class);
-	private static final String CLIENT_ID = "700088417733.apps.googleusercontent.com";
-	private static final String API_KEY = "AIzaSyDGS6xMhkUEiR7FVCp5lslzcWOKGXWxooc";
-	private static final String APPLICATION_NAME = "projecttesting40702";
+	private static final String CLIENT_ID = "588877069341.apps.googleusercontent.com";
+	private static final String API_KEY = "AIzaSyBh9EtSr6O_4K0bvFCkpxZMA_PheFKy3aI";
+	private static final String APPLICATION_NAME = "schoolviewerq";
 	private Person Self;
 
 	private void loadLogin(final LoginInfo loginInfo) {
