@@ -71,9 +71,9 @@ public class SchoolValueServiceImpl extends RemoteServiceServlet implements Scho
 			aLatLong = new LatLong(Double.parseDouble(latit), Double.parseDouble(longit));
 			System.out.println("latitude, longitude are" + latitude + " " + longitude);
 		} catch (JSONException e) {
-			e.printStackTrace();
+			return aLatLong;
 		} catch (Exception e) {
-			e.printStackTrace();
+			return aLatLong;
 		}
 		return aLatLong;
 	}
